@@ -1,4 +1,4 @@
-fork of GetSimple CMS
+fork of GetSimple CMS v 3.3.16
 # GetSimple readme
 GetSimple Content Management System
 =========================================
