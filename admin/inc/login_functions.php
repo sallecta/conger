@@ -9,7 +9,7 @@
 $MSG = null;
 # if the login cookie is already set, redirect user to control panel
 if(cookie_check()) {
-	gotoDefaultPage();                                           
+	redirect($cookie_redirect);                                             
 }
 
 # was the form submitted?
@@ -17,74 +17,67 @@ if(isset($_POST['submitted'])) {
 	
 	# initial variable setup
 	$user_xml = GSUSERSPATH . _id($_POST['userid']).'.xml';
-	$userid   = strtolower($_POST['userid']);
+	$userid = strtolower($_POST['userid']);
 	$password = $_POST['pwd'];
-	$status   = null;
+	$error = null;
 	
 	# check the username or password fields
 	if ( !$userid || !$password ) {
-		$status = "login-req";
+		$error = i18n_r('FILL_IN_REQ_FIELD');
 	} 
 	
 	# check for any errors
-	if ( !$status ) {
+	if ( !$error ) {
 		
-		exec_action('successful-login-start'); // @hook successful-login-start login process started
+		exec_action('successful-login-start');
 		
 		# hash the given password
-		$password  = passhash($password);
+		$password = passhash($password);
 
 		# does this user exist?
 		if (file_exists($user_xml)) {
+
 			# pull the data from the user's data file
-			$data   = getXML($user_xml);
-			$PASSWD = (string)$data->PWD;
-			$USR    = strtolower($data->USR);
+			$data = getXML($user_xml);
+			$PASSWD = $data->PWD;
+			$USR = strtolower($data->USR);
 
 			# do the username and password match?
-			
-			$allow = exec_filter('login',true); // @filter login filter bool allow
-
-			if ($allow && ($userid === $USR) && ($password === $PASSWD) ) {
+			if ( ($userid == $USR) && ($password == $PASSWD) ) {
 				$authenticated = true;
-				# add login success to failed logins log
-				$logFailed = new GS_Logging_Class('logins.log');
-				$logFailed->add('Username',$userid);
 			} else {
 				$authenticated = false;
+
 				# add login failure to failed logins log
 				$logFailed = new GS_Logging_Class('failedlogins.log');
 				$logFailed->add('Username',$userid);
-				$logFailed->add('Reason',i18n_r('INVALID_PASSWORD'));
-			}
+				$logFailed->add('Reason','Invalid Password');
+
+			} # end password match check
+			
 		} else {
 			# user doesnt exist in this system
 			$authenticated = false;
+
 			# add login failure to failed logins log
 			$logFailed = new GS_Logging_Class('failedlogins.log');
 			$logFailed->add('Username',$userid);
-			$logFailed->add('Reason',i18n_r('INVALID_USER'));
-		}
+			$logFailed->add('Reason','Invalid User');
+		}		
 		
 		# is this successful?
 		if( $authenticated ) {
 			# YES - set the login cookie, then redirect user to secure panel		
 			create_cookie();
-			exec_action('successful-login-end');  // @hook successful-login-end login process authentication success
-			$logFailed->save();			
-			gotoDefaultPage();
+			exec_action('successful-login-end');
+			redirect($cookie_redirect); 
 		} else {
 			# NO - show error message
-			exec_action('successful-login-failed');  // @hook successful-login-failed login process authentication failed
-			$status = "login-fail";
+			$error = i18n_r('LOGIN_FAILED');
 			$logFailed->save();
-		} 
+		} # end authenticated check
 		
 	} # end error check
 	
-	$update = $status;
-	
 } # end submission check
-
-
-/* ?> */
+?>

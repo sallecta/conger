@@ -1,9 +1,0 @@
-# Local dev or ide stuff
-*.project
-*.settings
-*.sublime-*
-*.orig
-/lib
-
-thumbs.db
-.DS_*

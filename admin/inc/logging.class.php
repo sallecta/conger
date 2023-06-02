@@ -33,14 +33,14 @@ class GS_Logging_Class {
         private $_entry;
   
         function __construct($filename,$logdefaults=true) {
-                // @todo check filename, must be .log
+                // check filename, must be .log
                 
                 if($this->validFilename($filename)){
                     $this->_xmlfile = GSDATAOTHERPATH.'logs/'.$filename;
                     if ( file_exists($this->_xmlfile) )  {
-                        $xml = getXML($this->_xmlfile);
-                        if(!is_object($xml)) $this->_xml = new SimpleXMLExtended('<?xml version="1.0" encoding="UTF-8"?><channel></channel>');
-                        else $this->_xml = $xml;
+                        $xml = file_get_contents($this->_xmlfile);
+                        if($xml) $this->_xml = simplexml_load_string($xml, 'SimpleXMLExtended', LIBXML_NOCDATA);
+                        else $this->_xml = new SimpleXMLExtended('<?xml version="1.0" encoding="UTF-8"?><channel></channel>');
                     } else {
                         $this->_xml = new SimpleXMLExtended('<?xml version="1.0" encoding="UTF-8"?><channel></channel>');
                     }
@@ -103,13 +103,13 @@ class GS_Logging_Class {
         /* 
          * Clear Log File
          * Deletes Log File
-         * @todo abstract to delete_log()
+         * 
          * @return success
          */    
         public function clear(){
                 if (is_file($this->_xmlfile)) {
                         $res = unlink($this->_xmlfile);
-                        exec_action('logfile-delete'); // @hook logfile-delete log file was deleted
+                        exec_action('logfile_delete');
                         return $res;
                 }
         }
@@ -119,27 +119,16 @@ class GS_Logging_Class {
          * 
          * @param string $field
          * @param string $value
-         * @param bool   $unique, is this field unique, if true replace existing values, else allow duplicates
          *
          * @return success
          */    
-        public function add($field,$value,$unique = true){
+        public function add($field,$value){
                 if(isset($field) && isset($value) && isset($this->_entry)){
-                      if($unique) $this->remove($field); // allow dups ?
                       $cdata = $this->_entry->addChild(htmlentities($field, ENT_QUOTES));
-                      return $cdata->addCData(safe_slash_html($value));
-                }
-        }
-
-        /*
-         * Remove Log Record Field
-         *
-         * @param string $field
-         */
-        public function remove($field){
-            if(isset($this->_entry->$field)) unset($this->_entry->$field);
+                      $cdata->addCData(safe_slash_html($value));
+                }  
         }
   
 } // end of class                   
 
-/* ?> */
+?>

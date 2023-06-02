@@ -12,19 +12,14 @@
 $load['plugin'] = true;
 
 ob_start();
+include('inc/common.php');
 
-	include('inc/common.php');
+# end it all :'(
+kill_cookie($cookie_name);
+exec_action('logout');
 
-	# end it all :'(
-	kill_cookie($cookie_name);
-	exec_action('logout'); // @hook logout logging out after cookie destroyed
-
-	// if debugging install , wipe website.xml to trigger reinstall
-	if(getDef('GSDEBUGINSTALL',true) && getDef('GSDEBUGINSTALLWIPE',true)) delete_file(GSDATAOTHERPATH.GSWEBSITEFILE);
-
-	# send back to login screen
-	redirect('index.php?logout');
-	
+# send back to login screen
+redirect('index.php?logout');
 ob_end_flush();
 
 ?>

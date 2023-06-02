@@ -1,4 +1,4 @@
-<?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
+<?php
 
 /**
  * 
@@ -225,8 +225,7 @@ class ZipArchive  {
 			return false;
 		}
 		
-		debugLog('archive function exec called ' . __FUNCTION__);
-		exec(escapeshellarg(self::$zip_exec." -m -r {$target_zip_file} * 2>&1"), $output, $return_value);
+		exec(self::$zip_exec." -m -r {$target_zip_file} * 2>&1", $output, $return_value);
 		chdir($currentWorkingDir);
 		
 		if($target_zip_file != $this->zipFilePath){
@@ -583,8 +582,7 @@ class ZipArchive  {
 			$list = "'".implode("' '", $entries)."'";
 		}
 		
-		debugLog('archive function exec called ' . __FUNCTION__);
-		exec(escapeshellarg(self::$unzip_exec." -o {$zip_path} -d {$destination} {$list}  2>&1"), $output, $return_value);
+		exec(self::$unzip_exec." -o {$zip_path} -d {$destination} {$list}  2>&1", $output, $return_value);
 		
 		if($return_value != 0){
 			return false;
@@ -804,4 +802,3 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-/* ?> */

@@ -13,8 +13,6 @@ $load['plugin'] = true;
 include('inc/common.php');
 login_cookie_check();
 
-exec_action('load-menu-manager');
-
 # save page priority order
 if (isset($_POST['menuOrder'])) {
 	$menuOrder = explode(',',$_POST['menuOrder']);
@@ -22,7 +20,7 @@ if (isset($_POST['menuOrder'])) {
 	foreach ($menuOrder as $slug) {
 		$file = GSDATAPAGESPATH . $slug . '.xml';
 		if (file_exists($file)) {
-			$data = getPageXML($slug);
+			$data = getXML($file);
 			if ($priority != (int) $data->menuOrder) {
 				unset($data->menuOrder);
 				$data->addChild('menuOrder')->addCData($priority);
@@ -39,8 +37,7 @@ if (isset($_POST['menuOrder'])) {
 getPagesXmlValues();
 $pagesSorted = subval_sort($pagesArray,'menuOrder');
 
-$pagetitle = strip_tags(i18n_r('MENU_MANAGER')).' &middot; '.i18n_r('PAGE_MANAGEMENT');
-get_template('header');
+get_template('header', cl($SITENAME).' &raquo; '.i18n_r('PAGE_MANAGEMENT').' &raquo; '.str_replace(array('<em>','</em>'), '', i18n_r('MENU_MANAGER'))); 
 
 ?>
 	
@@ -50,15 +47,11 @@ get_template('header');
 	
 	<div id="maincontent">
 		<div class="main" >
-			<h3 class="floated"><?php echo str_replace(array('<em>','</em>'), '', i18n_r('MENU_MANAGER')); ?></h3>
-			<div class="edit-nav clearfix" >
-				<?php exec_action(get_filename_id().'-edit-nav'); ?>
-			</div>		
-			<?php exec_action(get_filename_id().'-body'); ?>				
+			<h3><?php echo str_replace(array('<em>','</em>'), '', i18n_r('MENU_MANAGER')); ?></h3>
 			<p><?php i18n('MENU_MANAGER_DESC'); ?></p>
 			<?php
 				if (count($pagesSorted) != 0) { 
-					echo '<form class="watch" method="post" action="menu-manager.php">';
+					echo '<form method="post" action="menu-manager.php">';
 					echo '<ul id="menu-order" >';
 					foreach ($pagesSorted as $page) {
 						$sel = '';
@@ -77,9 +70,7 @@ get_template('header');
 						}
 					}
 					echo '</ul>';
-					echo '<div id="submit_line"><span>';
 					echo '<input type="hidden" name="menuOrder" value=""><input class="submit" type="submit" value="'. i18n_r("SAVE_MENU_ORDER").'" />';
-					echo '</span></div>';
 					echo '</form>';
 				} else {
 					echo '<p>'.i18n_r('NO_MENU_PAGES').'.</p>';	
@@ -96,7 +87,7 @@ get_template('header');
 							var cat = $(this).attr('rel');
 							order = order+','+cat;
 						});
-						$('[name=menuOrder]').val(order).change(); // set val, fire change for form watcher
+						$('[name=menuOrder]').val(order);
 					}
 				});
 				$("#menu-order").disableSelection();

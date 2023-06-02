@@ -1,9 +1,9 @@
-<?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
+<?php
 /**
  * Security
  *
  * @package GetSimple
- * @subpackage Security-Functions
+ * @subpackage init
  */
 
 /*
@@ -13,7 +13,7 @@ $mime_type_blacklist = array(
 	# HTML may contain cookie-stealing JavaScript and web bugs
 	'text/html', 'text/javascript', 'text/x-javascript',  'application/x-shellscript',
 	# PHP scripts may execute arbitrary code on the server
-	'application/x-php', 'text/x-php', 'application/php', 'application/x-httpd-php', 'application/x-httpd-php-source',
+	'application/x-php', 'text/x-php',
 	# Other types that may be interpreted by some servers
 	'text/x-python', 'text/x-perl', 'text/x-bash', 'text/x-sh', 'text/x-csh',
 	# Client-side hazards on Internet Explorer
@@ -24,12 +24,11 @@ $mime_type_blacklist = array(
 	# and thus blacklisted just as other zip files
 	'application/x-opc+zip'
 );
-
 $file_ext_blacklist = array(
 	# HTML may contain cookie-stealing JavaScript and web bugs
 	'html', 'htm', 'js', 'jsb', 'mhtml', 'mht',
 	# PHP scripts may execute arbitrary code on the server
-	'php', 'pht', 'phtm', 'phtml', 'php3', 'php4', 'php5', 'ph3', 'ph4', 'ph5', 'phps', 'phar', 'php7', 'php8',
+	'php', 'pht', 'phtm', 'phtml', 'php3', 'php4', 'php5', 'ph3', 'ph4', 'ph5', 'phps',
 	# Other types that may be interpreted by some servers
 	'shtml', 'jhtml', 'pl', 'py', 'cgi', 'sh', 'ksh', 'bsh', 'c', 'htaccess', 'htpasswd',
 	# May contain harmful executables for Windows victims
@@ -58,19 +57,16 @@ function antixss($str){
 	$str = preg_replace('#<!--.*?-->?#', '', $str);
 	$str = preg_replace('#<!--#', '', $str);
 	$str = preg_replace('#(<[a-z]+(\s+[a-z][a-z\-]+\s*=\s*(\'[^\']*\'|"[^"]*"|[^\'">][^\s>]*))*)\s+href\s*=\s*(\'javascript:[^\']*\'|"javascript:[^"]*"|javascript:[^\s>]*)((\s+[a-z][a-z\-]*\s*=\s*(\'[^\']*\'|"[^"]*"|[^\'">][^\s>]*))*\s*>)#is', '$1$5', $str);
-	
 	foreach($attr as $a) {
 	    $regex = '(<[a-z]+(\s+[a-z][a-z\-]+\s*=\s*(\'[^\']*\'|"[^"]*"|[^\'">][^\s>]*))*)\s+'.$a.'\s*=\s*(\'[^\']*\'|"[^"]*"|[^\'">][^\s>]*)((\s+[a-z][a-z\-]*\s*=\s*(\'[^\']*\'|"[^"]*"|[^\'">][^\s>]*))*\s*>)';
-	    $str   = preg_replace('#'.$regex.'#is', '$1$5', $str);
+	    $str = preg_replace('#'.$regex.'#is', '$1$5', $str);
 	}
-
 	foreach($elem as $e) {
 		$regex = '<'.$e.'(\s+[a-z][a-z\-]*\s*=\s*(\'[^\']*\'|"[^"]*"|[^\'">][^\s>]*))*\s*>.*?<\/'.$e.'\s*>';
-    	$str   = preg_replace('#'.$regex.'#is', '', $str);
+	    $str = preg_replace('#'.$regex.'#is', '', $str);
 	}
 
 	// if($strdirty !== $str) debugLog("string cleaned: removed ". (strlen($strdirty) - strlen($str)) .' chars');
-
 	return $str;
 }
 
@@ -111,34 +107,6 @@ function xss_clean($data){
 	return $data;
 }
 
-
-/**
- * check for csrfs
- * @param  string $action action to pass to check_nonce
- * @param  string $file   file to pass to check_nonce
- * @param  bool   $die    if false return instead of die
- * @return bool   returns true if csrf check fails
- */
-function check_for_csrf($action, $file="", $die = true){
-	// check for csrf
-	if (!getDef('GSNOCSRF',true)) {
-		$nonce = $_REQUEST['nonce'];
-		if(!check_nonce($nonce, $action, $file)) {
-			exec_action('csrf'); // @hook csrf a csrf was detected
-			if(requestIsAjax()){
-				$error = i18n_r("CSRF","CRSF Detected!");
-				echo "<div>"; // jquery bug will not parse 1 html element so we wrap it
-				include('template/error_checking.php');
-				echo "</div>";
-				die();
-			}
-			if($die) die(i18n_r("CSRF","CRSF Detected!"));
-			return true;
-		}
-	}
-}
-
-
 /**
  * Get Nonce
  *
@@ -155,25 +123,19 @@ function check_for_csrf($action, $file="", $die = true){
 function get_nonce($action, $file = "", $last = false) {
 	global $USR;
 	global $SALT;
-
-	// set nonce_timeout default and clamps
-	include_once(GSADMININCPATH.'configuration.php');
-	clamp($nonce_timeout, 60, 86400, 3600);// min, max, default in seconds
-
-	// $nonce_timeout = 10;
-
+	
 	if($file == "")
-		$file = getScriptFile();
-
+		$file = $_SERVER['PHP_SELF'];
+	
 	// using user agent since ip can change on proxys
 	$uid = $_SERVER['HTTP_USER_AGENT'];
-
-	// set nonce time domain to $nonce_timeout or $nonce_timeout x 2 when last is $true
-	$time = $last ? time() - $nonce_timeout: time();
-	$time = floor($time/$nonce_timeout);
-
+	
+	// Limits Nonce to one hour
+	$time = $last ? time() - 3600: time(); 
+	
 	// Mix with a little salt
-	$hash=sha1($action.$file.$uid.$USR.$SALT.$time);
+	$hash=sha1($action.$file.$uid.$USR.$SALT.@date('YmdH',$time));
+	
 	return $hash;
 }
 
@@ -194,7 +156,6 @@ function check_nonce($nonce, $action, $file = ""){
 	return ( $nonce === get_nonce($action, $file) || $nonce === get_nonce($action, $file, true) );
 }
 
-
 /**
  * Validate Safe File
  * NEVER USE MIME CHECKING FROM BROWSERS, eg. $_FILES['userfile']['type'] cannot be trusted
@@ -214,6 +175,7 @@ function validate_safe_file($file, $name, $mime = null){
 	include(GSADMININCPATH.'configuration.php');
 
 	$file_extension = lowercase(pathinfo($name,PATHINFO_EXTENSION));
+	if(!$mime)$mime = file_mime_type($file);
 
 	if ($mime && $mime_type_whitelist && in_arrayi($mime, $mime_type_whitelist)) {
 		return true;
@@ -236,20 +198,16 @@ function validate_safe_file($file, $name, $mime = null){
 
 /**
  * Checks that an existing filepath is safe to use by checking canonicalized absolute pathname.
- * If file does not exist and realpath fails, we realpath dirname() instead
  *
  * @since 3.1.3
  *
- * @param string $filepath Unknown Path to file to check for safety
+ * @param string $path Unknown Path to file to check for safety
  * @param string $pathmatch Known Path to parent folder to check against
  * @param bool $subdir allow path to be a deeper subfolder
- * @param bool $newfile if true fallback and realpath basename, caution, use with other filename sanitizers
  * @return bool Returns true if files path resolves to your known path
  */
-function filepath_is_safe($filepath, $pathmatch, $subdir = true, $newfile = false){
-	$realpath = realpath($filepath);
-	if(!$realpath && $newfile) return path_is_safe(dirname($filepath),$pathmatch,$subdir);
-
+function filepath_is_safe($path,$pathmatch,$subdir = true){
+	$realpath = realpath($path);
 	$realpathmatch = realpath($pathmatch);
 	if($subdir) return strpos(dirname($realpath),$realpathmatch) === 0;
 	return dirname($realpath) == $realpathmatch;
@@ -267,15 +225,10 @@ function filepath_is_safe($filepath, $pathmatch, $subdir = true, $newfile = fals
  *
  */
 function path_is_safe($path,$pathmatch,$subdir = true){
-	$realpath      = realpath($path);
+	$realpath = realpath($path);
 	$realpathmatch = realpath($pathmatch);
 	if($subdir) return strpos($realpath,$realpathmatch) === 0;
 	return $realpath == $realpathmatch;
-}
-
-// alias to check a subdir easily
-function subpath_is_safe($path,$dir){
-	return path_is_safe($path.$dir,$path);
 }
 
 /**
@@ -284,16 +237,7 @@ function subpath_is_safe($path,$dir){
  * @returns bool
  */
 function server_is_apache() {
-    return( strpos(strtolower(get_Server_Software()),'apache') !== false );
-}
-
-/**
- * Try to get server_software
- * 
- * @returns string
- */
-function get_Server_Software() {
-    return $_SERVER['SERVER_SOFTWARE'];
+    return( strpos(strtolower($_SERVER['SERVER_SOFTWARE']),'apache') !== false );
 }
 
 /**
@@ -305,6 +249,7 @@ function get_Server_Software() {
  * @return string         return filtered string
  */
 function var_out($var,$filter = "special"){
+	$var = (string)$var;
 
 	// php 5.2 shim
 	if(!defined('FILTER_SANITIZE_FULL_SPECIAL_CHARS')){
@@ -312,8 +257,9 @@ function var_out($var,$filter = "special"){
 		if($filter == "full") return htmlspecialchars($var, ENT_QUOTES);
 	}
 
-    if(function_exists( "filter_var") && ($filter !== "string" )){
+	if(function_exists( "filter_var") ){
 		$aryFilter = array(
+			"string"  => FILTER_SANITIZE_STRING,
 			"int"     => FILTER_SANITIZE_NUMBER_INT,
 			"float"   => FILTER_SANITIZE_NUMBER_FLOAT,
 			"url"     => FILTER_SANITIZE_URL,
@@ -324,26 +270,12 @@ function var_out($var,$filter = "special"){
 		if(isset($aryFilter[$filter])) return filter_var( $var, $aryFilter[$filter]);
 		return filter_var( $var, FILTER_SANITIZE_SPECIAL_CHARS);
 	}
-	else if ($filter === "string") {
-		return htmlspecialchars($var);
-	}
 	else {
 		return htmlentities($var);
 	}
-}
-
-//alias var_out for inputs in case we ned to diverge in future
-function var_in($var,$filter = 'special'){
-	return var_out($var,$filter);
 }
 
 function validImageFilename($file){
 	$image_exts = array('jpg','jpeg','gif','png');
 	return in_array(getFileExtension($file),$image_exts);
 }
-
-function gs_get_magic_quotes_gpc(){
-	return false;
-}
-
-/* ?> */

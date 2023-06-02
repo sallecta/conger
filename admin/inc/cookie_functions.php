@@ -1,12 +1,10 @@
 <?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
-
 /**
  * Cookie Functions
  *
  * @package GetSimple
- * @subpackage Cookie-Functions
+ * @subpackage Login
  */
-
 require_once(GSADMININCPATH.'configuration.php');
 
 
@@ -45,11 +43,9 @@ function gs_unsetcookie($id){
  * @uses $SALT
  * @uses $cookie_time
  * @uses $cookie_name
- *
- *
  */
 function create_cookie() {
-	global $USR,$SALT,$cookie_time,$cookie_name;
+  global $USR,$SALT,$cookie_time,$cookie_name;
   $saltUSR    = sha1($USR.$SALT);
   $saltCOOKIE = sha1($cookie_name.$SALT);
 
@@ -67,12 +63,12 @@ function create_cookie() {
  */
 function kill_cookie($identifier) {
   global $SALT,$cookie_time;
-	$saltCOOKIE = sha1($identifier.$SALT);
+  $saltCOOKIE = sha1($identifier.$SALT);
  	gs_unsetcookie('GS_ADMIN_USERNAME');  
-	if (isset($_COOKIE[$saltCOOKIE])) {
+  if (isset($_COOKIE[$saltCOOKIE])) {
 		$_COOKIE[$saltCOOKIE] = FALSE;
 		gs_unsetcookie($saltCOOKIE);
-	}
+  }
 }
 
 /**
@@ -88,12 +84,12 @@ function kill_cookie($identifier) {
  */
 function cookie_check() {
 	global $USR,$SALT,$cookie_name;
-	$saltUSR      = sha1($USR.$SALT);
-	$saltCOOKIEID = sha1($cookie_name.$SALT);
-	if(isset($_COOKIE[$saltCOOKIEID]) && $_COOKIE[$saltCOOKIEID] === $saltUSR) {
-		return true; // Cookie proves logged in status.
-	} else {
-		return false; 
+	$saltUSR = $USR.$SALT;
+	$saltCOOKIE = sha1($cookie_name.$SALT);
+	if(isset($_COOKIE[$saltCOOKIE])&&$_COOKIE[$saltCOOKIE]==sha1($saltUSR)) {
+		return TRUE; // Cookie proves logged in status.
+	} else { 
+		return FALSE; 
 	}
 }
 
@@ -110,8 +106,8 @@ function login_cookie_check() {
 	if(cookie_check()) {
 		create_cookie();
 	} else {
-		$qstring      = filter_queryString(explode(',',getDef('GSLOGINQSALLOWED')));
-		$redirect_url = $cookie_login.'?redirect='.myself(false).'?'.$qstring;
+		$qstring = filter_queryString(array('id'));
+		$redirect_url = $cookie_login.'?redirect='.myself(FALSE).'?'.$qstring; // @todo reimplement safely, removed redirect getter #1300
 		redirect($redirect_url);
 	}
 }
@@ -126,9 +122,9 @@ function login_cookie_check() {
  * @return bool
  */
 function get_cookie($cookie_name) {
-	if(cookie_check($cookie_name) === true) { 
+	if(cookie_check($cookie_name)==TRUE) { 
 		return $_COOKIE[$cookie_name];
 	}
 }
 	
-/* ?> */
+?>
