@@ -1,3 +1,5 @@
+fork of GetSimple CMS
+# GetSimple readme
 GetSimple Content Management System
 =========================================
 
