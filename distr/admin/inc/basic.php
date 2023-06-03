@@ -685,13 +685,16 @@ function i18n_merge_impl($plugin, $lang, &$globali18n) {
  * @param string $text
  * @return string
  */
-function safe_slash_html($text) {
-	if (get_magic_quotes_gpc()==0) {
+function safe_slash_html($text)
+{
+	if ( function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()==0)
+	{
 		$text = addslashes(htmlspecialchars($text, ENT_QUOTES, 'UTF-8'));
-	} else {
+	}
+	else
+	{
 		$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 	}
-
 	return xmlFilterChars($text);
 }
 
