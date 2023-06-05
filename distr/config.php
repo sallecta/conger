@@ -61,7 +61,7 @@ define('GSDONOTPING', 1);
 #define('GSEDITOROPTIONS', '');
 
 # Set email from address
-#define('GSFROMEMAIL', 'noreply@get-simple.info');
+#define('GSFROMEMAIL', 'noreply@example.org');
 
 # Autosave within edit.php. Value is the autosave interval in seconds
 #define('GSAUTOSAVE', 900);

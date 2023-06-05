@@ -1,14 +1,5 @@
 <?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
-/**
- * Theme Functions
- *
- * These functions are used within the front-end of a GetSimple installation
- *
- * @link http://get-simple.info/docs/theme-codex/
- *
- * @package GetSimple
- * @subpackage Theme-Functions
- */
+
 
 /**
  * Get Page Content

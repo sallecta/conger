@@ -118,12 +118,12 @@ function gs_anonymousdata() {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_TIMEOUT, 4);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_URL, 'http://get-simple.info/api/anonymous/?data='.urlencode($xml));
+			curl_setopt($ch, CURLOPT_URL, 'http://example.org/api/anonymous/?data='.urlencode($xml));
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: text/xml'));
 			$result = curl_exec($ch);
 			curl_close($ch);
 		} else {
-			sendmail('chris@get-simple.info','Anonymous Data Submission',$xml);
+			sendmail('chris@example.org','Anonymous Data Submission',$xml);
 		}
 		
 	}

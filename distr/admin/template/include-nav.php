@@ -5,7 +5,7 @@
  * @package GetSimple
  */
  
-$debugInfoUrl = 'http://get-simple.info/docs/debugging';
+$debugInfoUrl = 'http://example.org/docs/debugging';
 
 if (cookie_check()) { 
 	echo '<ul id="pill"><li class="leftnav"><a href="logout.php" accesskey="'. find_accesskey(i18n_r('TAB_LOGOUT')).'" >'.i18n_r('TAB_LOGOUT').'</a></li>';

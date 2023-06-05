@@ -6,7 +6,7 @@
  *
  * @package GetSimple
  * @subpackage Backups
- * @link http://get-simple.info/docs/restore-page-backup
+ * @link http://example.org/docs/restore-page-backup
  */
  
 // Setup inclusions

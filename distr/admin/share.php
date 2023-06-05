@@ -33,16 +33,16 @@ if ($term = '{SHARE}') {
 			
 			<div style="float:left;width:65px;" >
 				<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-				<g:plusone size="tall" href="http://get-simple.info/" ></g:plusone>
+				<g:plusone size="tall" href="http://example.org/" ></g:plusone>
 			</div>
 			
 			<div style="float:left;width:68px;" >	
-				<a href="//twitter.com/share" class="twitter-share-button" data-url="http://get-simple.info/" data-text="Check out GetSimple CMS!" data-count="vertical" data-via="get_simple" data-related="buydealsin:Daily Deals">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+				<a href="//twitter.com/share" class="twitter-share-button" data-url="http://example.org/" data-text="Check out GetSimple CMS!" data-count="vertical" data-via="get_simple" data-related="buydealsin:Daily Deals">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 			</div>
 			
 			<div style="float:left;width:55px;" >	
 				<script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
-				<script type="IN/Share" data-url="get-simple.info" data-counter="top"></script>
+				<script type="IN/Share" data-url="example.org" data-counter="top"></script>
 			</div>
 			
 			<div style="clear:both"></div>

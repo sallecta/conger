@@ -15,12 +15,12 @@
 	  		}
       		
       		if(!isAuthPage()){ ?>
-	      		<p>&copy; 2009-<?php echo date('Y'); ?> <a href="http://get-simple.info/" target="_blank" >GetSimple CMS</a>
+	      		<p>&copy; 2009-<?php echo date('Y'); ?> <a href="http://example.org/" target="_blank" >GetSimple CMS</a>
 	      		<?php echo '&ndash; '. i18n_r('VERSION') .' '. $site_version_no;  ?>
 	      		</p> 
       		</div> <!-- end .footer-left -->
 	      	<div class="gslogo" >
-		      	<a href="http://get-simple.info/" target="_blank" ><img src="template/images/getsimple_logo.gif" alt="GetSimple Content Management System" /></a>
+		      	<a href="http://example.org/" target="_blank" ><img src="template/images/getsimple_logo.gif" alt="GetSimple Content Management System" /></a>
 		    </div>
 	      	<div class="clear"></div>
 	      	<?php

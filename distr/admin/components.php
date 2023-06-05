@@ -6,7 +6,7 @@
  *
  * @package GetSimple
  * @subpackage Components
- * @link http://get-simple.info/docs/what-are-components
+ * @link http://example.org/docs/what-are-components
  */
  
 # setup inclusions

@@ -7,7 +7,7 @@ GetSimple Content Management System
 GetSimple CMS is a flatfile CMS that works fast and efficient and has 
 the best UI around.
 
-Official Website - http://get-simple.info/
+Official Website - http://example.org/
 
 GetSimple CMS was developed by Chris Cagle [ http://chriscagle.me ] and 
 is now passionately supported and developed by a loving community.
@@ -19,13 +19,13 @@ is now passionately supported and developed by a loving community.
 This software package is licensed under the GNU GENERAL PUBLIC LICENSE v3. 
 LICENSE.txt is located within this download's zip file
 
-It would be great if you would link back to get-simple.info if you use it.
+It would be great if you would link back to example.org if you use it.
 
 
 REQUIREMENTS: 
 -----------------------------------
 
-http://get-simple.info/docs/requirements
+http://example.org/docs/requirements
 
 ### Build Requirements ###
 
@@ -51,13 +51,13 @@ To disable this warning see gsconfig definition GSNOAPACHECHECK
 INSTALLATION:
 -----------------------------------
 
-Please see: http://get-simple.info/docs/installation
+Please see: http://example.org/docs/installation
 
 
 UPGRADING
 -----------------------------------
 
-Please see: http://get-simple.info/docs/upgrading
+Please see: http://example.org/docs/upgrading
 
 
 DISCLAIMER:
@@ -67,8 +67,8 @@ While GetSimple strives to be a secure and stable application, we simply cannot
 be held liable for any information loss, corruption or anything else that may 
 happen to your site while it is using the our software. If you find a bug 
 or security hole, please contact someone in the forums at 
-http://get-simple.info/forum
+http://example.org/forum
 
 
 ______________________________________________
-GetSimple CMS - http://get-simple.info/
+GetSimple CMS - http://example.org/
