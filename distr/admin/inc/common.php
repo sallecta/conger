@@ -170,6 +170,7 @@ if (file_exists($thisfilew)) {
 	$TEMPLATE = $dataw->TEMPLATE;
 	$PRETTYURLS = $dataw->PRETTYURLS;
 	$PERMALINK = $dataw->PERMALINK;
+	$CHECKUPDATES = $dataw->CHECKUPDATES;
 } else {
 	$SITENAME = '';
 	//$SITEURL = '';
@@ -259,7 +260,7 @@ if(isset($TIMEZONE) && function_exists('date_default_timezone_set') && ($TIMEZON
 /**
  * Variable Globalization
  */
-global $SITENAME, $SITEURL, $TEMPLATE, $TIMEZONE, $LANG, $SALT, $i18n, $USR, $PERMALINK, $GSADMIN, $components, $EDTOOL, $EDOPTIONS, $EDLANG, $EDHEIGHT;
+global $CHECKUPDATES, $SITENAME, $SITEURL, $TEMPLATE, $TIMEZONE, $LANG, $SALT, $i18n, $USR, $PERMALINK, $GSADMIN, $components, $EDTOOL, $EDOPTIONS, $EDLANG, $EDHEIGHT;
 
 /** grab authorization and security data */
 if (defined('GSUSECUSTOMSALT')) {

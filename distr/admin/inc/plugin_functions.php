@@ -100,24 +100,34 @@ read_pluginsxml();        // get the live plugins into $live_plugins array
 if(!is_frontend()) create_pluginsxml();      // check that plugins have not been removed or added to the directory
 
 // load each of the plugins
-foreach ($live_plugins as $file=>$en) {
-  $pluginsLoaded=true;
-  # debugLog("plugin: $file" . " exists: " . file_exists(GSPLUGINPATH . $file) ." enabled: " . $en); 
-  if ($en=='true' && file_exists(GSPLUGINPATH . $file)){
-	require_once(GSPLUGINPATH . $file);
-  } else {
-	if(!is_frontend() and get_filename_id() == 'plugins'){
-	  $apiback = get_api_details('plugin', $file, getDef('GSNOPLUGINCHECK',true));
-	  $response = json_decode($apiback);
-	  if ($response and $response->status == 'successful') {
-		register_plugin( pathinfo_filename($file), $file, 'disabled', $response->owner, '', i18n_r('PLUGIN_DISABLED'), '', '');
-	  } else {
-		register_plugin( pathinfo_filename($file), $file, 'disabled', 'Unknown', '', i18n_r('PLUGIN_DISABLED'), '', '');
-	  }
-	} else {
-		register_plugin( pathinfo_filename($file), $file, 'disabled', 'Unknown', '', i18n_r('PLUGIN_DISABLED'), '', '');
-	}  
-  }
+foreach ($live_plugins as $file=>$en)
+{
+	$pluginsLoaded=true;
+	# debugLog("plugin: $file" . " exists: " . file_exists(GSPLUGINPATH . $file) ." enabled: " . $en); 
+	if ($en=='true' && file_exists(GSPLUGINPATH . $file))
+	{
+		require_once(GSPLUGINPATH . $file);
+	}
+	else
+	{
+		if(!is_frontend() and get_filename_id() == 'plugins')
+		{
+			$apiback = get_api_details('plugin', $file, getDef('GSNOPLUGINCHECK',true));
+			$response = json_decode($apiback);
+			if ($response and $response->status == 'successful')
+			{
+				register_plugin( pathinfo_filename($file), $file, 'disabled', $response->owner, '', i18n_r('PLUGIN_DISABLED'), '', '');
+			}
+			else
+			{
+				register_plugin( pathinfo_filename($file), $file, 'disabled', 'Unknown', '', i18n_r('PLUGIN_DISABLED'), '', '');
+			}
+		}
+		else
+		{
+			register_plugin( pathinfo_filename($file), $file, 'disabled', 'Unknown', '', i18n_r('PLUGIN_DISABLED'), '', '');
+		}  
+	}
 }
 
 /**

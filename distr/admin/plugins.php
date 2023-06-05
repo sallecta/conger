@@ -48,6 +48,7 @@ foreach ($pluginfiles as $fi) {
 			$cls_Disabled = 'hidden';
 			$trclass='disabled';
 		}
+		
 		$api_data = json_decode(get_api_details('plugin', $fi, getDef('GSNOPLUGINCHECK',true)));
 		$updatelink = null;
 		if (is_object($api_data) && $api_data->status == 'successful') {

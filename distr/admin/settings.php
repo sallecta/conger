@@ -89,6 +89,14 @@ if(isset($_POST['submitted'])) {
 	} else {
 		$PRETTYURLS = '';
 	}
+	if(isset($_POST['checkupdates']))
+	{
+		$CHECKUPDATES = $_POST['checkupdates'];
+	}
+	else
+	{
+		$CHECKUPDATES = '';
+	}
    
 	# user-specific fields
 	if(isset($_POST['user'])) { 
@@ -157,6 +165,7 @@ if(isset($_POST['submitted'])) {
 		$note->addCData($TEMPLATE);
 		$xmls->addChild('PRETTYURLS', $PRETTYURLS);
 		$xmls->addChild('PERMALINK', var_out($PERMALINK));
+		$xmls->addChild('CHECKUPDATES', var_out($CHECKUPDATES));
 		
 		exec_action('settings-website');
 		
@@ -178,6 +187,7 @@ if(isset($_POST['submitted'])) {
 # are any of the control panel checkboxes checked?
 if ($HTMLEDITOR != '' ) { $editorchck = 'checked'; }
 if ($PRETTYURLS != '' ) { $prettychck = 'checked'; }
+if ($CHECKUPDATES != '' ) { $checkupdates = 'checked'; }
 
 # get all available language files
 if ($LANG == ''){ $LANG = 'en_US'; }
@@ -222,6 +232,8 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('GENERAL_SETTINGS'));
 		<div class="clear"></div>
 		
 		<p class="inline" ><input name="prettyurls" id="prettyurls" type="checkbox" value="1" <?php echo $prettychck; ?>  /> &nbsp;<label for="prettyurls" ><?php i18n('USE_FANCY_URLS');?></label></p>
+		
+		<p class="inline" ><input name="checkupdates" id="checkupdates" type="checkbox" value="1" <?php echo $checkupdates; ?>  /> &nbsp;<label for="checkupdates" ><?php i18n('CHECK_UPDATES');?></label></p>
 				
 		<div class="leftsec">
 			<p><label for="permalink"  class="clearfix"><?php i18n('PERMALINK');?>: <span class="right"><a href="http://example.org/docs/pretty_urls" target="_blank" ><?php i18n('MORE');?></a></span></label><input class="text" name="permalink" id="permalink" type="text" placeholder="%parent%/%slug%/" value="<?php if(isset($PERMALINK)) { echo var_out($PERMALINK); } ?>" /></p>

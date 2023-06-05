@@ -897,8 +897,15 @@ function get_pages_menu_dropdown($parentitem, $menu,$level) {
  */
 
 function get_api_details($type='core', $args=null, $cached = false) {
-	GLOBAL $debugApi,$nocache,$nocurl;
+	GLOBAL $debugApi,$nocache,$nocurl,$CHECKUPDATES;
 
+	if( $CHECKUPDATES!='1' )
+	{
+		debug_api_details('CHECKUPDATES setting disabled (-2)');
+		$data = '{"status":-2}';
+		return $data;
+	}
+	
 	include(GSADMININCPATH.'configuration.php');
 
 	if($cached){
@@ -938,20 +945,22 @@ function get_api_details($type='core', $args=null, $cached = false) {
 
 	$cacheAge = file_exists(GSCACHEPATH.$cachefile) ? filemtime(GSCACHEPATH.$cachefile) : '';
 
-
 	// api disabled and no cache file exists
 	if($cached && empty($cacheAge)){
 		debug_api_details('cache file does not exist - ' . GSCACHEPATH.$cachefile);
 		debug_api_details();
 		return '{"status":-1}';
 	}
-
 	if (!$nocache && !empty($cacheAge) && (time() - $cacheExpire) < $cacheAge ) {
 		debug_api_details('cache file time - ' . $cacheAge . ' (' . (time() - $cacheAge) . ')' );
 		# grab the api request from the cache
 		$data = file_get_contents(GSCACHEPATH.$cachefile);
+		echo "cache data is $data]]";
 		debug_api_details('returning cache file - ' . GSCACHEPATH.$cachefile);
-	} else {	
+	}
+	else
+	{
+		echo "api call!!!! data is $data]]";
 		# make the api call
 		if (function_exists('curl_init') && function_exists('curl_exec') && !$nocurl) {
 
@@ -1044,7 +1053,7 @@ function get_api_details($type='core', $args=null, $cached = false) {
 		debug_api_details();		
 		return $data;
 	}
-	debug_api_details();	
+	debug_api_details();
 	return $data;
 }
 

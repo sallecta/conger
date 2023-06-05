@@ -51,6 +51,10 @@ elseif ($verstatus == "2")
 {
 	$ver = '<span class="INFOmsg" ><b>' . $site_version_no . "</b><br /> " . i18n_r("BETA") . "</span>";
 }
+elseif ($verstatus == "-2")
+{
+	$ver = '<span class="INFOmsg" ><b>' . $site_version_no . "</b><br /> " . i18n_r("CHECK_UPDATES_OFF") . "</span>";
+}
 else
 {
 	$ver = '<span class="WARNmsg" ><b>' . $site_version_no . "</b><br />" . i18n_r("CANNOT_CHECK") . '<br /><a href="http://example.org/download">' . i18n_r("DOWNLOAD") . "</a></span>";
