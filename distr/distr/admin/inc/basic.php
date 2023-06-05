@@ -410,62 +410,59 @@ if(!function_exists('in_arrayi')) {
 	}
 }
 
-/**
- * Creates Standard URL for Pages
- *
- * Default function to create the correct url structure for each front-end page
- *
- * @since 2.0
- * @uses $PRETTYURLS
- * @uses $SITEURL
- * @uses $PERMALINK
- * @uses tsl
- *
- * @param string $slug
- * @param string $parent
- * @param string $type Default is 'full', alternative is 'relative'
- * @return string
- */
-function find_url($slug, $parent, $type='full') {
+function find_url($a_slug, $a_parent, $a_type='full')
+{
 	global $PRETTYURLS;
 	global $SITEURL;
 	global $PERMALINK;
 				
-	if ($type == 'full') {
-		$full = $SITEURL;
-	} elseif($type == 'relative') {
+	if ($a_type == 'full')
+	{
+		$full = $SITEURL.'/';
+	}
+	elseif($a_type == 'relative')
+	{
 		$s = pathinfo(htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES));
 		$full = $s['dirname'] .'/';
 		$full = str_replace('//', '/', $full);
-	} else {
+	}
+	else
+	{
 		$full = '/';
 	}
-	
-	if ($parent != '') {
-		$parent = tsl($parent); 
-	}	
-
-  if ($PRETTYURLS == '1') {      
-    if ($slug != 'index'){  
-    	$url = $full . $parent . $slug . '/';
-    } else {
-    	$url = $full;
-    }   
-  } else {
-		if ($slug != 'index'){ 
-    	$url = $full .'index.php?id='.$slug;
-    } else {
-    	$url = $full;
-    }
-  }
-  
-	if (trim($PERMALINK) != '' && $slug != 'index'){
-		$plink = str_replace('%parent%/', $parent, $PERMALINK);
-		$plink = str_replace('%parent%', $parent, $plink);
-		$plink = str_replace('%slug%', $slug, $plink);
+	if ($a_parent != '')
+	{
+		$a_parent = tsl($a_parent); 
+	}
+	if ($PRETTYURLS == '1')
+	{
+		if ($a_slug != 'index')
+		{  
+			$url = $full . $a_parent . $a_slug . '/';
+		}
+		else
+		{
+			$url = $full;
+		}
+	}
+	else
+	{
+		if ($a_slug != 'index')
+		{
+			$url = $full .'index.php?id='.$a_slug;
+		}
+		else
+		{
+			$url = $full;
+		}
+	}
+	if (trim($PERMALINK) != '' && $a_slug != 'index')
+	{
+		$plink = str_replace('%a_parent%/', $a_parent, $PERMALINK);
+		$plink = str_replace('%a_parent%', $a_parent, $plink);
+		$plink = str_replace('%a_slug%', $a_slug, $plink);
 		$url = $full . $plink;
 	}
-
 	return (string)$url;
 }
 
