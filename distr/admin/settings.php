@@ -97,6 +97,14 @@ if(isset($_POST['submitted'])) {
 	{
 		$CHECKUPDATES = '';
 	}
+	if(isset($_POST['page_time_stamp']))
+	{
+		$PAGE_TIME_STAMP = $_POST['page_time_stamp'];
+	}
+	else
+	{
+		$PAGE_TIME_STAMP = '';
+	}
    
 	# user-specific fields
 	if(isset($_POST['user'])) { 
@@ -166,6 +174,7 @@ if(isset($_POST['submitted'])) {
 		$xmls->addChild('PRETTYURLS', $PRETTYURLS);
 		$xmls->addChild('PERMALINK', var_out($PERMALINK));
 		$xmls->addChild('CHECKUPDATES', var_out($CHECKUPDATES));
+		$xmls->addChild('PAGE_TIME_STAMP', var_out($PAGE_TIME_STAMP));
 		
 		exec_action('settings-website');
 		
@@ -188,6 +197,7 @@ if(isset($_POST['submitted'])) {
 if ($HTMLEDITOR != '' ) { $editorchck = 'checked'; }
 if ($PRETTYURLS != '' ) { $prettychck = 'checked'; }
 if ($CHECKUPDATES != '' ) { $checkupdates = 'checked'; }
+if ($PAGE_TIME_STAMP != '' ) { $page_time_stamp = 'checked'; }
 
 # get all available language files
 if ($LANG == ''){ $LANG = 'en_US'; }
@@ -234,6 +244,8 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('GENERAL_SETTINGS'));
 		<p class="inline" ><input name="prettyurls" id="prettyurls" type="checkbox" value="1" <?php echo $prettychck; ?>  /> &nbsp;<label for="prettyurls" ><?php i18n('USE_FANCY_URLS');?></label></p>
 		
 		<p class="inline" ><input name="checkupdates" id="checkupdates" type="checkbox" value="1" <?php echo $checkupdates; ?>  /> &nbsp;<label for="checkupdates" ><?php i18n('CHECK_UPDATES');?></label></p>
+		
+		<p class="inline" ><input name="page_time_stamp" id="page_time_stamp" type="checkbox" value="1" <?php echo $page_time_stamp; ?>  /> &nbsp;<label for="page_time_stamp" ><?php i18n('PAGE_TIME_STAMP');?></label></p>
 				
 		<div class="leftsec">
 			<p><label for="permalink"  class="clearfix"><?php i18n('PERMALINK');?>: <span class="right"><a href="http://example.org/docs/pretty_urls" target="_blank" ><?php i18n('MORE');?></a></span></label><input class="text" name="permalink" id="permalink" type="text" placeholder="%parent%/%slug%/" value="<?php if(isset($PERMALINK)) { echo var_out($PERMALINK); } ?>" /></p>

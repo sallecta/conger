@@ -23,15 +23,14 @@ register_plugin(
 	'theme', 										# Page type of plugin
 	'renovation_show'  								# Function that displays content
 );
-
 $hidemenu = true;
-
 # hooks
 # enable side menu is theme is renovation or on theme page and enabling renovation, handle plugin exec before global is set
 if(	!$hidemenu || (
 	( $TEMPLATE == "Renovation" || 	( get_filename_id() == 'theme' && isset($_POST['template']) && $_POST['template'] == 'Renovation') ) &&
 	!( $TEMPLATE == "Renovation" && get_filename_id() == 'theme' && isset($_POST['template']) && $_POST['template'] != 'Renovation') )
-) {
+)
+{
 	add_action('theme-sidebar','createSideMenu',array($thisfile_renov, i18n_r($thisfile_renov.'/RENOVATION_TITLE'))); 
 }
 

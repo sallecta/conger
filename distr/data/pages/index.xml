@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Tue, 06 Jun 2023 17:39:55 -0400</pubDate><title><![CDATA[Home]]></title><url><![CDATA[index]]></url><meta><![CDATA[getsimple, easy, content management system]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Home]]></menu><menuOrder><![CDATA[1]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[]]></parent><content><![CDATA[&lt;p&gt;Con[tentMane]ger&#039;s web site.&lt;/p&gt;
+<item><pubDate>Tue, 06 Jun 2023 17:39:55 -0400</pubDate><title>Home</title><url>index</url><meta>getsimple, easy, content management system</meta><metad></metad><menu>Home</menu><menuStatus>Y</menuStatus><template>template.php</template><parent></parent><content>&amp;lt;p&amp;gt;Con[tentMane]ger&amp;#039;s web site.&amp;lt;/p&amp;gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-css&quot;&gt;#header h1 a { 
+&amp;lt;pre&amp;gt;&amp;lt;code class=&amp;quot;language-css&amp;quot;&amp;gt;#header h1 a { 
 	display: block; 
 	width: 300px; 
 	height: 80px; 
-}&lt;/code&gt;&lt;/pre&gt;
-]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author></item>
+}&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
+</content><private></private><author>admin</author><menuOrder><![CDATA[3]]></menuOrder></item>

@@ -10,6 +10,10 @@
  */
 
 
+define('APP',1);
+require_once(dirname(dirname(dirname(__FILE__))).'/modules/paths.php');
+require_once(dirname(dirname(dirname(__FILE__))).'/modules/action.php');
+
 /**
  * Headers
  */
@@ -154,8 +158,6 @@ $load['plugin'] = (isset($load['plugin'])) ? $load['plugin'] : '';
 
 
 
-define('APP',1);
-require_once(dirname(dirname(dirname(__FILE__))).'/modules/paths.php');
 $SITEURL=paths::client(dirname(dirname(__FILE__)));
 /**
  * Pull data from storage

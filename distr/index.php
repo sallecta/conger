@@ -40,9 +40,9 @@
 
 /* end */
 # Include common.php
-include($GSADMIN.'/inc/common.php');
+require($GSADMIN.'/inc/common.php');
 # Hook to load page Cache
-exec_action('index-header');
+action::name('index-header');
 
 # get page id (url slug) that is being passed via .htaccess mod_rewrite
 if (isset($_GET['id'])){ 
@@ -63,22 +63,28 @@ $user_created_404 = GSDATAPAGESPATH . '404.xml';
 $data_index = null;
 
 // apply page data if page id exists
-if (isset($pagesArray[$id])) {
+if (isset($pagesArray[$id]))
+{
 	$data_index = getXml(GSDATAPAGESPATH . $id . '.xml');
-} 
-
+}
 // filter to modify data_index obj
 $data_index = exec_filter('data_index',$data_index);
 
 // page not found handling
-if(!$data_index) {	
-	if (isset($pagesArray['404'])) {
+if(!$data_index)
+{
+	if (isset($pagesArray['404']))
+	{
 		// use user created 404 page
 		$data_index = getXml($user_created_404);		
-	} elseif (file_exists($file_404))	{
+	}
+	elseif (file_exists($file_404))
+	{
 		// default 404
 		$data_index = getXml($file_404);
-	} else {
+	}
+	else
+	{
 		// fail over
 		redirect('404');
 	} 	

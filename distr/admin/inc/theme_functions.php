@@ -186,21 +186,24 @@ function get_parent($echo=true) {
  * @return string Echos or returns based on param $echo
  */
 function get_page_date($i = "l, F jS, Y - g:i A", $echo=true) {
-	global $date;
+	global $date,$dataw;
 	global $TIMEZONE;
-	if ($TIMEZONE != '') {
-		if (function_exists('date_default_timezone_set')) {
+	if ($TIMEZONE != '')
+	{
+		if (function_exists('date_default_timezone_set'))
+		{
 			date_default_timezone_set($TIMEZONE);
 		}
 	}
-	
-	$myVar = date($i, strtotime($date));
-	
-	if ($echo) {
-		echo $myVar;
-	} else {
-		return $myVar;
+	if ((string)$dataw->PAGE_TIME_STAMP == '1')
+	{
+		$myVar = date($i, strtotime($date));
 	}
+	else
+	{
+		$myVar='-';
+	}
+	if ($echo) { echo $myVar;} else { return $myVar; }
 }
 
 /**

@@ -9,7 +9,6 @@
 *****************************************************/
 
 $pagesArray = array();
-
 add_action('index-header','getPagesXmlValues',array(false));      // make $pagesArray available to the front 
 add_action('header', 'getPagesXmlValues',array(get_filename_id() != 'pages'));  // make $pagesArray available to the back
 add_action('page-delete', 'create_pagesxml',array(true));         // Create pages.array if page deleted
@@ -191,13 +190,11 @@ function getChildrenMulti($page,$options=array()){
  * @since 3.1
  *  
  */
-function getPagesXmlValues($chkcount=false){
-  global $pagesArray;
-
-   // debugLog(__FUNCTION__.": chkcount - " .(int)$chkcount);
-   
-   // if page cache not load load it
-   if(!$pagesArray){
+function getPagesXmlValues($chkcount=false)
+{
+	global $pagesArray;
+	// if page cache not load load it
+	if(!$pagesArray){
 		$pagesArray=array();
 		$file=GSDATAOTHERPATH."pages.xml";
 		if (file_exists($file)){

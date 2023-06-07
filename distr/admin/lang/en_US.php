@@ -220,6 +220,7 @@ $i18n = array(
 "LANGUAGE"					=>	"Language",
 "USE_FANCY_URLS"		=>	"Use Fancy URLs - <b style=\"font-weight:100\">Requires that your host has <code>mod_rewrite</code> enabled</b>",
 "CHECK_UPDATES"		=>	"Check updates - <b style=\"font-weight:100\">Request external site for new version of CMS and plugins</b>",
+"PAGE_TIME_STAMP"		=>	"Page time stamp - <b style=\"font-weight:100\">Show published time in pages</b>",
 "ENABLE_HTML_ED"		=>	"<b>Enable the HTML editor</b>",
 "WARN_EMAILINVALID"	=>	"WARNING: This email address does not look valid!",
 "ONLY_NEW_PASSWORD"	=>	"Only provide a password below if you want to change your current one",

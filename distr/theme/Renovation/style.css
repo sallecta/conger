@@ -56,7 +56,7 @@ header .breadcrumbs a:hover {
 	text-decoration:underline;
 }
 #index header .breadcrumbs {
-	display:none; /* no reason to have breadcrumbs on homepage */
+	display:hidden; /* no reason to have breadcrumbs on homepage */
 } 
 
 /* HEADER: logo */
@@ -364,4 +364,21 @@ footer a:link, footer a:visited {
 footer a:hover, footer a:focus {
 	color:#555;
 	text-decoration:underline;
+}
+/* btns */
+
+.btn_adm, a.btn_adm
+{
+	display: block;
+	border-radius: 5px;
+	background: #2f5faa;
+	padding: 0.5rem;
+	width: fit-content;
+	color: white;
+	text-decoration:none;
+}
+.btn_adm:hover
+{
+	background: #5b89bf;
+	cursor:pointer;
 }

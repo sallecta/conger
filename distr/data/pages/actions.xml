@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Wed, 07 Jun 2023 17:36:08 +0300</pubDate><title><![CDATA[Actions]]></title><url><![CDATA[actions]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Actions]]></menu><menuOrder><![CDATA[1]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[api]]></parent><content><![CDATA[&lt;h2&gt;action::name / exec_action&lt;/h2&gt;
+
+&lt;p&gt;Creates new action.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;action::name(action_name);&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Or&lt;/p&gt;
+
+&lt;p&gt;exec_action&lt;code&gt;(action_name, added_function, added_function_array_args);&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2&gt;action::add / add_action&lt;/h2&gt;
+
+&lt;p&gt;Adds function to known action.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;action::add(action_name, added_function, added_function_args_array);&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Or&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;add_action(action_name, added_function, added_function_args_array);&lt;/code&gt;&lt;/p&gt;
+]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author></item>
