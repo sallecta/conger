@@ -78,50 +78,90 @@ header #logo:focus {
 	text-decoration:none;
 }
 
-/* HEADER: navigation */
-header nav {
-	position:absolute;
-	top:30px;
-	right:0;
-	text-shadow: 1px 1px 0px rgba(0,0,0, .3);
-}
-header nav ul {
-	list-style:none;	
-	float:right;
-}	
-header nav li {
-	display:block;
-	float:left;
-	margin:0 0 0 10px;
-}
-header nav li a {
-	display:block;
-	font-size:13px;
-	padding:5px 15px;
-	text-transform:uppercase;
-	font-weight:bold;
-}
-header nav li a:link, 
-header nav li a:visited {
-	color:#eee;
-	text-decoration:none;
-}	
-header nav li a:hover, 
-header nav li a:focus {
-	color:#FFF;
-	text-decoration:none;
-}
-header nav li.current a {
-	color:#FFF;
-	background:#7096B6;
-	background:rgba(255,255,255,.2);
-	text-decoration:none;
-	border-radius:40px;
-	-moz-border-radius:40px;
-	-khtml-border-radius:40px;
-	-webkit-border-radius:40px;
+/* HEADER: */
+
+/* Nested menu */
+/*
+thanks to
+https://codepen.io/una/pen/pVvXmK
+https://css-tricks.com/solved-with-css-dropdown-menus/
+https://codepen.io/una
+Una Kravets
+*/
+.menudt a {
+  text-decoration: none;
 }
 
+.menudt {
+	top: 15px;
+	position: absolute;
+	right: 0;
+}
+
+.menudt ul {
+  background: transparent;
+	list-style: none;
+	margin: 0;
+	padding-left: 0;
+}
+
+.menudt li {
+	color: #fff;
+	background: transparent;
+	display: block;
+	float: left;
+	padding: 1rem;
+	position: relative;
+	text-decoration: none;
+	transition-duration: 0.2s;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 5px;
+}
+.menudt .current {
+	background: #748db3;
+}
+  
+.menudt li a {
+  color: #fff;
+}
+
+.menudt li:hover,
+.menudt li:focus-within {
+	background: #8798c1;
+	cursor: pointer;
+	z-index:1;
+}
+
+.menudt li:focus-within a {
+  outline: none;
+}
+
+.menudt ul li ul {
+	background: #0b101c85;
+	visibility: hidden;
+  opacity: 0;
+  min-width: 5rem;
+	position: absolute;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+	left: 0;
+  display: none;
+  border-radius: 5px;
+}
+
+.menudt ul li:hover > ul,
+.menudt ul li:focus-within > ul,
+.menudt ul li ul:hover,
+.menudt ul li ul:focus {
+   visibility: visible;
+   opacity: 1;
+   display: block;
+}
+
+.menudt ul li ul li {
+	clear: both;
+}
 
 /* BODY CONTENT */
 article {

@@ -158,17 +158,17 @@ function delete_upload($id, $path = "") {
  *
  * @returns deleted count on success, null if there are any errors
  */
-function delete_cache() { 
+function delete_cache()
+{
+	exec_action('cache-delete');
 	$cachepath = GSCACHEPATH;
-	
-	$cnt = 0;	
+	$cnt = 0;
 	$success = null;
-	
-	foreach(glob($cachepath.'*.txt') as $file){
+	foreach(glob($cachepath.'*.txt') as $file)
+	{
 		if(unlink($file)) $cnt++;
 		else $success = false;
-	}	
-
+	}
 	if($success == false) return null;
 	return $cnt;
 } 

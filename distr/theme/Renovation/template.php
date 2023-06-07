@@ -10,7 +10,7 @@
 
 # Get this theme's settings based on what was entered within its plugin. 
 # This function is in functions.php 
-$innov_settings = Innovation_Settings();
+$renov_settings = Renovation_Settings();
 
 # Include the header template
 include('header.inc.php'); 

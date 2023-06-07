@@ -3,19 +3,19 @@
 *
 * @File: 			functions.php
 * @Package:		GetSimple
-* @Action:		Innovation theme for GetSimple CMS
+* @Action:		Renovation theme for GetSimple CMS
 *
 *****************************************************/
 
 /**
- * Innovation Parent Link
+ * Renovation Parent Link
  *
  * This creates a link for a parent for the breadcrumb feature of this theme
  *
  * @param string $name - This is the slug of the link you want to create
  * @return string
  */
-function Innovation_Parent_Link($name) {
+function Renovation_Parent_Link($name) {
 	$file = GSDATAPAGESPATH . $name .'.xml';
 	if (file_exists($file)) {
 		$p = getXML($file);
@@ -27,14 +27,14 @@ function Innovation_Parent_Link($name) {
 }
 
 /**
- * Innovation Settings
+ * Renovation Settings
  *
  * This defines variables based on the theme plugin's settings
  *
  * @return bool
  */
-function Innovation_Settings() {
-	$file = GSDATAOTHERPATH . 'InnovationSettings.xml';
+function Renovation_Settings() {
+	$file = GSDATAOTHERPATH . 'RenovationSettings.xml';
 	if (file_exists($file)) {
 		$p = getXML($file);
 		return $p;

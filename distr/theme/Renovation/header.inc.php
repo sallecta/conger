@@ -41,23 +41,21 @@
 	<header>
 		<div class="header">
 			<div class="wrapper">
-				
 				<!-- logo/sitename -->
 				<a href="<?php get_site_url(); ?>" id="logo" ><?php get_site_name(); ?></a>
-				
-				<!-- main navigation -->
-				<nav id="main-nav">
+				<!-- new nav -->
+				<div class="menudt">
 					<ul>
-						<?php get_navigation(get_page_slug(FALSE)); ?>
+						<?php get_nested_navigation(return_page_slug()); ?>
 					</ul>
-				</nav>
+				</div>
 			</div>
 		</div>
 		
 		<!-- breadcrumbs: only show when NOT on homepage -->
 		<p class="breadcrumbs" >
 			<span class="wrapper">
-				<a href="<?php get_site_url(); ?>">Home</a> &nbsp;&nbsp;&#149;&nbsp;&nbsp; <?php Innovation_Parent_Link(get_parent(FALSE)); ?> <b><?php get_page_clean_title(); ?></b>
+				<a href="<?php get_site_url(); ?>">Home</a> &nbsp;&nbsp;&#149;&nbsp;&nbsp; <?php Renovation_Parent_Link(get_parent(FALSE)); ?> <b><?php get_page_clean_title(); ?></b>
 			</span>
 		</p>
 		

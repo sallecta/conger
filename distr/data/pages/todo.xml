@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Tue, 06 Jun 2023 22:45:48 -0400</pubDate><title><![CDATA[ToDo]]></title><url><![CDATA[todo]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[todo]]></menu><menuOrder><![CDATA[2]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[]]></parent><content><![CDATA[&lt;h2&gt;Nested menu feature&lt;/h2&gt;
+
+&lt;ol&gt;
+	&lt;li&gt;add &lt;a href=&quot;http://get-simple.info/extend/plugin/nested-menus/256/&quot; target=&quot;_blank&quot;&gt;Nested Menus plugin&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;use nested menu plugin in default theme&lt;/li&gt;
+&lt;/ol&gt;
+]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author></item>

@@ -160,7 +160,6 @@ $SITEURL=paths::client(dirname(dirname(__FILE__)));
 /**
  * Pull data from storage
  */
- 
 /** grab website data */
 $thisfilew = GSDATAOTHERPATH .'website.xml';
 if (file_exists($thisfilew)) {
