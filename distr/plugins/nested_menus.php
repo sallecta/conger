@@ -57,35 +57,40 @@ function nested_menus__clear_cache()
 
 function nested_menu_data()
 {
-  $menu_data = menu_data();
-  // echo "<pre>menu_data\n----------\n" . print_r($menu_data, 1) . "</pre>";
-  usort($menu_data, 'nested_menu_data__sort_menu_parents_first');
-  // echo "<pre>menu_data after sort\n----------\n" . print_r($menu_data, 1) . "</pre>";
-  $nested_menu_data = array();
-  foreach($menu_data as $item) {
-    if (empty($item['menu_status'])) continue;
-  	if (empty($item['menu_text'])) $item['menu_text'] = $item['title'];
-  	if (empty($item['title'])) $item['title'] = $item['menu_text'];
-    if (empty($item['parent_slug'])) {
-      $nested_menu_data[$item['slug']] = $item;
-      $nested_menu_data[$item['slug']]['children'] = array();
-    }
-    elseif(isset($nested_menu_data[$item['parent_slug']])) {
-      $nested_menu_data[$item['parent_slug']]['children'][] = $item;
-    }
-  }
-  // echo "<pre>nested_menu_data\n----------\n" . print_r($nested_menu_data, 1) . "</pre>";
-  usort($nested_menu_data, 'nested_menu_data__sort_by_menu_priority');
-  // echo "<pre>nested_menu_data after initial sort\n----------\n" . print_r($nested_menu_data, 1) . "</pre>";
-  foreach($nested_menu_data as $key => $item) {
-    $children = $nested_menu_data[$key]['children'];
-    if (sizeof($children)) {
-      usort($children, 'nested_menu_data__sort_by_menu_priority');
-      $nested_menu_data[$key]['children'] = $children;
-    }
-  }
-  // echo "<pre>nested_menu_data after internal sort\n----------\n" . print_r($nested_menu_data, 1) . "</pre>";
-  return $nested_menu_data;
+	$menu_data = menu_data();
+	// echo "<pre>menu_data\n----------\n" . print_r($menu_data, 1) . "</pre>";
+	usort($menu_data, 'nested_menu_data__sort_menu_parents_first');
+	// echo "<pre>menu_data after sort\n----------\n" . print_r($menu_data, 1) . "</pre>";
+	$nested_menu_data = array();
+	foreach($menu_data as $item) 
+	{
+		if (empty($item['menu_status'])) { continue; }
+		if (empty($item['menu_text'])) { $item['menu_text'] = $item['title']; }
+		if (empty($item['title'])) { $item['title'] = $item['menu_text']; }
+		if (empty($item['parent_slug']))
+		{
+			$nested_menu_data[$item['slug']] = $item;
+			$nested_menu_data[$item['slug']]['children'] = array();
+		}
+		elseif(isset($nested_menu_data[$item['parent_slug']]))
+		{
+			$nested_menu_data[$item['parent_slug']]['children'][] = $item;
+		}
+	}
+	// echo "<pre>nested_menu_data\n----------\n" . print_r($nested_menu_data, 1) . "</pre>";
+	usort($nested_menu_data, 'nested_menu_data__sort_by_menu_priority');
+	// echo "<pre>nested_menu_data after initial sort\n----------\n" . print_r($nested_menu_data, 1) . "</pre>";
+	foreach($nested_menu_data as $key => $item)
+	{
+		$children = $nested_menu_data[$key]['children'];
+		if (sizeof($children))
+		{
+			usort($children, 'nested_menu_data__sort_by_menu_priority');
+			$nested_menu_data[$key]['children'] = $children;
+		}
+	}
+	// echo "<pre>nested_menu_data after internal sort\n----------\n" . print_r($nested_menu_data, 1) . "</pre>";
+	return $nested_menu_data;
 }
 
 function get_nested_navigation($echo = true) 

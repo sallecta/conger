@@ -34,13 +34,13 @@ function edit_page()
 	global $plgid;
 	if (cookie_check())
 	{
-		//The name of the admin page
 		global $GSADMIN;
 		//Get url and slug
 		$url=get_site_url(false);
+		if ( $url == '/' ) { $sl='';} else { $sl='/';}
 		$slug=get_page_slug(false);
 		//Echo the link
-		echo '<a class="btn_adm" href="'.$url.'/'.$GSADMIN.'/edit.php?id='.$slug.'">'.i18n_r($plgid.'/EDIT_PAGE').'.</a>';
+		echo '<a class="btn_adm" href="'.$url.$sl.$GSADMIN.'/edit.php?id='.$slug.'">'.i18n_r($plgid.'/EDIT_PAGE').'.</a>';
 	}
 }
 

@@ -226,10 +226,12 @@ function get_page_url($echo=false) {
 	global $SITEURL;
 	global $PRETTYURLS;
 	global $parent;
-
-	if (!$echo) {
+	if (!$echo)
+	{
 		echo find_url($url, $parent);
-	} else {
+	}
+	else
+	{
 		return find_url($url, $parent);
 	}
 }
@@ -238,7 +240,7 @@ function get_page_url($echo=false) {
  * Get Page Header HTML
  *
  * This will return header html for a particular page. This will include the 
- * meta desriptions & keywords, canonical and title tags
+ * meta desriptions & keywords, <s>canonical</s> and title tags
  *
  * @since 1.0
  * @uses exec_action
@@ -282,9 +284,10 @@ function get_header($full=true) {
 	$keywords = get_page_meta_keywords(FALSE);
 	if ($keywords != '') echo '<meta name="keywords" content="'.$keywords.'" />'."\n";
 	
-	if ($full) {
-		echo '<link rel="canonical" href="'. get_page_url(true) .'" />'."\n";
-	}
+	//if ($full)
+	//{
+		//echo '<link rel="canonical" href="'. get_page_url(true) .'" />'."\n";
+	//}
 
 	// script queue
 	get_scripts_frontend();
@@ -323,10 +326,12 @@ function get_footer() {
  */
 function get_site_url($echo=true) {
 	global $SITEURL;
-	
-	if ($echo) {
+	if ($echo)
+	{
 		echo $SITEURL;
-	} else {
+	}
+	else 
+	{
 		return $SITEURL;
 	}
 }
@@ -343,14 +348,18 @@ function get_site_url($echo=true) {
  * @param bool $echo Optional, default is true. False will 'return' value
  * @return string Echos or returns based on param $echo
  */
-function get_theme_url($echo=true) {
+function get_theme_url($echo=true)
+{
 	global $SITEURL;
 	global $TEMPLATE;
-	$myVar = trim($SITEURL . "/theme/" . $TEMPLATE);
-	
-	if ($echo) {
+	if ( $SITEURL == '/') { $sl='';} else { $sl = '/';}
+	$myVar = trim($SITEURL . $sl . "theme/" . $TEMPLATE);
+	if ($echo)
+	{
 		echo $myVar;
-	} else {
+	}
+	else 
+	{
 		return $myVar;
 	}
 }
@@ -440,66 +449,70 @@ function get_site_credits($text ='Powered by ') {
  *				True will return value in XML format. False will return an array
  * @return array|string Type 'string' in this case will be XML 
  */
-function menu_data($id = null,$xml=false) {
-    $menu_extract = array();
-
-    global $pagesArray; 
-    $pagesSorted = subval_sort($pagesArray,'menuOrder');
-    if (count($pagesSorted) != 0) { 
-      $count = 0;
-      if (!$xml){
-        foreach ($pagesSorted as $page) {
-          $text = (string)$page['menu'];
-          $pri = (string)$page['menuOrder'];
-          $parent = (string)$page['parent'];
-          $title = (string)$page['title'];
-          $slug = (string)$page['url'];
-          $menuStatus = (string)$page['menuStatus'];
-          $private = (string)$page['private'];
-					$pubDate = (string)$page['pubDate'];
-          
-          $url = find_url($slug,$parent);
-          
-          $specific = array("slug"=>$slug,"url"=>$url,"parent_slug"=>$parent,"title"=>$title,"menu_priority"=>$pri,"menu_text"=>$text,"menu_status"=>$menuStatus,"private"=>$private,"pub_date"=>$pubDate);
-          
-          if ($id == $slug) { 
-              return $specific; 
-              exit; 
-          } else {
-              $menu_extract[] = $specific;
-          }
-        }
-        return $menu_extract;
-      } else {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?><channel>';    
-	        foreach ($pagesSorted as $page) {
-            $text = $page['menu'];
-            $pri = $page['menuOrder'];
-            $parent = $page['parent'];
-            $title = $page['title'];
-            $slug = $page['url'];
-            $pubDate = $page['pubDate'];
-            $menuStatus = $page['menuStatus'];
-            $private = $page['private'];
-           	
-            $url = find_url($slug,$parent);
-            
-            $xml.="<item>";
-            $xml.="<slug><![CDATA[".$slug."]]></slug>";
-            $xml.="<pubDate><![CDATA[".$pubDate."]]></pubDate>";
-            $xml.="<url><![CDATA[".$url."]]></url>";
-            $xml.="<parent><![CDATA[".$parent."]]></parent>";
-            $xml.="<title><![CDATA[".$title."]]></title>";
-            $xml.="<menuOrder><![CDATA[".$pri."]]></menuOrder>";
-            $xml.="<menu><![CDATA[".$text."]]></menu>";
-            $xml.="<menuStatus><![CDATA[".$menuStatus."]]></menuStatus>";
-            $xml.="<private><![CDATA[".$private."]]></private>";
-            $xml.="</item>";
-	        }
-	        $xml.="</channel>";
-	        return $xml;
-        }
-    }
+function menu_data($id = null,$xml=false)
+{
+	$menu_extract = array();
+	global $pagesArray; 
+	$pagesSorted = subval_sort($pagesArray,'menuOrder');
+	if (count($pagesSorted) != 0)
+	{ 
+		$count = 0;
+		if (!$xml)
+		{
+			foreach ($pagesSorted as $page)
+			{
+				$text = (string)$page['menu'];
+				$pri = (string)$page['menuOrder'];
+				$parent = (string)$page['parent'];
+				$title = (string)$page['title'];
+				$slug = (string)$page['url'];
+				$menuStatus = (string)$page['menuStatus'];
+				$private = (string)$page['private'];
+				$pubDate = (string)$page['pubDate'];  
+				$url = find_url($slug,$parent);
+				$specific = array("slug"=>$slug,"url"=>$url,"parent_slug"=>$parent,"title"=>$title,"menu_priority"=>$pri,"menu_text"=>$text,"menu_status"=>$menuStatus,"private"=>$private,"pub_date"=>$pubDate);
+				if ($id == $slug)
+				{ 
+					return $specific; 
+					exit; 
+				}
+				else
+				{
+					$menu_extract[] = $specific;
+				}
+			}
+			return $menu_extract;
+		}
+		else
+		{
+			$xml = '<?xml version="1.0" encoding="UTF-8"?><channel>';    
+			foreach ($pagesSorted as $page)
+			{
+				$text = $page['menu'];
+				$pri = $page['menuOrder'];
+				$parent = $page['parent'];
+				$title = $page['title'];
+				$slug = $page['url'];
+				$pubDate = $page['pubDate'];
+				$menuStatus = $page['menuStatus'];
+				$private = $page['private'];
+				$url = find_url($slug,$parent);
+				$xml.="<item>";
+				$xml.="<slug><![CDATA[".$slug."]]></slug>";
+				$xml.="<pubDate><![CDATA[".$pubDate."]]></pubDate>";
+				$xml.="<url><![CDATA[".$url."]]></url>";
+				$xml.="<parent><![CDATA[".$parent."]]></parent>";
+				$xml.="<title><![CDATA[".$title."]]></title>";
+				$xml.="<menuOrder><![CDATA[".$pri."]]></menuOrder>";
+				$xml.="<menu><![CDATA[".$text."]]></menu>";
+				$xml.="<menuStatus><![CDATA[".$menuStatus."]]></menuStatus>";
+				$xml.="<private><![CDATA[".$private."]]></private>";
+				$xml.="</item>";
+			}
+			$xml.="</channel>";
+			return $xml;
+		}
+	}
 }
 
 /**

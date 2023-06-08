@@ -415,10 +415,17 @@ function find_url($a_slug, $a_parent, $a_type='full')
 	global $PRETTYURLS;
 	global $SITEURL;
 	global $PERMALINK;
-				
+	if ($SITEURL == '/') 
+	{
+		$sl = ''; 
+	}
+	else 
+	{
+		$sl = '/';
+	}
 	if ($a_type == 'full')
 	{
-		$full = $SITEURL.'/';
+		$full = $SITEURL.$sl;
 	}
 	elseif($a_type == 'relative')
 	{

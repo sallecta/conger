@@ -14,8 +14,7 @@ $GS_scripts       = array();  // used for queing Scripts
 $GS_styles        = array();  // used for queing Styles
 
 // constants
-// asseturl is scheme-less ://url if GSASSETSCHEMES is not true
-$ASSETURL = getDef('GSASSETSCHEMES',true) !==true ? str_replace(parse_url($SITEURL, PHP_URL_SCHEME).':', '', $SITEURL) : $SITEURL;
+$ASSETURL = $SITEURL =='/' ? '' : $SITEURL;
 if (!defined('GSFRONT')) define('GSFRONT',1);
 if (!defined('GSBACK'))  define('GSBACK',2);
 if (!defined('GSBOTH'))  define('GSBOTH',3);
@@ -441,20 +440,29 @@ function dequeue_script($handle, $where){
  *
  * @param boolean $footer Load only script with footer flag set
  */
-function get_scripts_frontend($footer=FALSE){
+function get_scripts_frontend($footer=FALSE)
+{
 	global $GS_scripts;
-	if (!$footer){
+	if (!$footer)
+	{
 		get_styles_frontend();
 	}
-	foreach ($GS_scripts as $script){
-		if ($script['where'] & GSFRONT ){
-			if (!$footer){
-				if ($script['load']==TRUE && $script['in_footer']==FALSE ){
+	foreach ($GS_scripts as $script)
+	{
+		if ($script['where'] & GSFRONT )
+		{
+			if (!$footer)
+			{
+				if ($script['load']==TRUE && $script['in_footer']==FALSE )
+				{
 					 echo "\t<script src=\"".$script['src'].'?v='.$script['ver']."\"></script>\n";
 					 cdn_fallback($script);		 					 
 				}
-			} else {
-				if ($script['load']==TRUE && $script['in_footer']==TRUE ){
+			}
+			else
+			{
+				if ($script['load']==TRUE && $script['in_footer']==TRUE )
+				{
 					 echo "\t<script src=\"".$script['src'].'?v='.$script['ver']."\"></script>\n";
 					 cdn_fallback($script);		 					 
 				}
