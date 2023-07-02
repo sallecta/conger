@@ -31,7 +31,7 @@ if(	!$hidemenu || (
 	!( $TEMPLATE == "Renovation" && get_filename_id() == 'theme' && isset($_POST['template']) && $_POST['template'] != 'Renovation') )
 )
 {
-	add_action('theme-sidebar','createSideMenu',array($thisfile_renov, i18n_r($thisfile_renov.'/RENOVATION_TITLE'))); 
+	event::join('theme-sidebar','createSideMenu',array($thisfile_renov, i18n_r($thisfile_renov.'/RENOVATION_TITLE'))); 
 }
 
 $services = array(

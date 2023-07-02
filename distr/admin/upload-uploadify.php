@@ -42,7 +42,7 @@ if ($_POST['sessionHash'] === $SESSIONHASH) {
 			} else {
 				chmod($targetFile, 0644);
 			}
-			exec_action('file-uploaded');
+			event::create('file-uploaded');
 		} else {
 			die(i18n_r('ERROR_UPLOAD') . ' - ' . i18n_r('BAD_FILE'));
 			// invalid file

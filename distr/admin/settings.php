@@ -156,7 +156,7 @@ if(isset($_POST['submitted'])) {
 		$xml->addChild('TIMEZONE', $TIMEZONE);
 		$xml->addChild('LANG', $LANG);
 		
-		exec_action('settings-user');
+		event::create('settings-user');
 		
 		if (! XMLsave($xml, GSUSERSPATH . $file) ) {
 			$error = i18n_r('CHMOD_ERROR');
@@ -176,7 +176,7 @@ if(isset($_POST['submitted'])) {
 		$xmls->addChild('CHECKUPDATES', var_out($CHECKUPDATES));
 		$xmls->addChild('PAGE_TIME_STAMP', var_out($PAGE_TIME_STAMP));
 		
-		exec_action('settings-website');
+		event::create('settings-website');
 		
 		if (! XMLsave($xmls, GSDATAOTHERPATH . $wfile) ) {
 			$error = i18n_r('CHMOD_ERROR');
@@ -254,7 +254,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('GENERAL_SETTINGS'));
 		<div class="clear"></div>
 		
 
-		<?php exec_action('settings-website-extras'); ?>
+		<?php event::create('settings-website-extras'); ?>
 	
 		
 		<div id="profile" class="section" >
@@ -295,7 +295,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('GENERAL_SETTINGS'));
 		<div class="clear"></div>
 		<p class="inline" ><input name="show_htmleditor" id="show_htmleditor" type="checkbox" value="1" <?php echo $editorchck; ?> /> &nbsp;<label for="show_htmleditor" ><?php i18n('ENABLE_HTML_ED');?></label></p>
 		
-		<?php exec_action('settings-user-extras'); ?>
+		<?php event::create('settings-user-extras'); ?>
 		
 		<p style="margin:0px 0 5px 0;font-size:12px;color:#999;" ><?php i18n('ONLY_NEW_PASSWORD');?>:</p>
 		<div class="leftsec">

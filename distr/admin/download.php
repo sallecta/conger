@@ -47,7 +47,7 @@ if(isset($_GET['file'])) {
 	} 
 	
 	# plugin hook
-	exec_action('download-file');
+	event::create('download-file');
 	
 	# get file
 	if (file_exists($file)) {		

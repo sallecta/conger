@@ -28,7 +28,7 @@ if(isset($_GET['do'])) {
 			die("CSRF detected!");
 		}
 	}	
-	exec_action('archive-backup');
+	event::create('archive-backup');
 	redirect('zip.php?s='.$SESSIONHASH);	
 }
 

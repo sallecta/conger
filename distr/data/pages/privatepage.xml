@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Sun, 02 Jul 2023 18:56:21 +0300</pubDate><title><![CDATA[Private page]]></title><url><![CDATA[privatepage]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Private page]]></menu><menuOrder><![CDATA[8]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[parent]]></parent><content><![CDATA[&lt;p&gt;Try to open me without login.&lt;/p&gt;
+
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p&gt;[$site_role$]&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;[$cpath$]&quot;&gt;testroot&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;[$cpath$]catalog/valves&quot;&gt;testnested&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;[$cpath$]contact/othernested&quot;&gt;testcrossnested&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;[$cpath$]contact&quot;&gt;testother&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;[$cpath$]contact&quot;&gt;contactnew&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;test &lt;a href=&quot;[$cpath$]catalog&quot;&gt;catalog&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;{$ pumps $}&lt;/p&gt;
+]]></content><private><![CDATA[Y]]></private><author><![CDATA[admin]]></author><about><![CDATA[<p>Private page</p>
+]]></about><creDate>Fri, 09 Jun 2023 21:37:35 +0300</creDate><user><![CDATA[admin]]></user></item>

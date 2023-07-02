@@ -109,7 +109,7 @@ class GS_Logging_Class {
         public function clear(){
                 if (is_file($this->_xmlfile)) {
                         $res = unlink($this->_xmlfile);
-                        exec_action('logfile_delete');
+                        event::create('logfile_delete');
                         return $res;
                 }
         }

@@ -14,7 +14,7 @@ $GS_scripts       = array();  // used for queing Scripts
 $GS_styles        = array();  // used for queing Styles
 
 // constants
-$ASSETURL = $SITEURL =='/' ? '' : $SITEURL;
+//$ASSETURL = $SITEURL =='/' ? '' : $SITEURL; // moved to av
 if (!defined('GSFRONT')) define('GSFRONT',1);
 if (!defined('GSBACK'))  define('GSBACK',2);
 if (!defined('GSBOTH'))  define('GSBOTH',3);
@@ -32,26 +32,25 @@ $jquery_ui_ver = '1.8.17';
 
 $GS_script_assets['jquery']['cdn']['url']      = '//ajax.googleapis.com/ajax/libs/jquery/'.$jquery_ver.'/jquery.min.js';
 $GS_script_assets['jquery']['cdn']['ver']      = $jquery_ver;
-
-$GS_script_assets['jquery']['local']['url']    = $ASSETURL.'/'.$GSADMIN.'/template/js/jquery.min.js';
+$GS_script_assets['jquery']['local']['url']    = av::get('cadmin').'template/js/jquery.min.js';
 $GS_script_assets['jquery']['local']['ver']    = $jquery_ver;
 
 // jquery-ui
 $GS_script_assets['jquery-ui']['cdn']['url']   = '//ajax.googleapis.com/ajax/libs/jqueryui/'.$jquery_ui_ver.'/jquery-ui.min.js';
 $GS_script_assets['jquery-ui']['cdn']['ver']   = $jquery_ui_ver;
 
-$GS_script_assets['jquery-ui']['local']['url'] = $ASSETURL.'/'.$GSADMIN.'/template/js/jquery-ui.min.js';
+$GS_script_assets['jquery-ui']['local']['url'] = av::get('cadmin').'template/js/jquery-ui.min.js';
 $GS_script_assets['jquery-ui']['local']['ver'] = $jquery_ui_ver;
 
 // misc
-$GS_script_assets['fancybox']['local']['url']  = $ASSETURL.'/'.$GSADMIN.'/template/js/fancybox/jquery.fancybox.pack.js';
+$GS_script_assets['fancybox']['local']['url']  = av::get('cadmin').'template/js/fancybox/jquery.fancybox.pack.js';
 $GS_script_assets['fancybox']['local']['ver']  = '2.0.4';
 
-$GS_style_assets['fancybox']['local']['url']   =  $ASSETURL.'/'.$GSADMIN.'/template/js/fancybox/jquery.fancybox.css';
+$GS_style_assets['fancybox']['local']['url']   =  av::get('cadmin').'template/js/fancybox/jquery.fancybox.css';
 $GS_style_assets['fancybox']['local']['ver']   = '2.0.4';
 
 // scrolltofixed
-$GS_script_assets['scrolltofixed']['local']['url']   =  $ASSETURL.'/'.$GSADMIN.'/template/js/jquery-scrolltofixed.js';
+$GS_script_assets['scrolltofixed']['local']['url']   =  av::get('cadmin').'template/js/jquery-scrolltofixed.js';
 $GS_script_assets['scrolltofixed']['local']['ver']   = '0.0.1';
 
 /**
@@ -98,6 +97,8 @@ read_pluginsxml();        // get the live plugins into $live_plugins array
 
 if(!is_frontend()) create_pluginsxml();      // check that plugins have not been removed or added to the directory
 
+$EDTOOL='basic';
+
 // load each of the plugins
 foreach ($live_plugins as $file=>$en)
 {
@@ -128,6 +129,12 @@ foreach ($live_plugins as $file=>$en)
 		}  
 	}
 }
+
+/* Reject any other plugin attempt to overwrite $EDTOOL switch */
+$EDTOOL=$field_editor_type;
+unset($field_editor_type);
+/* end */
+
 
 /**
  * change_plugin
@@ -310,48 +317,6 @@ function register_plugin($id, $name, $ver=null, $auth=null, $auth_url=null, $des
 }
 
 
-/**
- * Add Filter
- *
- * @since 2.0
- * @uses $filters
- * @uses $live_plugins
- *
- * @param string $id Id of current page
- * @param string $txt Text to add to tabbed link
- */
-function add_filter($filter_name, $added_function) {
-  global $filters;
-  global $live_plugins;   
-  $bt = debug_backtrace();
-  $caller = array_shift($bt);
-  $pathName= pathinfo_filename($caller['file']);
-	$filters[] = array(
-		'filter' => $filter_name,
-		'function' => $added_function
-	);
-}
-
-/**
- * Execute Filter
- *
- * Allows changing of the passed variable
- *
- * @since 2.0
- * @uses $filters
- *
- * @param string $script Filter name to execute
- * @param array $data
- */
-function exec_filter($script,$data=array()) {
-	global $filters;
-	foreach ($filters as $filter)	{
-		if ($filter['filter'] == $script) {
-			$data = call_user_func_array($filter['function'], array($data));
-		}
-	}
-	return $data;
-}
 
 /**
  * Register Script

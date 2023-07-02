@@ -20,7 +20,7 @@
  */
 function get_template($name, $title='** Change Me - Default Page Title **') {
 	ob_start();
-	$file = "template/" . $name . ".php";
+	$file = av::get('spath_admintemplate').$name.'.php';
 	include($file);
 	$template = ob_get_contents();
 	ob_end_clean(); 
@@ -160,7 +160,7 @@ function delete_upload($id, $path = "") {
  */
 function delete_cache()
 {
-	exec_action('cache-delete');
+	event::create('cache-delete');
 	$cachepath = GSCACHEPATH;
 	$cnt = 0;
 	$success = null;
@@ -209,7 +209,7 @@ function restore_bak($id) {
 		copy($tmpfile, $newfile);
 		unlink($tmpfile);
 	}
-	exec_action('page-restored');
+	event::create('page-restored');
 	generate_sitemap();
 } 
 
@@ -323,64 +323,64 @@ function makeIso8601TimeStamp($dateTime) {
  * @param string $url_xml XML sitemap
  * @return bool
  */
-function pingGoogleSitemaps($url_xml) {
-   $status = 0;
-   $google = 'www.google.com';
-   $bing 	 = 'www.bing.com';
-   $ask 	 = 'submissions.ask.com';
-   if( $fp=@fsockopen($google, 80) ) {
-      $req =  'GET /webmasters/sitemaps/ping?sitemap=' .
-              urlencode( $url_xml ) . " HTTP/1.1\r\n" .
-              "Host: $google\r\n" .
-              "User-Agent: Mozilla/5.0 (compatible; " .
-              PHP_OS . ") PHP/" . PHP_VERSION . "\r\n" .
-              "Connection: Close\r\n\r\n";
-      fwrite( $fp, $req );
-      while( !feof($fp) ) {
-         if( @preg_match('~^HTTP/\d\.\d (\d+)~i', fgets($fp, 128), $m) ) {
-            $status = intval( $m[1] );
-            break;
-         }
-      }
-      fclose( $fp );
-   }
+//function pingGoogleSitemaps($url_xml) {
+   //$status = 0;
+   //$google = 'www.google.com';
+   //$bing 	 = 'www.bing.com';
+   //$ask 	 = 'submissions.ask.com';
+   //if( $fp=@fsockopen($google, 80) ) {
+      //$req =  'GET /webmasters/sitemaps/ping?sitemap=' .
+              //urlencode( $url_xml ) . " HTTP/1.1\r\n" .
+              //"Host: $google\r\n" .
+              //"User-Agent: Mozilla/5.0 (compatible; " .
+              //PHP_OS . ") PHP/" . PHP_VERSION . "\r\n" .
+              //"Connection: Close\r\n\r\n";
+      //fwrite( $fp, $req );
+      //while( !feof($fp) ) {
+         //if( @preg_match('~^HTTP/\d\.\d (\d+)~i', fgets($fp, 128), $m) ) {
+            //$status = intval( $m[1] );
+            //break;
+         //}
+      //}
+      //fclose( $fp );
+   //}
    
-   if( $fp=@fsockopen($bing, 80) ) {
-      $req =  'GET /webmaster/ping.aspx?sitemap=' .
-              urlencode( $url_xml ) . " HTTP/1.1\r\n" .
-              "Host: $bing\r\n" .
-              "User-Agent: Mozilla/5.0 (compatible; " .
-              PHP_OS . ") PHP/" . PHP_VERSION . "\r\n" .
-              "Connection: Close\r\n\r\n";
-      fwrite( $fp, $req );
-      while( !feof($fp) ) {
-         if( @preg_match('~^HTTP/\d\.\d (\d+)~i', fgets($fp, 128), $m) ) {
-            $status = intval( $m[1] );
-            break;
-         }
-      }
-      fclose( $fp );
-   }
+   //if( $fp=@fsockopen($bing, 80) ) {
+      //$req =  'GET /webmaster/ping.aspx?sitemap=' .
+              //urlencode( $url_xml ) . " HTTP/1.1\r\n" .
+              //"Host: $bing\r\n" .
+              //"User-Agent: Mozilla/5.0 (compatible; " .
+              //PHP_OS . ") PHP/" . PHP_VERSION . "\r\n" .
+              //"Connection: Close\r\n\r\n";
+      //fwrite( $fp, $req );
+      //while( !feof($fp) ) {
+         //if( @preg_match('~^HTTP/\d\.\d (\d+)~i', fgets($fp, 128), $m) ) {
+            //$status = intval( $m[1] );
+            //break;
+         //}
+      //}
+      //fclose( $fp );
+   //}
    
-   if( $fp=@fsockopen($ask, 80) ) {
-      $req =  'GET /ping?sitemap=' .
-              urlencode( $url_xml ) . " HTTP/1.1\r\n" .
-              "Host: $ask\r\n" .
-              "User-Agent: Mozilla/5.0 (compatible; " .
-              PHP_OS . ") PHP/" . PHP_VERSION . "\r\n" .
-              "Connection: Close\r\n\r\n";
-      fwrite( $fp, $req );
-      while( !feof($fp) ) {
-         if( @preg_match('~^HTTP/\d\.\d (\d+)~i', fgets($fp, 128), $m) ) {
-            $status = intval( $m[1] );
-            break;
-         }
-      }
-      fclose( $fp );
-   }
+   //if( $fp=@fsockopen($ask, 80) ) {
+      //$req =  'GET /ping?sitemap=' .
+              //urlencode( $url_xml ) . " HTTP/1.1\r\n" .
+              //"Host: $ask\r\n" .
+              //"User-Agent: Mozilla/5.0 (compatible; " .
+              //PHP_OS . ") PHP/" . PHP_VERSION . "\r\n" .
+              //"Connection: Close\r\n\r\n";
+      //fwrite( $fp, $req );
+      //while( !feof($fp) ) {
+         //if( @preg_match('~^HTTP/\d\.\d (\d+)~i', fgets($fp, 128), $m) ) {
+            //$status = intval( $m[1] );
+            //break;
+         //}
+      //}
+      //fclose( $fp );
+   //}
    
-   return( $status );
-}
+   //return( $status );
+//}
 
 /**
  * Undo
@@ -525,22 +525,6 @@ function generate_salt() {
   }
 } 
 
-/**
- * Get Admin Path
- *
- * Gets the path of the admin directory
- *
- * @since 1.0
- * @uses $GSADMIN
- * @uses GSROOTPATH
- * @uses tsl
- *
- * @return string
- */
-function get_admin_path() {
-	global $GSADMIN;
-	return tsl(GSROOTPATH . $GSADMIN);
-}
 
 /**
  * Get Root Install Path
@@ -551,12 +535,14 @@ function get_admin_path() {
  *
  * @return string
  */
-function get_root_path() {
-  $pos = strrpos(dirname(__FILE__),DIRECTORY_SEPARATOR.'inc');
-  $adm = substr(dirname(__FILE__), 0, $pos);
-  $pos2 = strrpos($adm,DIRECTORY_SEPARATOR);
-  return tsl(substr(__FILE__, 0, $pos2));
-}
+//function get_root_path() {
+  //$pos = strrpos(dirname(__FILE__),DIRECTORY_SEPARATOR.'inc');
+  //$adm = substr(dirname(__FILE__), 0, $pos);
+  //$pos2 = strrpos($adm,DIRECTORY_SEPARATOR);
+  //$out=tsl(substr(__FILE__, 0, $pos2));
+  //echo "<h1><pre>get_root_path=$out</pre></h1>";
+  //return $out;
+//}
 
 
 
@@ -717,6 +703,46 @@ function get_link_menu_array($parent='', $array=array(), $level=0) {
       }
 	return $array;
 } 
+function portable_get_link_menu_array($parent='', $array=array(), $level=0)
+{
+	global $pagesSorted;
+	$items=array();
+	// $pageList=array();
+	foreach ($pagesSorted as $page)
+	{
+		if ($page['parent']==$parent)
+		{
+			$items[(string)$page['url']]=$page;
+		}
+	}
+	if (count($items)>0)
+	{
+		foreach ($items as $page)
+		{
+			$dash="";
+			if ($page['parent'] != '')
+			{
+				$page['parent'] = $page['parent']."/";
+			}
+			for ($i=0;$i<=$level-1;$i++)
+			{
+				if ($i!=$level-1)
+				{
+					$dash .= utf8_encode("\xA0\xA0"); // outer level
+				}
+				else 
+				{
+					$dash .= '- '; // inner level
+				}   
+			} 
+			array_push($array, array( $dash . $page['title'], page_path_portable($page['url'], $page['parent'])));
+			// recurse submenus
+			$array=portable_get_link_menu_array((string)$page['url'], $array,$level+1);	 
+		}
+	}
+	//echo json_encode($array);
+	return $array;
+} 
 
 /**
  * List Pages Json
@@ -751,9 +777,35 @@ function list_pages_json() {
 			}
 	$pagesSorted = subval_sort($pagesArray_tmp,'sort');
 
-	$links = exec_filter('editorlinks',get_link_menu_array());
+	$links = filter::create('editorlinks',get_link_menu_array());
 	return json_encode($links);
 		}
+function portable_list_pages_json()
+{
+	global $pagesArray,$pagesSorted;
+	$pagesArray_tmp = array();
+	$count = 0;
+	foreach ($pagesArray as $page)
+	{
+		if ($page['parent'] != '')
+		{ 
+			$parentTitle = returnPageField($page['parent'], "title");
+			$sort = $parentTitle .' '. $page['title'];		
+		}
+		else
+		{
+			$sort = $page['title'];
+		}
+		$page = array_merge($page, array('sort' => $sort));
+		$pagesArray_tmp[$count] = $page;
+		$count++;
+	}
+	$pagesSorted = subval_sort($pagesArray_tmp,'sort');
+
+	$links = filter::create('editorlinks',portable_get_link_menu_array());
+	return json_encode($links);
+}
+
 
 /**
  * @deprecated since 3.3.0
@@ -1087,7 +1139,7 @@ function get_gs_version() {
  * Creates sitemap.xml in the site's root.
  */
 function generate_sitemap() {
-	
+	/*
 	if(getDef('GSNOSITEMAP',true)) return;
 
 	// Variable settings
@@ -1101,7 +1153,8 @@ function generate_sitemap() {
 	if (count($pagesSorted) != 0)
 	{ 
 		$xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><urlset></urlset>');
-		$xml->addAttribute('xsi:schemaLocation', 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd', 'http://www.w3.org/2001/XMLSchema-instance');
+		
+		$xml->addAttribute ('xsi:schemaLocation', 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd','http://www.w3.org/2001/XMLSchema-instance');
 		$xml->addAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 		
 		foreach ($pagesSorted as $page)
@@ -1139,28 +1192,27 @@ function generate_sitemap() {
 		
 		//create xml file
 		$file = GSROOTPATH .'sitemap.xml';
-		$xml = exec_filter('sitemap',$xml);
+		$xml = filter::create('sitemap',$xml);
 		XMLsave($xml, $file);
-		exec_action('sitemap-aftersave');
+		event::create('sitemap-aftersave');
 	}
-	
-	if (!defined('GSDONOTPING')) {
-		if (file_exists(GSROOTPATH .'sitemap.xml')){
-			if( 200 === ($status=pingGoogleSitemaps($SITEURL.'/sitemap.xml')))	{
-				#sitemap successfully created & pinged
-				return true;
-			} else {
-				error_log(i18n_r('SITEMAP_ERRORPING'));
-				return i18n_r('SITEMAP_ERRORPING');
-			}
-		} else {
-			error_log(i18n_r('SITEMAP_ERROR'));
-			return i18n_r('SITEMAP_ERROR');
-		}
-	} else {
-		#sitemap successfully created - did not ping
-		return true;
-	}
+	*/
+	//if (!defined('GSDONOTPING')) {
+		//if (file_exists(GSROOTPATH .'sitemap.xml')){
+			//if( 200 === ($status=pingGoogleSitemaps($SITEURL.'/sitemap.xml')))	{
+				//#sitemap successfully created & pinged
+				//return true;
+			//} else {
+				//error_log(i18n_r('SITEMAP_ERRORPING'));
+				//return i18n_r('SITEMAP_ERRORPING');
+			//}
+		//} else {
+			//error_log(i18n_r('SITEMAP_ERROR'));
+			//return i18n_r('SITEMAP_ERROR');
+		//}
+	//} 
+	#sitemap successfully created - did not ping
+	return true;
 }
 
 

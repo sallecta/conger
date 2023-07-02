@@ -1,18 +1,14 @@
 <?php
-/**
- * Common Setup File
- * 
- * This file initializes up most variables for the site. It is also where most files
- * are included from. It also reads and stores certain variables.
- *
- * @package GetSimple
- * @subpackage init
- */
-
-
-define('APP',1);
-require_once(dirname(dirname(dirname(__FILE__))).'/modules/paths.php');
-require_once(dirname(dirname(dirname(__FILE__))).'/modules/action.php');
+define('APP','Conger');
+require_once(dirname(dirname(dirname(__FILE__))).'/modules/dev/dev.php');
+require_once(dirname(dirname(dirname(__FILE__))).'/modules/av/av.php');
+require_once(av::get('spath').'modules/event/event.php');
+require_once(av::get('spath').'modules/filter/filter.php');
+/*
+Enable development mode
+dev mode
+*/
+av::set('dev',true);
 
 /**
  * Headers
@@ -73,13 +69,63 @@ if (version_compare(PHP_VERSION, "5")  >= 0) {
 }
 
 /**
- * Basic file inclusions
+ * Language control
  */
+if(!isset($LANG) || $LANG == '') {
+	$filenames = glob(GSLANGPATH.'*.php');	
+	$cntlang = count($filenames);
+	if ($cntlang == 1) {
+		// assign lang to only existing file
+		$LANG = basename($filenames[0], ".php");
+	} elseif($cntlang > 1 && in_array(GSLANGPATH .'en_US.php',$filenames)) {
+		// fallback to en_US if it exists
+		$LANG = 'en_US';
+	} elseif(isset($filenames[0])) {
+		// fallback to first lang found
+		$LANG=basename($filenames[0], ".php");
+	}
+}
+
+
 include('basic.php');
+
+/* Get website data from storage */
+$thisfilew = GSDATAOTHERPATH .'website.xml';
+if (file_exists($thisfilew)) {
+	$dataw = getXML($thisfilew);
+	$SITENAME = stripslashes($dataw->SITENAME);
+	av::set('site_name',stripslashes(strip_tags(html_entity_decode($SITENAME, ENT_QUOTES, 'UTF-8'))) );
+	//$SITEURL = $dataw->SITEURL;
+	$TEMPLATE = $dataw->TEMPLATE;
+	$PRETTYURLS = $dataw->PRETTYURLS;
+	$PERMALINK = $dataw->PERMALINK;
+	$CHECKUPDATES = $dataw->CHECKUPDATES;
+} else {
+	$SITENAME = '';
+	//$SITEURL = '';
+}
+
+/* Get user data from storage */
+global $USR;
+if (isset($_COOKIE['GS_ADMIN_USERNAME'])) {
+	$cookie_user_id = _id($_COOKIE['GS_ADMIN_USERNAME']);
+	if (file_exists(GSUSERSPATH . $cookie_user_id.'.xml')) {
+		$datau = getXML(GSUSERSPATH  . $cookie_user_id.'.xml');
+		$USR = stripslashes($datau->USR);
+		$HTMLEDITOR = $datau->HTMLEDITOR;
+		$TIMEZONE = $datau->TIMEZONE;
+		$LANG = $datau->LANG;
+	} else {
+		$USR = null;
+	}
+} else {
+	$USR = null;
+}
+require_once(av::get('spath').'modules/field/field.php');
+
 include('template_functions.php');
 include('logging.class.php');
 
-define('GSROOTPATH', get_root_path());
 if(!is_frontend()){
 	if (file_exists(GSROOTPATH . 'config.php')) {
 		require_once(GSROOTPATH . 'config.php');
@@ -110,24 +156,7 @@ if(getDef('GSNOFRAME') !== false){
 	else if(getDef('GSNOFRAME') === GSFRONT && is_frontend()) header_xframeoptions();
 }
 
-/**
- * Define some constants
- */
-define('GSADMINPATH', get_admin_path());
-define('GSADMININCPATH', GSADMINPATH. 'inc/');
-define('GSPLUGINPATH', GSROOTPATH. 'plugins/');
-define('GSLANGPATH', GSADMINPATH. 'lang/');
-define('GSDATAPATH', GSROOTPATH. 'data/');
-define('GSDATAOTHERPATH', GSROOTPATH. 'data/other/');
-define('GSDATAPAGESPATH', GSROOTPATH. 'data/pages/');
-define('GSDATAUPLOADPATH', GSROOTPATH. 'data/uploads/');
-define('GSTHUMBNAILPATH', GSROOTPATH. 'data/thumbs/');
-define('GSBACKUPSPATH', GSROOTPATH. 'backups/');
-define('GSTHEMESPATH', GSROOTPATH. 'theme/');
-define('GSUSERSPATH', GSROOTPATH. 'data/users/');
-define('GSBACKUSERSPATH', GSROOTPATH. 'backups/users/');
-define('GSCACHEPATH', GSROOTPATH. 'data/cache/');
-define('GSAUTOSAVEPATH', GSROOTPATH. 'data/pages/autosave/');
+
 
 $reservedSlugs = array($GSADMIN,'data','theme','plugins','backups');
 
@@ -158,60 +187,6 @@ $load['plugin'] = (isset($load['plugin'])) ? $load['plugin'] : '';
 
 
 
-$SITEURL=paths::client(dirname(dirname(__FILE__)));
-/**
- * Pull data from storage
- */
-/** grab website data */
-$thisfilew = GSDATAOTHERPATH .'website.xml';
-if (file_exists($thisfilew)) {
-	$dataw = getXML($thisfilew);
-	$SITENAME = stripslashes($dataw->SITENAME);
-	//$SITEURL = $dataw->SITEURL;
-	$TEMPLATE = $dataw->TEMPLATE;
-	$PRETTYURLS = $dataw->PRETTYURLS;
-	$PERMALINK = $dataw->PERMALINK;
-	$CHECKUPDATES = $dataw->CHECKUPDATES;
-} else {
-	$SITENAME = '';
-	//$SITEURL = '';
-} 
-
-
-/** grab user data */
-if (isset($_COOKIE['GS_ADMIN_USERNAME'])) {
-	$cookie_user_id = _id($_COOKIE['GS_ADMIN_USERNAME']);
-	if (file_exists(GSUSERSPATH . $cookie_user_id.'.xml')) {
-		$datau = getXML(GSUSERSPATH  . $cookie_user_id.'.xml');
-		$USR = stripslashes($datau->USR);
-		$HTMLEDITOR = $datau->HTMLEDITOR;
-		$TIMEZONE = $datau->TIMEZONE;
-		$LANG = $datau->LANG;
-	} else {
-		$USR = null;
-	}
-} else {
-	$USR = null;
-}
-
-/**
- * Language control
- */
-if(!isset($LANG) || $LANG == '') {
-	$filenames = glob(GSLANGPATH.'*.php');	
-	$cntlang = count($filenames);
-	if ($cntlang == 1) {
-		// assign lang to only existing file
-		$LANG = basename($filenames[0], ".php");
-	} elseif($cntlang > 1 && in_array(GSLANGPATH .'en_US.php',$filenames)) {
-		// fallback to en_US if it exists
-		$LANG = 'en_US';
-	} elseif(isset($filenames[0])) {
-		// fallback to first lang found
-		$LANG=basename($filenames[0], ".php");
-	}
-}
-
 i18n_merge(null); // load $LANG file into $i18n
 
 // Merge in default lang to avoid empty lang tokens
@@ -234,15 +209,11 @@ if(getDef('GSMERGELANG', true) !== false and !getDef('GSMERGELANG', true) ){
 if(!defined('GSCKETSTAMP')) define('GSCKETSTAMP',get_gs_version()); // ckeditor asset querystring for cache control
 if (defined('GSEDITORHEIGHT')) { $EDHEIGHT = GSEDITORHEIGHT .'px'; } else {	$EDHEIGHT = '500px'; }
 if (defined('GSEDITORLANG'))   { $EDLANG = GSEDITORLANG; } else {	$EDLANG = i18n_r('CKEDITOR_LANG'); }
-if (defined('GSEDITORTOOL') and !isset($EDTOOL)) { $EDTOOL = GSEDITORTOOL; }
+//if (defined('GSEDITORTOOL') and !isset($EDTOOL)) { $EDTOOL = GSEDITORTOOL; }
 if (defined('GSEDITOROPTIONS') and !isset($EDOPTIONS) && trim(GSEDITOROPTIONS)!="" ) $EDOPTIONS = GSEDITOROPTIONS; 
 
-if(!isset($EDTOOL)) $EDTOOL = 'basic'; // default gs toolbar
 
-if($EDTOOL == "none") $EDTOOL = null; // toolbar to use cke default
-$EDTOOL = returnJsArray($EDTOOL);
-// if($EDTOOL === null) $EDTOOL = 'null'; // not supported in cke 3.x
-// at this point $EDTOOL should always be a valid js nested array ([[ ]]) or escaped toolbar id ('toolbar_id')
+
 
 /**
  * Timezone setup
@@ -308,7 +279,7 @@ if (get_filename_id() != 'install' && get_filename_id() != 'setup' && get_filena
 	
 	# if there is no SITEURL set, then it's a fresh install. Start installation process
 	# siteurl check is not good for pre 3.0 since it will be empty, so skip and run update first.
-	if ($SITEURL == '' &&  get_gs_version() >= 3.0)	{
+	if ( !isset($SITEURL) &&  get_gs_version() >= 3.0)	{
 		serviceUnavailable();
 		redirect($fullpath . $GSADMIN.'/install.php');
 	} 
@@ -360,7 +331,7 @@ if(isset($load['plugin']) && $load['plugin']){
 	include_once('caching_functions.php');
 	
 	# main hook for common.php
-	exec_action('common');
+	event::create('common');
 	
 }
 if(isset($load['login']) && $load['login']){ 	include_once(GSADMININCPATH.'login_functions.php'); }

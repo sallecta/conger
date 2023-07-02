@@ -22,16 +22,6 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('SUPPORT') );
 	<div id="maincontent">
 		<div class="main">
 	
-			<h3><?php i18n('GETTING_STARTED');?></h3>
-			
-			<ul>
-				<li><a href="http://example.org/docs/" target="_blank" ><?php i18n('SIDE_DOCUMENTATION'); ?></a></li>
-				<li><a href="http://example.org/forum/" target="_blank" ><?php i18n('SUPPORT_FORUM'); ?></a></li>
-				<li><a href="http://example.org/extend/" target="_blank" ><?php echo str_replace(array('<em>','</em>'), '', i18n_r('GET_PLUGINS_LINK')); ?></a></li>
-				<li><a href="share.php?term=<?php i18n('SHARE'); ?>" rel="facybox" ><?php i18n('SHARE'); ?> GetSimple</a></li>
-				<li><a href="https://github.com/GetSimpleCMS" target="_blank">Github SVN</a></li>
-			</ul>
-			
 			<p><?php i18n('WELCOME_MSG'); ?> <?php i18n('WELCOME_P'); ?></p>
 			
 			<ul>
@@ -40,14 +30,14 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('SUPPORT') );
 				<li><a href="upload.php"><?php i18n('UPLOADIFY_BUTTON'); ?></a></li>
 				<li><a href="settings.php"><?php i18n('GENERAL_SETTINGS'); ?></a></li>
 				<li><a href="theme.php"><?php i18n('CHOOSE_THEME'); ?></a></li>
-				<?php exec_action('welcome-link'); ?>
-				<?php exec_action('welcome-doc-link'); ?>
+				<?php event::create('welcome-link'); ?>
+				<?php event::create('welcome-doc-link'); ?>
 			</ul>
 			
 			<h3><?php i18n('SUPPORT');?></h3>
 			<ul>
 				<li><p><a href="log.php?log=failedlogins.log"><?php i18n('VIEW_FAILED_LOGIN');?></a></p></li>
-				<?php exec_action('support-extras'); ?>
+				<?php event::create('support-extras'); ?>
 			</ul>
 
 		</div>

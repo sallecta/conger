@@ -42,7 +42,7 @@
 # Include common.php
 require($GSADMIN.'/inc/common.php');
 # Hook to load page Cache
-action::name('index-header');
+event::create('index-header');
 
 # get page id (url slug) that is being passed via .htaccess mod_rewrite
 if (isset($_GET['id'])){ 
@@ -54,7 +54,8 @@ if (isset($_GET['id'])){
 }
 
 // filter to modify page id request
-$id = exec_filter('indexid',$id);
+$id = filter::create('indexid',$id);
+//echo "<pre>id=$id</pre>";
  // $_GET['id'] = $id; // support for plugins that are checking get?
 
 # define page, spit out 404 if it doesn't exist
@@ -68,8 +69,7 @@ if (isset($pagesArray[$id]))
 	$data_index = getXml(GSDATAPAGESPATH . $id . '.xml');
 }
 // filter to modify data_index obj
-$data_index = exec_filter('data_index',$data_index);
-
+$data_index = filter::create('data_index',$data_index);
 // page not found handling
 if(!$data_index)
 {
@@ -88,7 +88,7 @@ if(!$data_index)
 		// fail over
 		redirect('404');
 	} 	
-	exec_action('error-404');
+	event::create('error-404');
 }
 
 $title         = $data_index->title;
@@ -102,7 +102,7 @@ $template_file = $data_index->template;
 $private       = $data_index->private;	
 
 // after fields from dataindex, can modify globals here or do whatever by checking them
-exec_action('index-post-dataindex');
+event::create('index-post-dataindex');
 
 # if page is private, check user
 if ($private == 'Y') {
@@ -131,13 +131,13 @@ if ( file_exists(GSTHEMESPATH .$TEMPLATE."/functions.php") ) {
 }
 
 # call pretemplate Hook
-exec_action('index-pretemplate');
+event::create('index-pretemplate');
 
 # include the template and template file set within theme.php and each page
 if ( (!file_exists(GSTHEMESPATH .$TEMPLATE."/".$template_file)) || ($template_file == '') ) { $template_file = "template.php"; }
 include(GSTHEMESPATH .$TEMPLATE."/".$template_file);
 
 # call posttemplate Hook
-exec_action('index-posttemplate');
+event::create('index-posttemplate');
 
 ?>

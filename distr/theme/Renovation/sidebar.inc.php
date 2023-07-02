@@ -1,16 +1,19 @@
 <?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }?>
 <aside id="sidebar">
+<?php
+if($innov_settings)
+{
+?>
 	<div class="section" id="socialmedia" >
 		<h2>Connect</h2>
+		<?php echo '</br>[inset'.json_encode($innov_settings).']</br>';?>
 		<div class="icons">
 		<?php
-			if($innov_settings){
-				foreach($innov_settings as $id=>$setting)
+			foreach($innov_settings as $id=>$setting)
+			{
+				if ($setting  != '' )
 				{
-					if ($setting  != '' )
-					{
-						echo '<a href="'.$setting.'"><img src="'.get_theme_url(false).'/assets/images/'.$id.'.png" alt="'.$id.'"/></a>';
-					}
+					echo '<a href="'.$setting.'"><img src="'.get_theme_url(false).'/assets/images/'.$id.'.png" alt="'.$id.'"/></a>';
 				}
 			}
 		?>
@@ -22,6 +25,9 @@
 			<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js"></script>
 		</div>
 	</div>
+<?php
+}
+?>
 	<!-- wrap each sidebar section like this -->
 	<div class="section">
 		<?php get_component('sidebar');	?>

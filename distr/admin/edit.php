@@ -12,7 +12,7 @@
 $load['plugin'] = true;
 
 // Include common.php
-include('inc/common.php');
+include('inc/common.php'); 
 
 // Variable settings
 $userid = login_cookie_check();
@@ -80,15 +80,19 @@ if ($id){
 if ($template == '') { $template = 'template.php'; }
 
 $themes_path = GSTHEMESPATH . $TEMPLATE;
-$themes_handle = opendir($themes_path) or die("Unable to open ". GSTHEMESPATH);		
-while ($file = readdir($themes_handle))	{		
-	if( isFile($file, $themes_path, 'php') ) {		
-		if ($file != 'functions.php' && substr(strtolower($file),-8) !='.inc.php' && substr($file,0,1)!=='.') {		
-      $templates[] = $file;		
-    }		
-	}		
-}		
-		
+$themes_handle = opendir($themes_path) or die("Unable to open ". GSTHEMESPATH);
+
+while ($file = readdir($themes_handle))
+{
+	//echo $themes_path.'</br>';
+	if( isFile($file, $themes_path, 'php') )
+	{
+		if ($file != 'functions.php' && substr(strtolower($file),-8) !='.inc.php' && substr($file,0,1)!=='.')
+		{
+			$templates[] = $file;
+		}
+	}
+}
 sort($templates);
 
 foreach ($templates as $file){
@@ -247,7 +251,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 
 			</div>
 			<div class="clear"></div>
-			<?php exec_action('edit-extras'); ?>		
+			<?php event::create('edit-extras'); ?>		
 
 			</div>	<!-- / metadata toggle screen -->
 				
@@ -258,7 +262,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 				<textarea id="post-content" name="post-content"><?php echo $content; ?></textarea>
 			</p>
 			
-			<?php exec_action('edit-content'); ?> 
+			<?php event::create('edit-content'); ?> 
 			
 			<?php if(isset($data_edit)) { 
 				echo '<input type="hidden" name="existing-url" value="'. $url .'" />'; 
@@ -298,78 +302,165 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 			<?php } ?>
 			
 		</form>
-		
-		<?php 
-
-			if(isset($EDTOOL)) $EDTOOL = returnJsArray($EDTOOL);
-			if(isset($toolbar)) $toolbar = returnJsArray($toolbar); // handle plugins that corrupt this
-
-			else if(strpos(trim($EDTOOL),'[[')!==0 && strpos(trim($EDTOOL),'[')===0){ $EDTOOL = "[$EDTOOL]"; }
-
-			if(isset($toolbar) && strpos(trim($toolbar),'[[')!==0 && strpos($toolbar,'[')===0){ $toolbar = "[$toolbar]"; }
-			$toolbar = isset($EDTOOL) ? ",toolbar: ".trim($EDTOOL,",") : '';
-			$options = isset($EDOPTIONS) ? ','.trim($EDOPTIONS,",") : '';
-
-		?>
 		<?php if ($HTMLEDITOR != '') { ?>
-		<script type="text/javascript" src="template/js/ckeditor/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
-
-			<script type="text/javascript">
-			<?php if(getDef("GSCKETSTAMP",true)) echo "CKEDITOR.timestamp = '".getDef("GSCKETSTAMP") . "';\n"; ?>
-			var editor = CKEDITOR.replace( 'post-content', {
-					skin : 'getsimple',
-					forcePasteAsPlainText : true,
-					language : '<?php echo $EDLANG; ?>',
-					defaultLanguage : 'en',
-					<?php if (file_exists(GSTHEMESPATH .$TEMPLATE."/editor.css")) { 
-						$fullpath = suggest_site_path();
-						?>
-						contentsCss: '<?php echo $fullpath; ?>theme/<?php echo $TEMPLATE; ?>/editor.css',
-					<?php } ?>
-					entities : false,
-					// uiColor : '#FFFFFF',
-					height: '<?php echo $EDHEIGHT; ?>',
-					baseHref : '<?php echo $SITEURL; ?>',
-					tabSpaces:10,
-					filebrowserBrowseUrl : 'filebrowser.php?type=all',
-					filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
-					filebrowserWindowWidth : '730',
-					filebrowserWindowHeight : '500'
-					<?php echo $toolbar; ?>
-					<?php echo $options; ?>					
-			});
-
-			CKEDITOR.instances["post-content"].on("instanceReady", InstanceReadyEvent);
-
-			function InstanceReadyEvent(ev) {
-				_this = this;
-
-				this.document.on("keyup", function () {
-					$('#editform #post-content').trigger('change');
-					_this.resetDirty();
-				});
-
-			    this.timer = setInterval(function(){trackChanges(_this)},500);
-			}		
-
-			/**
-			 * keep track of changes for editor
-			 * until cke 4.2 is released with onchange event
+		<?php
+		/* CKEditor toolbar */
+		//if( $EDTOOL=='basic' && empty($toolbar) )
+		//{
+			//$toolbar=array
+			//(
+				//(object)array('name'=>'basicstyles', 'items'=>['Bold','Italic']),
+			//);
+			//$toolbar= json_encode($toolbar);
+		//}
+		//if( $EDTOOL=='advanced' && empty($toolbar) )
+		//{
+			/*
+			 [['h2','h3','h4','h5','h6'], ['Bold','Italic','Underline'],['NumberedList', 'BulletedList', 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock', 'Table', 'TextColor', 'BGColor', 'Link', 'Unlink', 'Image', 'RemoveFormat', 'Source'], ['Undo','Redo'], [ 'Maximize', 'ShowBlocks','-','About' ] ]
 			 */
-			function trackChanges(editor) {
-				// console.log('check changes');
-				if ( editor.checkDirty() ) {
-					$('#editform #post-content').trigger('change');
-					editor.resetDirty();			
-				}
-			};
+			//$toolbar=array
+			//(
+				////(object)array('name'=>'basicstyles', 'items'=>['Bold','Italic']),
+				//(object)array('items'=>['h2','h3','h4','h5','h6']),
+				//(object)array('items'=>['Link','Unlink','Anchor']),
+				//(object)array('items'=>['Source','Unlink','Anchor']),
+			//);
+			//$toolbar= json_encode($toolbar);
+			//$toolbar= "[['h2','h3','h4','h5','h6'], ['NumberedList', 'BulletedList'],['Outdent','Indent'],[ 'find', 'selection', 'spellchecker' ],
+			//'/',
+			//['Source','About']]";
+		//}
+		//if( !empty($toolbar) && gettype($toolbar==='string') )
+		//{
+			//$toolbar="toolbar: $toolbar";
+		//}
+		//else
+		//{
+			//$toolbar = false;
+		//}
+		//$ckeditor_mod_url=$SITEURL.'/admin/template/js/ckeditor';
+		?>
+<script type="text/javascript" src="<?=av::get('cpath')?>admin/template/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
+<script type="text/javascript">
+// CKEditor run script
+var startCKeditor = ( function()
+{
+	//var ckedroot='rooot/dir/where/ckeditor/listed';
+	var ckedroot=<?="'".av::get('cpath').'admin/template/js/ckeditor'."'";?>;
+	var editor_el_name = 'post-content';
+	var custom_opts =
+	{
+		customConfig: ckedroot+'/custom/config.js',
+		//extraPlugins: 'format_buttons',
+		skin : 'conger,'+ckedroot+'/custom/skins/conger/',
+		filebrowserBrowseUrl : 'filebrowser.php?type=all',
+		filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
+		filebrowserWindowWidth : '730',
+		filebrowserWindowHeight : '500',
+		language : '<?php echo $EDLANG; ?>',
+		defaultLanguage : '<?php echo $EDLANG; ?>',
+		<?php if (file_exists(GSTHEMESPATH.$TEMPLATE."/editor.css")) { ?>
+		contentsCss: '<?=$SITEURL."theme/$TEMPLATE/editor.css";?>',
+		<?php } 
+		else
+		{ ?>
+		contentsCss: ckedroot+'/custom/contents.css',
+		<?php } ?>
+	};
+	//console.log(['ckedroot',ckedroot,'custom_opts',custom_opts]);
+	if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
+	{
+		CKEDITOR.tools.enableHtml5Elements( document );
+	}
+	// The trick to keep the editor in the sample quite small
+	// unless user specified own height.
+	//CKEDITOR.config.height = 150;
+	CKEDITOR.config.width = 'auto';
+	CKEDITOR.config.contentsCss = ckedroot+'/custom/contents.css';
+	CKEDITOR.plugins.basePath = ckedroot+'/custom/plugins/';
+	var wysiwygareaAvailable = isWysiwygareaAvailable();
+	return function()
+	{
+		//var editor; // uncomment for local scope
+		editor =  document.getElementById( editor_el_name );
+		/* Create classic or inline editor. */
+		if ( wysiwygareaAvailable )
+		{
+			editor = CKEDITOR.replace( editor_el_name, custom_opts );
+		}
+		else
+		{
+			console.warn('CKEditor missing wysiwygarea plugin, using inline mode.');
+			editor.setAttribute( 'contenteditable', 'true' );
+			editor = CKEDITOR.inline( editor_el_name, custom_opts );
+		}
+		//isSomePlugin = !!CKEDITOR.plugins.get( 'plugin_name' );
+		//if ( true ) { editorElement.setHtml('Sample text.');}
+		//console.log('editor element=',editor);
+	};
+	function isWysiwygareaAvailable()
+	{
+		// If in development mode, then the wysiwygarea must be available.
+		// Split REV into two strings so builder does not replace it :D.
+		if ( CKEDITOR.revision == ( '%RE' + 'V%' ) )
+		{
+			return true;
+		}
+		return !!CKEDITOR.plugins.get( 'wysiwygarea' );
+	}
+} )();
+startCKeditor();
 
-			</script>
+////**/
+CKEDITOR.instances["post-content"].on("instanceReady", InstanceReadyEvent);
+function InstanceReadyEvent(ev)
+{
+	_this = this;
+	this.document.on("keyup", function ()
+	{
+		$('#editform #post-content').trigger('change');
+		_this.resetDirty();
+	});
+    this.timer = setInterval(function(){trackChanges(_this)},500);
+				var imgs = editor.document.getElementsByTag('img').$;
+				var from = '<?php echo av::get('cpath_shortcode');?>';
+				var to = '<?=av::get('cpath');?>';
+				for (let img of imgs)
+				{
+					var pos = img.src.indexOf('<?php echo av::get('cpath_shortcode');?>');
+					//console.log('pos='+pos);
+					src=img.src.substring(pos);
+					//console.log('src='+src);
+					img.src=src.replace(from,to);
+				
+				}
+				//console.log(imgs);
+}
+
+/**
+ * keep track of changes for editor
+ * until cke 4.2 is released with onchange event
+ */
+function trackChanges(editor)
+{
+	// console.log('check changes');
+	if ( editor.checkDirty() )
+	{
+		$('#editform #post-content').trigger('change');
+		editor.resetDirty();
+	}
+	
+				
+};
+///**/
+//end CKEditor run script
+</script>
 			
 			<?php
+			
 				# CKEditor setup functions
-				ckeditor_add_page_link();
-				exec_action('html-editor-init'); 
+				ckeditor_add_page_link();// does nothing, deprecated
+				event::create('html-editor-init'); 
 			?>
 			
 		<?php } ?>
@@ -403,7 +494,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 			}
 
 			jQuery(document).ready(function() { 
-
+				
 			<?php if (defined('GSAUTOSAVE') && (int)GSAUTOSAVE != 0) { /* IF AUTOSAVE IS TURNED ON via GSCONFIG.PHP */ ?>	
 
 					$('#pagechangednotify').hide();
@@ -485,6 +576,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 							$('#cancel-updates').show();						
 					}
 			});
+			conger_path='<?=$SITEURL;?>';
 		</script>
 	</div>
 	</div><!-- end maincontent -->

@@ -130,11 +130,14 @@ get_template('header', cl($SITENAME).' &raquo; '. i18n_r('BAK_MANAGEMENT').' &ra
 		</div>
 		
 		<?php if ($HTMLEDITOR != '') { ?>
-		<script type="text/javascript" src="template/js/ckeditor/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
+		<script type="text/javascript" src="template/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
 		<script type="text/javascript">
 		<?php if(getDef("GSCKETSTAMP",true)) echo "CKEDITOR.timestamp = '".getDef("GSCKETSTAMP") . "';\n"; ?>
+		var ckedroot=<?="'".av::get('cpath').'admin/template/js/ckeditor'."'";?>;
+		CKEDITOR.plugins.basePath = ckedroot+'/custom/plugins/';
 		var editor = CKEDITOR.replace( 'codetext', {
-			skin : 'getsimple',
+			customConfig: ckedroot+'/custom/config.js',
+			skin : 'conger,'+ckedroot+'/custom/skins/conger/',
 			language : '<?php echo $EDLANG; ?>',
 			defaultLanguage : '<?php echo $EDLANG; ?>',
 			<?php if (file_exists(GSTHEMESPATH .$TEMPLATE."/editor.css")) { 

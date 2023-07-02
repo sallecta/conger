@@ -9,11 +9,11 @@ Additonal Credit: Based heavily on the child_menu plugin by Erik (http://www.foh
 */
 
 // get correct id for plugin
-$thisfile = basename(__FILE__, '.php'); // This gets the correct ID for the plugin.
+$nesmenfile = 'nested_menus'; // This gets the correct ID for the plugin.
 
 // register plugin
 register_plugin(
-	$thisfile,	// ID of plugin, should be filename minus php
+	$nesmenfile,	// ID of plugin, should be filename minus php
 	'Nested Menus',	# Title of plugin
 	'1.4',	// Version of plugin
 	'Chris Bloom',	// Author of plugin
@@ -24,9 +24,9 @@ register_plugin(
 );
 
 // activate actions
-add_action('changedata-save','nested_menus__clear_cache');
-add_action('page-delete', 'nested_menus__clear_cache');
-add_action('cache-delete', 'nested_menus__clear_cache');
+event::join('changedata-save','nested_menus__clear_cache');
+event::join('page-delete', 'nested_menus__clear_cache');
+event::join('cache-delete', 'nested_menus__clear_cache');
 
 // functions
 function nested_menus__clear_cache() 
@@ -97,57 +97,66 @@ function get_nested_navigation($echo = true)
 {
 	$active_page=return_page_slug();
 	$cachepath = GSDATAOTHERPATH.'nested_menu_cache/'.$active_page.'.cache';
-	
-	if (is_file($cachepath)) //We have a cached file, use it.
+	//if (is_file($cachepath)) //We have a cached file, use it.
+	//{
+		//echo file_get_contents($cachepath);
+		//if ($echo)
+		//{
+			//echo file_get_contents($cachepath);
+			//return;
+		//}
+		//else
+		//{
+			//return file_get_contents($cachepath);
+		//}
+	//}
+	//We do not have a cached file<s>, create a new one<s>.
+	$nested_menu_data = nested_menu_data();
+	$items = array();
+	$num_items = sizeof($items);
+	foreach($nested_menu_data as $key => $item)
 	{
-		echo file_get_contents($cachepath);
-	}
-	else //We do not have a cached file, create a new one.
-	{
-		$nested_menu_data = nested_menu_data();
-		$items = array();
-		$num_items = sizeof($items);
-		foreach($nested_menu_data as $key => $item)
+		$num_children = sizeof($item['children']);
+		$classes = array($item['slug']);
+		if ($key == 0) { $classes[] = 'first'; }
+		elseif($key == ($num_items - 1)) { $classes[] = 'last'; }
+		if ($num_children) { $classes[] = 'submenu'; }
+		if ($item['slug'] == $active_page) { $classes[] = 'current'; }
+		$string = '<li class="%s"><a href="'. $item['url'] . '" title="'. strip_quotes(stripslashes($item['title'])) .'">'.stripslashes($item['menu_text']).'</a>';
+		if ($num_children)
 		{
-			$num_children = sizeof($item['children']);
-			$classes = array($item['slug']);
-			if ($key == 0) { $classes[] = 'first'; }
-			elseif($key == ($num_items - 1)) { $classes[] = 'last'; }
-			if ($num_children) { $classes[] = 'submenu'; }
-			if ($item['slug'] == $active_page) { $classes[] = 'current'; }
-			$string = '<li class="%s"><a href="'. $item['url'] . '" title="'. strip_quotes(stripslashes($item['title'])) .'">'.stripslashes($item['menu_text']).'</a>';
-			if ($num_children)
+			$string .= "\n  <ul>";
+			foreach ($item['children'] as $sub_key => $sub_item)
 			{
-				$string .= "\n  <ul>";
-				foreach ($item['children'] as $sub_key => $sub_item)
+				$string .= "\n    <li class=\"" . $sub_item['slug'];
+				if ($sub_key == 0) { $string .= ' first'; }
+				elseif($sub_key == ($num_children - 1)) { $string .= ' last'; }
+				if ($sub_item['slug'] == $active_page)
 				{
-					$string .= "\n    <li class=\"" . $sub_item['slug'];
-					if ($sub_key == 0) { $string .= ' first'; }
-					elseif($sub_key == ($num_children - 1)) { $string .= ' last'; }
-					if ($sub_item['slug'] == $active_page)
-					{
-						$classes[] = 'current_parent';
-						$string .= ' current';
-					}
-					$string .= '"><a href="'. $sub_item['url'] . '" title="'. strip_quotes(stripslashes($sub_item['title'])) .'">'.stripslashes($sub_item['menu_text']).'</a></li>';
+					$classes[] = 'current_parent';
+					$string .= ' current';
 				}
-				$string .= "\n  </ul>\n";
+				$string .= '"><a href="'. $sub_item['url'] . '" title="'. strip_quotes(stripslashes($sub_item['title'])) .'">'.stripslashes($sub_item['menu_text']).'</a></li>';
 			}
-			$string .= '</li>';
-			$items[] = sprintf($string, implode(' ', $classes));
+			$string .= "\n  </ul>\n";
 		}
-		if (sizeof($items))
-		{
-			$items = implode("\n", $items);
-			if ($echo)
-			{
-				nested_menus__cache_file($cachepath, $items);
-				echo '<!-- un-cached -->' . $items;
-			}
-			else return $items;
-		}
-		else return "";
+		$string .= '</li>';
+		$items[] = sprintf($string, implode(' ', $classes));
 	}
+	if (sizeof($items))
+	{
+		$items = implode("\n", $items);
+		if ($echo)
+		{
+			//nested_menus__cache_file($cachepath, $items);
+			echo '<!-- un-cached -->' . $items;
+		}
+		else
+		{
+			return $items;
+		}
+	}
+	else return "";
 }
 
 function nested_menu_data__sort_menu_parents_first($a, $b) {

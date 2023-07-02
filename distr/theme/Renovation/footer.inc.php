@@ -1,14 +1,17 @@
 <?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); } 
-
+$email=field::get('site_email');
 ?>
-	<!-- site footer -->
 	<footer class="clearfix" >
 		
 		<?php get_footer(); ?>
 
 	 	<div class="wrapper">
-			<div class="left"><?php echo date('Y'); ?> <a href="<?php get_site_url(); ?>" ><?php get_site_name(); ?></a></div>
-			<div class="right">Renovation Theme by <a href="http://www.example.com" >Sallecta, Cagintranet</a> &middot; <?php get_site_credits(); ?></div>
+			<div class="left"><?php //echo date('Y'); ?> <a href="<?=field::get('site_url'); ?>" ><?php get_site_name(); ?></a></div>
+			<div class="right">
+				<?php if ($email) { ?>
+				<a href="mailto:<?=field::get('site_email');?>"><?=field::get('site_email');?></a>
+				<?php } ?>
+			</div>
 		</div>
 	</footer>
 	 

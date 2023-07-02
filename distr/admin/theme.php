@@ -75,7 +75,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('THEME_MANAGEMENT'));
 		<?php	
 			$theme_path = str_replace(GSROOTPATH,'',GSTHEMESPATH);
 			if ( $SITEURL ) {	
-				echo '<p><b>'.i18n_r('THEME_PATH').': &nbsp;</b> <code>'.$SITEURL.'/'.$theme_path.$TEMPLATE.'/</code></p>';
+				echo '<p><b>'.i18n_r('THEME_PATH').': &nbsp;</b> <code>'.av::get('cpath_themes').$TEMPLATE.'/</code></p>';
 			}
 		?>
 		<p><select id="theme_select" class="text" style="width:250px;" name="template" >
@@ -91,7 +91,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('THEME_MANAGEMENT'));
 				echo '<span id="theme_no_img"><p><em>'.i18n_r('NO_THEME_SCREENSHOT').'</em></p></span>';
 			}
 
-			exec_action('theme-extras');
+			event::create('theme-extras');
 		?>
 			
 		</div>

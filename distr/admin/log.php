@@ -38,7 +38,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && strlen($log_name)>0
 		}
 	}
 	unlink($log_file);
-	exec_action('logfile_delete');
+	event::create('logfile_delete');
 	redirect('support.php?success='.urlencode('Log '.$log_name . i18n_r('MSG_HAS_BEEN_CLR')));
 }
 

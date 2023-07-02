@@ -25,7 +25,7 @@ register_plugin(
 );
 
 //Change hook name to alter the position where the link is being displayed
-add_action('content-bottom', 'edit_page', array());
+event::join('content-bottom', 'edit_page', array());
 
 
 # functions
@@ -34,13 +34,9 @@ function edit_page()
 	global $plgid;
 	if (cookie_check())
 	{
-		global $GSADMIN;
-		//Get url and slug
-		$url=get_site_url(false);
-		if ( $url == '/' ) { $sl='';} else { $sl='/';}
 		$slug=get_page_slug(false);
 		//Echo the link
-		echo '<a class="btn_adm" href="'.$url.$sl.$GSADMIN.'/edit.php?id='.$slug.'">'.i18n_r($plgid.'/EDIT_PAGE').'.</a>';
+		echo '<a class="btn_adm" href="'.av::get('cpath').'admin/edit.php?id='.$slug.'">'.i18n_r($plgid.'/EDIT_PAGE').'.</a>';
 	}
 }
 

@@ -9,11 +9,11 @@
 *****************************************************/
 
 $pagesArray = array();
-add_action('index-header','getPagesXmlValues',array(false));      // make $pagesArray available to the front 
-add_action('header', 'getPagesXmlValues',array(get_filename_id() != 'pages'));  // make $pagesArray available to the back
-add_action('page-delete', 'create_pagesxml',array(true));         // Create pages.array if page deleted
-add_action('page-restored', 'create_pagesxml',array(true));        // Create pages.array if page undo
-add_action('changedata-aftersave', 'create_pagesxml',array(true));     // Create pages.array if page is updated
+event::join('index-header','getPagesXmlValues',array(false));      // make $pagesArray available to the front 
+event::join('header', 'getPagesXmlValues',array(get_filename_id() != 'pages'));  // make $pagesArray available to the back
+event::join('page-delete', 'create_pagesxml',array(true));         // Create pages.array if page deleted
+event::join('page-restored', 'create_pagesxml',array(true));        // Create pages.array if page undo
+event::join('changedata-aftersave', 'create_pagesxml',array(true));     // Create pages.array if page is updated
 
 /**
  * Get Page Content
@@ -30,7 +30,7 @@ function getPageContent($page,$field='content'){
 	$data = simplexml_load_string($thisfile);
 	$content = stripslashes(htmlspecialchars_decode($data->$field, ENT_QUOTES));
 	if ($field=='content'){
-		$content = exec_filter('content',$content);
+		$content = filter::create('content',$content);
 	}
 	echo $content;
 }
@@ -94,7 +94,7 @@ function returnPageContent($page, $field='content', $raw = false, $nofilter = fa
 	$content = $data->$field;
 	if(!$raw) $content = stripslashes(htmlspecialchars_decode($content, ENT_QUOTES));
 	if ($field=='content' and !$nofilter){
-		$content = exec_filter('content',$content);
+		$content = filter::create('content',$content);
 	}
   	return $content;
 }
@@ -238,6 +238,7 @@ function getPagesXmlValues($chkcount=false)
   
 }
 
+
 /**
  * Create the Cached Pages XML file
  *
@@ -314,14 +315,14 @@ if ((isset($_GET['upd']) && $_GET['upd']=="edit-success") || $flag===true || $fl
   if ($flag===true || $flag == 'true'){
 
   	// Plugin Authors should add custom fields etc.. here
-  	$xml = exec_filter('pagecache',$xml);
+  	$xml = filter::create('pagecache',$xml);
 
     // sanity check in case the filter does not come back properly or returns null
     if($xml){ 
     	$success = XMLsave($xml,$filem);
   	}	
   	// debugLog("create_pagesxml saved: ". $success);
-  	exec_action('pagecache-aftersave');
+  	event::create('pagecache-aftersave');
   	return $success;
   }
 }

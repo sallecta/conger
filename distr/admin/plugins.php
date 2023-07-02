@@ -84,7 +84,7 @@ if ($needsupdate) {
 	}
 }	
 
-exec_action('plugin-hook');
+event::create('plugin-hook');
 get_template('header', cl($SITENAME).' &raquo; '.i18n_r('PLUGINS_MANAGEMENT')); 
 
 ?>

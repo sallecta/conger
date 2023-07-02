@@ -23,8 +23,7 @@ register_plugin(
 	'gsapi_display_cp'
 );
 
-# activate hooks
-add_action('settings-sidebar','createSideMenu',array($thisfileapi, i18n_r('API_CONFIGURATION'))); 
+event::join('settings-sidebar','createSideMenu',array($thisfileapi, i18n_r('API_CONFIGURATION'))); 
 
 function gsapi_display_cp() {
 	$thisdatafile = GSDATAOTHERPATH.'appid.xml';

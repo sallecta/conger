@@ -168,6 +168,7 @@ input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 	border-left: 1px solid <?php echo $primary_3; ?>;
 }
 
+#field_admin .wrapper .nav li a.field_admin,
 #edit .wrapper .nav li a.pages,
 #pages .wrapper .nav li a.pages,
 #menu-manager .wrapper .nav li a.pages,
@@ -181,9 +182,9 @@ input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 #upload .wrapper .nav li a.files,
 #image .wrapper .nav li a.files,
 #backups .wrapper .nav li a.backups,
+#health .wrapper .nav li a.health,
 #support .wrapper .nav li a.support,
 #log .wrapper .nav li a.support,
-#health-check .wrapper .nav li a.support,
 #backup-edit .wrapper .nav li a.backups,
 #archive .wrapper .nav li a.backups, 
 #load .wrapper .pages li a.pages,
@@ -193,6 +194,7 @@ input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 #load .wrapper .files li a.files,
 #load .wrapper .backups li a.backups,
 #load	.wrapper .support li a.support,
+#load	.wrapper .health li a.health,
 #load .wrapper .nav li a.current,
 #loadtab .wrapper .nav li a.current {
 	color: <?php echo $primary_1; ?>;
@@ -248,8 +250,8 @@ input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 /* warning alert on tab */
 .nav li.rightnav .warning, .nav li.rightnav .info {
 	position: absolute;
-	top: -5px;
-	left: -5px;
+	top: -11px;
+	left: 0px;
 }
 
 .nav li .warning, .nav li .info {
@@ -1537,7 +1539,7 @@ table.simple td.title {
 	float: right;
 	width: 60px;
 	text-align: right;
-	opacity: .10;	
+	opacity: .50;
 }
 
 #footer .footer-left {

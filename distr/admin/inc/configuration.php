@@ -7,7 +7,6 @@
  */
 
 $site_full_name     = 'Conger';
-$site_version_no    = '3.3.19';
 $name_url_clean     = lowercase(str_replace(' ','-',$site_full_name));
 $ver_no_clean       = str_replace('.','',$site_version_no);
 $site_link_back_url = 'http://example.org/';

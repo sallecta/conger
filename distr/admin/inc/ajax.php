@@ -23,6 +23,16 @@ if(isset($_REQUEST['list_pages_json'])) {
 	echo list_pages_json();
 	die();
 }
+// JSON output of portable pages for ckeditor select
+if(isset($_REQUEST['list_pages_portable_json'])) {
+	av::set('cmode','json');
+	include_once('plugin_functions.php');	
+	include_once('caching_functions.php');
+	getPagesXmlValues();
+	header('Content-type: application/json');	
+	echo portable_list_pages_json();
+	die();
+}
 
 // Make sure register globals don't make this hackable again.
 if (isset($TEMPLATE)) unset($TEMPLATE);

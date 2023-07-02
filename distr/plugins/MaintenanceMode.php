@@ -21,10 +21,10 @@ register_plugin(
   'MaintenanceModeSettingsRender'
 );
 
-add_action('settings-website-extras', 'MaintenanceModeSettingsRender');
-add_action('settings-website', 'MaintenanceModeSettingsSave');
-add_action('header', 'MaintenanceModeNotify');
-add_action('index-pretemplate', 'MaintenanceMode');
+event::join('settings-website-extras', 'MaintenanceModeSettingsRender');
+event::join('settings-website', 'MaintenanceModeSettingsSave');
+event::join('header', 'MaintenanceModeNotify');
+event::join('index-pretemplate', 'MaintenanceMode');
 function MaintenanceMode()
 {
 	global $dataw;

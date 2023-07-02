@@ -52,7 +52,7 @@ define('GSDONOTPING', 1);
 #define('GSEDITORHEIGHT', '400');
 
 # WYSIWYG toolbars (advanced, basic or [custom config]) 
-#define('GSEDITORTOOL', 'advanced');
+//define('GSEDITORTOOL', 'advanced');
 
 # WYSIWYG editor language (default en)
 #define('GSEDITORLANG', 'en');
@@ -77,8 +77,8 @@ define('GSDONOTPING', 1);
 # valid timeszones can be found here http://www.php.net/manual/en/timezones.php
 # define('GSTIMEZONE', 'America/Chicago');
 
-# Disable loading of external CDN versions of scripts (jQuery/jQueryUI)
-#define("GSNOCDN",true);
+# Disable loading of internet CDN versions of scripts (jQuery/jQueryUI), use local files
+define("GSNOCDN",true);
 
 # Disable Codemirror theme editor
 #define("GSNOHIGHLIGHT",true);

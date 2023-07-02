@@ -70,7 +70,7 @@ if (isset($_FILES['file'])) {
 				} else {
 					chmod($file_loc, 0644);
 				}
-				exec_action('file-uploaded');
+				event::create('file-uploaded');
 				
 				// generate thumbnail				
 				require_once('inc/imagemanipulation.php');	
@@ -322,7 +322,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('FILE_MANAGEMENT'));
 					
 				}
 			}
-			exec_action('file-extras');
+			event::create('file-extras');
 			echo '</table>';
 			
 			if ($counter > 0) { 

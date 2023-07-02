@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Tue, 06 Jun 2023 17:39:55 -0400</pubDate><title>Home</title><url>index</url><meta>getsimple, easy, content management system</meta><metad></metad><menu>Home</menu><menuStatus>Y</menuStatus><template>template.php</template><parent></parent><content>&amp;lt;p&amp;gt;Con[tentMane]ger&amp;#039;s web site.&amp;lt;/p&amp;gt;
+<item><pubDate>Sun, 02 Jul 2023 20:57:18 +0300</pubDate><title><![CDATA[Home]]></title><url><![CDATA[index]]></url><meta><![CDATA[краны вентили трубы водопровод купить]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Home]]></menu><menuOrder><![CDATA[1]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[]]></parent><content><![CDATA[&lt;p&gt;Hello, World!&lt;/p&gt;
 
-&amp;lt;pre&amp;gt;&amp;lt;code class=&amp;quot;language-css&amp;quot;&amp;gt;#header h1 a { 
-	display: block; 
-	width: 300px; 
-	height: 80px; 
-}&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
-</content><private></private><author>admin</author><menuOrder><![CDATA[3]]></menuOrder></item>
+&lt;p&gt;&lt;a href=&quot;[$cpath$]admin/&quot;&gt;Login&lt;/a&gt; as admin:admin, change password and start using your new Conger site.&lt;/p&gt;
+]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author><about><![CDATA[]]></about><creDate>Thu, 08 Jun 2023 16:25:46 +0300</creDate><user><![CDATA[admin]]></user></item>

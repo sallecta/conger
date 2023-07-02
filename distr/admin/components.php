@@ -74,7 +74,7 @@ if (isset($_POST['submitted'])){
 			$count++;
 		}
 	}
-	exec_action('component-save');
+	event::create('component-save');
 	XMLsave($xml, $path . $file);
 	redirect('components.php?upd=comp-success');
 }
@@ -106,7 +106,7 @@ if (count($componentsec) != 0) {
 		$table .= '<input type="hidden" class="compslug" name="slug[]" value="'. $component->slug .'" />';
 		$table .= '<input type="hidden" class="comptitle" name="title[]" value="'. stripslashes($component->title) .'" />';
 		$table .= '<input type="hidden" name="id[]" value="'. $count .'" />';
-		exec_action('component-extras');
+		event::create('component-extras');
 		$table .= '</div>';
 		$count++;
 	}

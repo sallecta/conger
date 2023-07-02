@@ -1,45 +1,23 @@
 <?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
 
 
-/**
- * Get Page Content
- *
- * @since 1.0
- * @uses $content 
- * @uses exec_action
- * @uses exec_filter
- * @uses strip_decode
- *
- * @return string Echos.
- */
+
 function get_page_content() {
 	global $content;
-	exec_action('content-top');
+	event::create('content-top');
 	$content = strip_decode($content);
-	$content = exec_filter('content',$content);
+	$content = filter::create('content',$content);
 	if(getDef('GSCONTENTSTRIP',true)) $content = strip_content($content);
 	echo $content;
-	exec_action('content-bottom');
+	event::create('content-bottom');
 }
 
-/**
- * Get Page Excerpt
- *
- * @since 2.0
- * @uses $content
- * @uses exec_filter
- * @uses strip_decode
- *
- * @param string $n Optional, default is 200.
- * @param bool $striphtml Optional, default false, true will strip html from $content
- * @param string $ellipsis Optional, Default '...', specify an ellipsis
- * @return string Echos.
- */
+
 function get_page_excerpt($len=200, $striphtml=true, $ellipsis = '...') {
 	GLOBAL $content;
 	if ($len<1) return '';
 	$content_e = strip_decode($content);
-	$content_e = exec_filter('content',$content_e);
+	$content_e = filter::create('content',$content_e);
 	if(getDef('GSCONTENTSTRIP',true)) $content_e = strip_content($content_e);	
 	echo getExcerpt($content_e, $len, $striphtml, $ellipsis);
 }
@@ -243,7 +221,7 @@ function get_page_url($echo=false) {
  * meta desriptions & keywords, <s>canonical</s> and title tags
  *
  * @since 1.0
- * @uses exec_action
+ * @uses event::create
  * @uses get_page_url
  * @uses strip_quotes
  * @uses get_page_meta_desc
@@ -260,8 +238,11 @@ function get_header($full=true) {
 	global $metad;
 	global $title;
 	global $content;
-	include(GSADMININCPATH.'configuration.php');
-	
+	include(av::get('spath_admin_inc').'configuration.php');
+	// favicon, shortcut icon
+	$favicon=field::get('favicon');
+	if( !empty($favicon) )
+	{ echo '<link rel="shortcut icon" href="'.av::get('cpath').$favicon.'" type="image/x-icon" />'; }
 	// meta description	
 	if ($metad != '') {
 		$desc = get_page_meta_desc(FALSE);
@@ -282,17 +263,13 @@ function get_header($full=true) {
 
 	// meta keywords
 	$keywords = get_page_meta_keywords(FALSE);
-	if ($keywords != '') echo '<meta name="keywords" content="'.$keywords.'" />'."\n";
-	
+	if ($keywords != '') echo '<meta name="keywords" content="'.$keywords.'" />';
 	//if ($full)
 	//{
 		//echo '<link rel="canonical" href="'. get_page_url(true) .'" />'."\n";
-	//}
-
-	// script queue
+	//}	// script queue
 	get_scripts_frontend();
-	
-	exec_action('theme-header');
+	event::create('theme-header');
 }
 
 /**
@@ -303,13 +280,13 @@ function get_header($full=true) {
  * the bottom of a site's template.
  *
  * @since 2.0
- * @uses exec_action
+ * @uses event::create
  *
  * @return string HTML for template header
  */
 function get_footer() {
 	get_scripts_frontend(TRUE);
-	exec_action('theme-footer');
+	event::create('theme-footer');
 }
 
 /**
@@ -336,33 +313,7 @@ function get_site_url($echo=true) {
 	}
 }
 
-/**
- * Get Theme URL
- *
- * This will return the current active theme's full URL 
- *
- * @since 1.0
- * @uses $SITEURL
- * @uses $TEMPLATE
- *
- * @param bool $echo Optional, default is true. False will 'return' value
- * @return string Echos or returns based on param $echo
- */
-function get_theme_url($echo=true)
-{
-	global $SITEURL;
-	global $TEMPLATE;
-	if ( $SITEURL == '/') { $sl='';} else { $sl = '/';}
-	$myVar = trim($SITEURL . $sl . "theme/" . $TEMPLATE);
-	if ($echo)
-	{
-		echo $myVar;
-	}
-	else 
-	{
-		return $myVar;
-	}
-}
+
 
 /**
  * Get Site's Name
@@ -455,7 +406,8 @@ function menu_data($id = null,$xml=false)
 	global $pagesArray; 
 	$pagesSorted = subval_sort($pagesArray,'menuOrder');
 	if (count($pagesSorted) != 0)
-	{ 
+	{
+		$logged_in = cookie_check();
 		$count = 0;
 		if (!$xml)
 		{
@@ -468,6 +420,12 @@ function menu_data($id = null,$xml=false)
 				$slug = (string)$page['url'];
 				$menuStatus = (string)$page['menuStatus'];
 				$private = (string)$page['private'];
+				/* hide private pages from public */
+				if ( !$logged_in && $private=='Y' )
+				{
+					continue;
+				}
+				/* end */
 				$pubDate = (string)$page['pubDate'];  
 				$url = find_url($slug,$parent);
 				$specific = array("slug"=>$slug,"url"=>$url,"parent_slug"=>$parent,"title"=>$title,"menu_priority"=>$pri,"menu_text"=>$text,"menu_status"=>$menuStatus,"private"=>$private,"pub_date"=>$pubDate);
@@ -496,6 +454,12 @@ function menu_data($id = null,$xml=false)
 				$pubDate = $page['pubDate'];
 				$menuStatus = $page['menuStatus'];
 				$private = $page['private'];
+				/* hide private pages from public */
+				if ( !$logged_in && $private=='Y' )
+				{
+					continue;
+				}
+				/* end */
 				$url = find_url($slug,$parent);
 				$xml.="<item>";
 				$xml.="<slug><![CDATA[".$slug."]]></slug>";
@@ -554,24 +518,6 @@ function get_component($id) {
     }
 }
 
-/**
- * Get Main Navigation
- *
- * This will return unordered list of main navigation
- * This function uses the menu opitions listed within the 'Edit Page' control panel screen
- *
- * @since 1.0
- * @uses GSDATAOTHERPATH
- * @uses getXML
- * @uses subval_sort
- * @uses find_url
- * @uses strip_quotes 
- * @uses exec_filter 
- *
- * @param string $currentpage This is the ID of the current page the visitor is on
- * @param string $classPrefix Prefix that gets added to the parent and slug classnames
- * @return string 
- */	
 function get_navigation($currentpage = "",$classPrefix = "") {
 
 	$menu = '';
@@ -597,7 +543,7 @@ function get_navigation($currentpage = "",$classPrefix = "") {
 		
 	}
 	
-	echo exec_filter('menuitems',$menu);
+	echo filter::create('menuitems',$menu);
 }
 
 /**

@@ -97,7 +97,7 @@ if (isset($_POST['submitted']))
 				}
 				else
 				{
-					exec_action('changedata-updateslug');
+					event::create('changedata-updateslug');
 					updateSlugs($existingurl);
 					$file = GSDATAPAGESPATH . $url .".xml";
 					$existing = GSDATAPAGESPATH . $existingurl .".xml";
@@ -191,7 +191,7 @@ if (isset($_POST['submitted']))
 		$note = $xml->addChild('author');
 		$note->addCData($author);
 
-		exec_action('changedata-save');
+		event::create('changedata-save');
 		if (isset($_POST['autosave']) && $_POST['autosave'] == 'true' && $autoSaveDraft == true) {
 			$status = XMLsave($xml, GSAUTOSAVEPATH.$url);
 		} else {
@@ -199,7 +199,7 @@ if (isset($_POST['submitted']))
 		}
 		
 		//ending actions
-		exec_action('changedata-aftersave');
+		event::create('changedata-aftersave');
 		generate_sitemap();
 		
 		// redirect user back to edit page 

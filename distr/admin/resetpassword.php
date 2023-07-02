@@ -58,7 +58,7 @@ if(isset($_POST['submitted'])){
 				$message .= "<p>". i18n_r('LABEL_USERNAME').": <strong>". $USR."</strong>";
 				$message .= "<br>". i18n_r('NEW_PASSWORD').": <strong>". $random."</strong>";
 				$message .= '<br>'. i18n_r('EMAIL_LOGIN') .': <a href="'.$SITEURL .'/'. $GSADMIN.'/">'.$SITEURL .'/'. $GSADMIN.'/</a></p>';
-				exec_action('resetpw-success');
+				event::create('resetpw-success');
 				$status = sendmail($EMAIL,$subject,$message);
 				# show the result of the reset attempt
 				usleep($randSleep); 
@@ -66,7 +66,7 @@ if(isset($_POST['submitted'])){
 				redirect("resetpassword.php?upd=pwd-".$status);
 			} else{
 				# username doesnt match listed xml username
-				exec_action('resetpw-error');
+				event::create('resetpw-error');
 				usleep($randSleep);
 				redirect("resetpassword.php?upd=pwd-success");
 			} 

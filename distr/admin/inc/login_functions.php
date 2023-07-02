@@ -29,7 +29,7 @@ if(isset($_POST['submitted'])) {
 	# check for any errors
 	if ( !$error ) {
 		
-		exec_action('successful-login-start');
+		event::create('successful-login-start');
 		
 		# hash the given password
 		$password = passhash($password);
@@ -69,7 +69,7 @@ if(isset($_POST['submitted'])) {
 		if( $authenticated ) {
 			# YES - set the login cookie, then redirect user to secure panel		
 			create_cookie();
-			exec_action('successful-login-end');
+			event::create('successful-login-end');
 			redirect($cookie_redirect); 
 		} else {
 			# NO - show error message

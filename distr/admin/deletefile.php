@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
 		updateSlugs($id);
 		$status = delete_file($id);
 		generate_sitemap();
-		exec_action('page-delete');
+		event::create('page-delete');
 		redirect("pages.php?upd=edit-".$status."&id=". $id ."&type=delete");
 	}
 } 

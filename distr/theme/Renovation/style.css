@@ -1,7 +1,24 @@
-/* GENERAL */
+:root {
+	--color_main:		#4f4ba9;
+	--color_main_tr:	#4f4ba9;
+	--color_main_d:		#45419b;
+	--color_main_d_tr:	#45419b9c;
+	--color_main_l:		#5f5bbf;
+	--color_main_l_tr:	#5f5bbfa6;
+	--color_content:	#2d2d2d;
+	--con_h_pad: 2rem 0 0.8rem 0;
+	--con_pad: 0.8rem 0 1.4rem 0;
+	--con_h_mar: 0rem 0 0rem 0;
+	--con_mar: 0rem 0 0rem 0;
+	--font_fam_main: 'Yanone Kaffeesatz', arial, sans-serif;
+	--font_size_p: 0.8rem;
+}
+
+
 body {
 	background:#EFEFEF;
 }
+
 .wrapper {
 	width:950px;
 	margin:0 auto;
@@ -20,14 +37,13 @@ a:hover, a:focus {
 
 /* HEADER */
 .header {
-	background: #6B94B4;
-	background: -moz-linear-gradient(top, #6B94B4 0%, #316594 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6B94B4), color-stop(100%,#316594)); 
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6B94B4', endColorstr='#316594',GradientType=0 );
-	height:80px;
-	border-bottom:#2B5780 1px solid;
+	background-color: var(--color_main);
+	background-image: url("assets/images/header.png");
+	background-size: cover;
+	height: 150px;
+	border-bottom: #2B5780 1px solid;
+	background-repeat: no-repeat;
 }
-
 /* HEADER: breadcrumbs */
 header .breadcrumbs {
 	text-shadow: 1px 1px 0px rgba(255,255,255,.5);
@@ -62,7 +78,7 @@ header .breadcrumbs a:hover {
 /* HEADER: logo */
 header #logo {
 	position:absolute;
-	top:20px;
+	top:50px;
 	left:0;
 	font-size:35px;
 	white-space:nowrap;
@@ -77,7 +93,12 @@ header #logo:hover,
 header #logo:focus {
 	text-decoration:none;
 }
-
+header .role {
+	color: #fff;
+	position: absolute;
+	display: block;
+	top: 86px;
+}
 /* HEADER: */
 
 /* Nested menu */
@@ -93,7 +114,7 @@ Una Kravets
 }
 
 .menudt {
-	top: 15px;
+	top: 50px;
 	position: absolute;
 	right: 0;
 }
@@ -104,31 +125,36 @@ Una Kravets
 	margin: 0;
 	padding-left: 0;
 }
-
-.menudt li {
+.menudt > ul > li {
 	color: #fff;
 	background: transparent;
 	display: block;
 	float: left;
-	padding: 1rem;
+	padding: 0rem;
 	position: relative;
 	text-decoration: none;
 	transition-duration: 0.2s;
-	font-size: 16px;
-	font-weight: bold;
+	font-size: calc(var(--font_size_p) + 0.7rem);
+	font-weight: normal;
 	border-radius: 5px;
+	line-height: 1rem;
+	margin: 0.3rem;
+	font-family: var(--font_fam_main);
 }
 .menudt .current {
-	background: #748db3;
+	background: var(--color_main_d_tr);
 }
   
-.menudt li a {
-  color: #fff;
+.menudt > ul > li > a {
+	color: #fff;
+	display: inline-block;
+	line-height: 2.5rem;
+	padding: 0rem 0.7rem 0rem 0.7rem;
 }
 
 .menudt li:hover,
 .menudt li:focus-within {
-	background: #8798c1;
+	background: var(--color_main_l_tr);
 	cursor: pointer;
 	z-index:1;
 }
@@ -136,20 +162,32 @@ Una Kravets
 .menudt li:focus-within a {
   outline: none;
 }
-
-.menudt ul li ul {
-	background: #0b101c85;
+.menudt > ul > li > ul {
+	background: #1a294dde;
 	visibility: hidden;
-  opacity: 0;
-  min-width: 5rem;
+	opacity: 0;
+	min-width: 5rem;
+	width: max-content;
 	position: absolute;
-  transition: all 0.2s ease;
-  margin-top: 1rem;
+	transition: all 0.2s ease;
 	left: 0;
-  display: none;
-  border-radius: 5px;
+	display: none;
+	font-size: calc(var(--font_size_p) + 0.3rem);
+	font-weight: normal;
+	border-radius: 5px;
 }
-
+.menudt > ul > li > ul > li {
+	border-radius: 5px;
+}
+.menudt > ul > li > ul > li > a {
+	min-width: 6.5rem;
+	display: inline-block;
+	border-radius: 5px;
+	color: #fff;
+	display: inline-block;
+	line-height: 2.5rem;
+	padding: 0rem 0.7rem 0rem 0.7rem;
+}
 .menudt ul li:hover > ul,
 .menudt ul li:focus-within > ul,
 .menudt ul li ul:hover,
@@ -176,65 +214,65 @@ article {
 	-webkit-box-shadow: 2px 1px 10px rgba(0,0,0, .07);
 	box-shadow: 2px 1px 10px rgba(0,0,0, .07);
 }
+
+article h1, article h2, article h3, article h4, article h5, article h6
+{
+	font-family: 'Yanone Kaffeesatz', arial, sans-serif;
+	font-family: var(--font_fam_main);
+	padding: var(--con_h_pad);
+	margin: var(--con_h_mar);
+	color:var(--color_main);
+}
+
 article h1 {
-	font-family: 'Yanone Kaffeesatz', arial, helvetica, sans-serif;
-	margin:0 0 45px 0;
-	color: #275176;
-	font-size:37px;
+	color: var(--color_main_d);
+	font-size:calc( var(--font_size_p) + 1.2rem)
 }
 article h2 {
-	font-family: 'Yanone Kaffeesatz', arial, helvetica, sans-serif;
-	margin:0 0 10px 0;
-	color: #222222;
-	font-size:30px;
+	font-size:calc( var(--font_size_p) + 1rem)
 }
 article h3 {
-	font-family: 'Yanone Kaffeesatz', arial, helvetica, sans-serif;
-	margin:0 0 15px 0;
-	color: #275176;
-	font-size:25px;
+	font-size:calc( var(--font_size_p) + 0.8rem)
 }
 article h4 {
-	font-family: 'Yanone Kaffeesatz', arial, helvetica, sans-serif;
-	margin:0 0 10px 0;
-	color: #555;
-	font-size:20px;
-	font-weight:100;
+	font-size:calc( var(--font_size_p) + 0.6rem)
 }
 article h5 {
-	font-family: arial, serif;
-	margin:0 0 10px 0;
-	color: #333;
-	font-size:15px;
+	font-size:calc( var(--font_size_p) + 0.4rem)
 }
 article h6 {
-	font-family: arial, serif;
-	margin:0 0 10px 0;
-	color: #666;
-	font-size:14px;
+	font-size:calc( var(--font_size_p) + 0.2rem)
 }
 article section {
 	padding:40px;
 	line-height:22px;
-	font-size:14px;
-	color:#333;	
+	font-size:var(--font_size_p);
+	color:var(--color_content);
 }
-article section p {margin:0 0 25px 0;}
-article section ul, 
-article section ol {
-	margin:0 0 25px 30px;
+article section p, article section address
+{
+	padding:var(--con_pad);
+	margin:var(--con_mar);
+}
+article section p a:link
+{
+	text-decoration: none;
+}
+article section ul, article section ol
+{
+	margin:var(--con_mar);
 }
 article section ul ul, 
 article section ol ol,
 article section ul ol, 
 article section ol ul {
-	margin:0 0 0 25px;
+	margin-left:25px;
 }
 article section code {
 	border:1px solid #ccc;
 	background:#f6f6f6;
 	font-size:12px;
-	padding:1px;
+	margin:var(--con_mar);
 }
 article section pre {
 	border:1px solid #ccc;
@@ -271,8 +309,14 @@ article section .footer {
 	border-top:1px dotted #ccc;
 	padding-top:15px;
 }
-article section .footer p {
-	margin:0 0 10px 0;
+article section .footer p
+{
+	margin:var(--con_mar);
+}
+
+article section .product_img
+{
+	width:50px;
 }
 
 
@@ -300,24 +344,21 @@ aside .section ol {
 	margin:0 0 15px 20px;
 }
 aside .section h2 {
-	background:#333;
-	border-top:1px solid rgba(255,255,255,.4);
+	background: var(--color_main);
+	border-top: 1px solid rgba(255,255,255,.4);
 	text-shadow: 1px 1px 0px rgba(0,0,0,.5);
-	text-transform:uppercase;
-	background: -moz-linear-gradient(top, #444 0%, #222 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#444), color-stop(100%,#222));
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#444444', endColorstr='#222222',GradientType=0 ); 
-	font-family: 'Yanone Kaffeesatz', arial, helvetica, sans-serif;
-	font-weight:100;
-	color:#fff;
-	font-size:19px;
-	line-height:19px;
-	margin:0 0 20px -31px;
-	padding:5px 0 7px 25px;
-	border-radius:0 4px 4px 0;
-	-moz-border-radius:0 4px 4px 0;
-	-khtml-border-radius:0 4px 4px 0;
-	-webkit-border-radius:0 4px 4px 0;
+	text-transform: uppercase;
+	font-family: var(--font_fam_main);
+	color: #fff;
+	line-height: normal;
+	margin: 0 0 20px -31px;
+	padding: calc( var(--font_size_p) - 0.4rem);
+	border-radius: 0 4px 4px 0;
+	-moz-border-radius: 0 4px 4px 0;
+	-khtml-border-radius: 0 4px 4px 0;
+	-webkit-border-radius: 0 4px 4px 0;
+	font-size: calc( var(--font_size_p) + 0.2rem);
+	font-weight: normal;
 }
 
 /* SIDEBAR: socialmedia */
@@ -326,10 +367,7 @@ aside #socialmedia {
 }
 aside #socialmedia h2 {
 	width:65px;
-	background: #316594;
-	background: -moz-linear-gradient(top, #316594 0%, #2C5983 100%); 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#316594), color-stop(100%,#2C5983));
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#316594', endColorstr='#2C5983',GradientType=0 ); 
+	background: var(--color_main_d); 
 }
 aside #socialmedia .icons {
 	position:absolute;
@@ -371,7 +409,7 @@ footer a:hover, footer a:focus {
 {
 	display: block;
 	border-radius: 5px;
-	background: #2f5faa;
+	background: var(--color_main);
 	padding: 0.5rem;
 	width: fit-content;
 	color: white;
@@ -379,6 +417,26 @@ footer a:hover, footer a:focus {
 }
 .btn_adm:hover
 {
-	background: #5b89bf;
+	background: var(--color_main_l);
 	cursor:pointer;
 }
+
+.conger_fimgs8_rounded {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.conger_fimgs8_rounded img {
+	display: block;
+	height: 8rem;
+	padding: 1rem;
+	border-radius: 50%;
+	width: auto;
+	border-color: #e3e3e3;
+	border-style: solid;
+	min-width: 8rem;
+	object-fit: contain;
+	border-width: 1px;
+}
+

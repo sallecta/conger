@@ -1,18 +1,12 @@
 <?php
 /**
  * English Language File
- *
- * Date:			6 December 2011
- * Revision:		Dec 2013
- * Version:			GetSimple 3.3.0
- * Traductors: 		Chris Cagle 
- *
- * @package GetSimple
- * @subpackage Language
  */
 
 
 $i18n = array(
+/* new */
+'by_module'=>'provided by module',
 
 /* 
  * For: install.php
@@ -299,6 +293,7 @@ $i18n = array(
 "TAB_BACKUPS"				=>	"<em>B</em>ackups",
 "PLUGINS_NAV" 			=>  "Plu<em>g</em>ins",
 "TAB_SETTINGS"			=>	"<em>S</em>ettings",
+"tab_health"				=>	"Health",
 "TAB_SUPPORT"				=>	"Supp<em>o</em>rt",
 "TAB_LOGOUT"				=>	"<em>L</em>ogout",
 
@@ -399,8 +394,8 @@ $i18n = array(
 /* 
  * For: support.php
 */
-"WELCOME_MSG"				=>	"Thank you for choosing GetSimple as your content management system!",
-"WELCOME_P"					=>	"GetSimple makes managing a website as simple as possible with its best-in-class user interface. We strive to keep the system easy enough for anyone to use, yet powerful enough for a developer to enable all the features that are needed.</p><p><strong>Some first steps that might be useful:</strong></p>",
+"WELCOME_MSG"				=>	"Thank you for choosing Conger as your content management system!",
+"WELCOME_P"					=>	"Conger makes managing a website as simple as possible with its best-in-class user interface. We strive to keep the system easy enough for anyone to use, yet powerful enough for a developer to enable all the features that are needed.</p><p><strong>Some first steps that might be useful:</strong></p>",
 "GETTING_STARTED"		=>	"Getting Started",
 
 /* 

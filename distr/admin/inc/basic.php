@@ -177,28 +177,40 @@ function sendmail($to,$subject,$message) {
  * @param bool $natural - sort using a "natural order" algorithm
  * @return array
  */
-function subval_sort($a,$subkey, $order='asc',$natural = true) {
-	if (count($a) != 0 || (!empty($a))) { 
-		foreach($a as $k=>$v) {
-			if(isset($v[$subkey])) $b[$k] = lowercase($v[$subkey]);
-		}
-
-		if(!isset($b)) return $a;
-
-		if($natural){
-			natsort($b);
-			if($order=='desc') $b = array_reverse($b,true);	
-		} 
-		else {
-			($order=='asc')? asort($b) : arsort($b);
-		}
-		
-		foreach($b as $key=>$val) {
-			$c[] = $a[$key];
-		}
-
-		return $c;
+function subval_sort($a_arr,$a_subkey, $a_order='asc',$a_natural = true)
+{
+	if (count($a_arr) == 0 || (empty($a_arr)))
+	{
+		return $a_arr;
 	}
+	foreach($a_arr as $key=>$val)
+	{
+		if(isset($val[$a_subkey]))
+		{
+			$b[$key] = lowercase($val[$a_subkey]);
+		}
+	}
+	if(!isset($b))
+	{
+		return $a_arr;
+	}
+	if($a_natural)
+	{
+		natsort($b);
+		if($a_order=='desc')
+		{
+			$b = array_reverse($b,true);
+		}
+	} 
+	else
+	{
+		($a_order=='asc')? asort($b) : arsort($b);
+	}
+	foreach($b as $key=>$val)
+	{
+		$c[] = $a_arr[$key];
+	}
+	return $c;
 }
 
 /**
@@ -219,24 +231,8 @@ class SimpleXMLExtended extends SimpleXMLElement{
   } 
 } 
 
-/**
- * Is File
- *
- * @since 1.0
- * @uses tsl
- *
- * @param string $file
- * @param string $path
- * @param string $type Optiona, default is 'xml'
- * @return bool
- */
-function isFile($file, $path, $type = 'xml') {
-	if( is_file(tsl($path) . $file) && $file != "." && $file != ".." && (strstr($file, $type))  ) {
-		return true;
-	} else {
-		return false;
-	}
-}
+
+
 
 /**
  * Get Files
@@ -311,7 +307,7 @@ function XMLsave($xml, $file) {
 	}	
 	$data = @$xml->asXML();
 	if(getDef('GSFORMATXML',true)) $data = formatXmlString($data); // format xml if config setting says so
-	$data = exec_filter('xmlsave',$data); // @filter xmlsave executed before writing string to file
+	$data = filter::create('xmlsave',$data); // @filter xmlsave executed before writing string to file
 	$success = file_put_contents($file, $data); // LOCK_EX ?
 	
 	// debugLog('XMLsave: ' . $file . ' ' . get_execution_time());	
@@ -380,21 +376,6 @@ function cl($data){
 }
 
 /**
- * Add Trailing Slash
- *
- * @since 1.0
- *
- * @param string $path
- * @return string
- */
-function tsl($path) {
-	if( substr($path, strlen($path) - 1) != '/' ) {
-		$path .= '/';
-	}
-	return $path;
-}
-
-/**
  * Case-Insensitve In-Array
  *
  * Creates a function that PHP should already have, but doesnt
@@ -415,52 +396,34 @@ function find_url($a_slug, $a_parent, $a_type='full')
 	global $PRETTYURLS;
 	global $SITEURL;
 	global $PERMALINK;
-	if ($SITEURL == '/') 
+	if ( $a_parent != '' )
 	{
-		$sl = ''; 
-	}
-	else 
-	{
-		$sl = '/';
-	}
-	if ($a_type == 'full')
-	{
-		$full = $SITEURL.$sl;
-	}
-	elseif($a_type == 'relative')
-	{
-		$s = pathinfo(htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES));
-		$full = $s['dirname'] .'/';
-		$full = str_replace('//', '/', $full);
+		$path_slug= av::get('cpath')."$a_parent/$a_slug"; 
 	}
 	else
 	{
-		$full = '/';
-	}
-	if ($a_parent != '')
-	{
-		$a_parent = tsl($a_parent); 
+		$path_slug= av::get('cpath')."$a_slug"; 
 	}
 	if ($PRETTYURLS == '1')
 	{
 		if ($a_slug != 'index')
-		{  
-			$url = $full . $a_parent . $a_slug . '/';
+		{
+			$out = $path_slug.'/';
 		}
 		else
 		{
-			$url = $full;
+			$out = av::get('cpath');
 		}
 	}
 	else
 	{
 		if ($a_slug != 'index')
 		{
-			$url = $full .'index.php?id='.$a_slug;
+			$out = av::get('cpath') .'index.php?id='.$a_slug;
 		}
 		else
 		{
-			$url = $full;
+			$out = av::get('cpath');
 		}
 	}
 	if (trim($PERMALINK) != '' && $a_slug != 'index')
@@ -468,9 +431,54 @@ function find_url($a_slug, $a_parent, $a_type='full')
 		$plink = str_replace('%a_parent%/', $a_parent, $PERMALINK);
 		$plink = str_replace('%a_parent%', $a_parent, $plink);
 		$plink = str_replace('%a_slug%', $a_slug, $plink);
-		$url = $full . $plink;
+		$out = av::get('cpath') . $plink;
 	}
-	return (string)$url;
+	return (string)$out;
+}
+
+function page_path_portable( $a_slug, $a_parent )
+{
+	global $PRETTYURLS;
+	global $SITEURL;
+	global $PERMALINK;
+	//return;
+	//echo "<h1>$a_slug</h1>";
+	if ($a_slug == 'index' && empty($a_parent) )
+	{
+		$a_slug = '';
+	}
+	if ( !empty($a_parent) )
+	{
+		$path_slug= av::get('cpath_shortcode')."$a_parent$a_slug"; 
+	}
+	else
+	{
+		$path_slug= av::get('cpath_shortcode')."$a_slug"; 
+	}
+	if ($PRETTYURLS == '1')
+	{
+		$out = $path_slug;
+	}
+	else
+	{
+		if ($a_slug != 'index/')
+		{
+			$out = av::get('cpath') .'index.php?id='.$a_slug;
+		}
+		else
+		{
+			$out = av::get('cpath');
+		}
+	}
+	if (trim($PERMALINK) != '' && $a_slug != 'index')
+	{
+		$plink = str_replace('%a_parent%/', $a_parent, $PERMALINK);
+		$plink = str_replace('%a_parent%', $a_parent, $plink);
+		$plink = str_replace('%a_slug%', $a_slug, $plink);
+		$out = av::get('cpath') . $plink;
+	}
+	//echo "<pre>page_path_portable=$out</pre>";
+	return (string)$out;
 }
 
 /**
@@ -579,9 +587,8 @@ function redirect($url) {
 function i18n($name, $echo=true) {
 	global $i18n;
 	global $LANG;
-
 	if(isset($i18n)){
-
+		
 		if (isset($i18n[$name])) {
 			$myVar = $i18n[$name];
 		} else {
@@ -678,6 +685,38 @@ function i18n_merge_impl($plugin, $lang, &$globali18n) {
     }
   } 
   return true;
+}
+function lang_merge($a_fpath, $a_lang=false )
+{
+	global $LANG;
+	if ( !$a_lang )
+	{
+		$a_lang= $LANG;
+	}
+	$name = basename($a_fpath, ".php");
+	$path     = ($name ? dirname($a_fpath).'/lang/' : GSLANGPATH);
+	$prefix   = $name ? $name.'/' : '';
+	$lang_file = $path . $a_lang . '.php';
+	if (!filepath_is_safe($lang_file,$path) || !file_exists($lang_file))
+	{
+		return false;
+	}
+	include($lang_file); 
+	if ( count($i18n) > 0 )
+	{
+		if( !isset($GLOBALS["i18n"]) )
+		{
+			$GLOBALS["i18n"] = array();
+		}
+		foreach ($i18n as $code => $text)
+		{
+			if (!array_key_exists($prefix.$code, $GLOBALS["i18n"]))
+			{
+				$GLOBALS["i18n"][$prefix.$code] = $text;
+			}
+		}
+	} 
+	return true;
 }
 
 /**
@@ -1308,47 +1347,6 @@ function requestIsAjax(){
 function arrayIsMultid($ary){
 	return is_array($ary) && ( count($ary) != count($ary,COUNT_RECURSIVE) );
 }
-
-/**
- * normalizes toolbar setting, always returns js array string syntax
- * @since 3.3.2
- * 
- * @param mixed $var string or array var to convert to js array syntax
- */
-function returnJsArray($var){
-	
-	if(!$var) return;
-
-	if(!is_array($var)) {
-		// if looks like an array string try to parse as array
-		if(strrpos($var, '[') !==false){
-			// normalize array strings
-			$var = stripslashes($var);         // remove escaped quotes
-			$var = trim(trim($var),',');       // remove trailing commas
-			$var = str_replace('\'','"',$var); // replace single quotes with double (for json)
-			
-			$ary = json_decode($var);
-			
-			// add primary nest if missing
-			if(!is_array($ary) || !arrayIsMultid($ary) ) $ary = json_decode('['.$var.']');
-			
-			// if proper array use it
-			if(is_array($ary) ) $var = json_encode($ary);
-			else $var = "'".trim($var,"\"'")."'"; 
-		} 
-		else{
-			// else quote wrap string, trim to avoid double quoting
-			$var = "'".trim($var,"\"'")."'";
-		}	
-	} 
-	else {
-		// convert php array to js array
-		$var = json_encode($var);
-	}
-
-	return $var;
-}
-
 
 /**
  * sends an x-frame-options heaeder

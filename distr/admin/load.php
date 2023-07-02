@@ -48,7 +48,7 @@ get_template('header', cl($SITENAME).' &raquo; '. $plugin_info[$plugin_id]['name
       if (!$res) { 
     ?>
       <ul class="snav">
-        <?php exec_action($plugin_info[$plugin_id]['page_type']."-sidebar"); ?>
+        <?php event::create($plugin_info[$plugin_id]['page_type']."-sidebar"); ?>
       </ul>
     <?php
       }
