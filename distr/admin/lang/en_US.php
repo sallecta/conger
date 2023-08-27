@@ -7,6 +7,9 @@
 $i18n = array(
 /* new */
 'by_module'=>'provided by module',
+'Contacts'=>'Contacts',
+'Working_hrs'=>'Working hours',
+'Mon-Fri'=>'Mon-Fri',
 
 /* 
  * For: install.php
@@ -168,15 +171,6 @@ $i18n = array(
 "NO"								=>	"No",
 "DATE"							=>	"Date",
 "PERMS"							=>  "Perms",
-
-/* 
- * For: components.php
-*/
-"COMPONENTS"				=>	"Components",
-"DELETE_COMPONENT"	=>	"Delete Component",
-"EDIT"							=>	"Edit",
-"ADD_COMPONENT"			=>	"<em>A</em>dd Component", // 'a' is the accesskey identifier
-"SAVE_COMPONENTS"		=>	"Save Components",
 
 /* 
  * For: sitemap.php
@@ -378,6 +372,7 @@ $i18n = array(
 "FTYPE_SYSTEM"			=>	"System", //a file-type
 "FTYPE_MISC"				=>	"Misc", //a file-type
 "IMAGES"						=>	"Images",
+"IMAGE"						=>	"Image",
 
 /* 
  * For: login_functions.php
@@ -578,12 +573,12 @@ $i18n = array(
 
 "X" => "not translated",
 
-
-/*
- * Additions for 3.1
- */
-"DEBUG_CONSOLE" => 'Debug Console'
-
+/* General */
+'save'=>'Save',
+'add'=>'Add',
+'del'=>'Delete',
+'up'=>'Up',
+'down'=>'Down',
 );
 
 ?>

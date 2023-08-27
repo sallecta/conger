@@ -1,14 +1,4 @@
 <?php
-/**
- * Upload Files
- *
- * Displays and uploads files to the website
- *
- * @package GetSimple
- * @subpackage Files
- * @todo Remove relative paths
- */
- 
 // Setup inclusions
 $load['plugin'] = true;
 include('inc/common.php');
@@ -139,207 +129,204 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('FILE_MANAGEMENT'));
 <div class="bodycontent clearfix">
 	<div id="maincontent">
 		<div class="main" >
-		<h3 class="floated"><?php echo i18n('UPLOADED_FILES'); ?><span id="filetypetoggle">&nbsp;&nbsp;/&nbsp;&nbsp;<?php echo i18n('SHOW_ALL'); ?></span></h3>
-		<div id="file_load">
-		<?php
-			$count="0";
-      		$dircount="0";
-			$counter = "0";
-			$totalsize = 0;
-			$filesArray = array();
-			$dirsArray = array();
-			$filenames = getFiles($path);
-			if (count($filenames) != 0)
-			{
-				foreach ($filenames as $file)
-				{
-					if ( $file == "." || $file == ".." || $file == ".htaccess" || $file == "index.php" )
-					{
-						// not a upload file
-					} 
-					elseif (is_dir($path . $file))
-					{
-						$dirsArray[$dircount]['name'] = $file;
-						clearstatcache();
-						$ss = @stat($path . $file);
-						$dirsArray[$dircount]['date'] = @date('M j, Y',$ss['mtime']);
-						$dircount++;
-					}
-					else
-					{
-						$filesArray[$count]['name'] = $file;
-						$ext = substr($file, strrpos($file, '.') + 1);
-						$extention = get_FileType($ext);
-						$filesArray[$count]['type'] = $extention;
-						clearstatcache();
-						$ss = @stat($path . $file);
-						$filesArray[$count]['date'] = @date('M j, Y',$ss['ctime']);
-						$filesArray[$count]['size'] = fSize($ss['size']);
-						$totalsize = $totalsize + $ss['size'];
-						$count++;
-					}
-				}
-				$filesSorted = subval_sort($filesArray,'name');
-				$dirsSorted = subval_sort($dirsArray,'name');
-			}
-			echo '<div class="edit-nav" >';
-			echo '<select id="imageFilter" >';
-			echo '<option value="All">'.i18n_r('SHOW_ALL').'</option>';
-			echo '3333'.gettype($filesSorted);
-			if ($filesSorted && count($filesSorted) > 0)
-			{
-				foreach ($filesSorted as $filter)
-				{
-					$filterArr[] = $filter['type'];
-				}
-				if (count($filterArr) != 0)
-				{
-					$filterArray = array_unique($filterArr);
-					$filterArray = subval_sort($filterArray,'type');
-					foreach ($filterArray as $type)
-					{
-						# check for image type
-						if (strstr($type, ' Images'))
-						{ 
-							$typeCleaned = 'Images';
-							$typeCleaned_2 = str_replace(' Images', '', $type);
-						} else
-						{
-							$typeCleaned = $type;
-							$typeCleaned_2 = $type;
-						}
-						echo '<option value="'.$typeCleaned.'">'.$typeCleaned_2.'</option>';
-					}
-				}
-			}
-			echo '</select><div class="clear" ></div></div>';
-			$pathParts = explode("/",$subPath);
-			$urlPath = null;
-			echo '<div class="h5 clearfix"><div class="crumbs">/ <a href="upload.php">uploads</a> / ';
-			foreach ($pathParts as $pathPart)
-			{
-				if ($pathPart!='')
-				{
-					$urlPath .= $pathPart.'/';
-					echo '<a href="?path='.$urlPath.'">'.$pathPart.'</a> / ';
-				}
-			}
-			echo '</div> <div id="new-folder">
-			<a href="#" id="createfolder">'.i18n_r('CREATE_FOLDER').'</a>
-			<form action="upload.php">&nbsp;<input type="hidden" name="path" value="'.$subPath.'" /><input type="hidden" name="nonce" value="'. get_nonce("createfolder") .'" /><input type="text" class="text" name="newfolder" id="foldername" /> <input type="submit" class="submit" value="'.i18n_r('CREATE_FOLDER').'" />&nbsp; <a href="#" class="cancel">'.i18n_r('CANCEL').'</a></form></div></div>';
-     echo '<table class="highlight" id="imageTable">'; 
-     echo '<tr><th class="imgthumb" ></th><th>'.i18n_r('FILE_NAME').'</th>';
-     echo '<th style="text-align:right;">'.i18n_r('FILE_SIZE').'</th>';
-	 if (isDebug()) {
-     	 echo '<th style="text-align:right;">'.i18n_r('PERMS').'</th>';
-     }
-     echo '<th style="text-align:right;">'.i18n_r('DATE').'</th>';
-     echo '<th><!-- actions --></th></tr>';  
-	if ($dirsSorted && count($dirsSorted) != 0)
+			<h3 class="floated"><?php echo i18n('UPLOADED_FILES'); ?><span id="filetypetoggle">&nbsp;&nbsp;/&nbsp;&nbsp;<?php echo i18n('SHOW_ALL'); ?></span></h3>
+			<div id="file_load">
+<?php
+$count="0";
+$dircount="0";
+$counter = "0";
+$totalsize = 0;
+$filesArray = array();
+$dirsArray = array();
+$filenames = getFiles($path);
+if (count($filenames) != 0)
+{
+	foreach ($filenames as $file)
 	{
-		$foldercount = 0;
-		foreach ($dirsSorted as $upload)
+		if ( $file == "." || $file == ".." || $file == ".htaccess" || $file == "index.php" )
 		{
-			# check to see if folder is empty
-			$directory_delete = null;
-			if ( check_empty_folder($path.$upload['name']) )
-			{
-				$directory_delete = '<a class="delconfirm" title="'.i18n_r('DELETE_FOLDER').': '. rawurlencode($upload['name']) .'" href="deletefile.php?path='.$urlPath.'&amp;folder='. rawurlencode($upload['name']) . '&amp;nonce='.get_nonce("delete", "deletefile.php").'">&times;</a>';
-			}
-			$directory_size = '<span>'.folder_items($path.$upload['name']).' '.i18n_r('ITEMS').'</span>';
-			echo '<tr class="All folder '.$upload['name'].'" >';
-			echo '<td class="imgthumb" ></td><td>';
-			$adm = substr($path . rawurlencode($upload['name']) ,  16); 
-			echo '<img src="template/images/folder.png" width="11" /> <a href="upload.php?path='.$adm.'" ><strong>'.htmlspecialchars($upload['name']).'</strong></a></td>';
-			echo '<td style="width:80px;text-align:right;" ><span>'.$directory_size.'</span></td>';
-			// get the file permissions.
-			if (isDebug())
-			{
-				$filePerms = substr(sprintf('%o', fileperms($path.$upload['name'])), -4);
-				if($isUnixHost)
-				{
-					$fileOwner = function_exists('posix_getpwuid') ? posix_getpwuid(fileowner($path.$upload['name'])) : '';
-					$fileOwnerName = isset($fileOwner['name']) ? $fileOwner['name'] : '';
-				}
-				else
-				{
-					$fileOwnerName = getenv('USERNAME');
-				}
-				echo '<td style="width:70px;text-align:right;"><span>'.$fileOwnerName.'/'.$filePerms.'</span></td>';
-			}
-			echo '<td style="width:85px;text-align:right;" ><span>'. shtDate($upload['date']) .'</span></td>';
-			echo '<td class="delete" >'.$directory_delete.'</td>';
-			echo '</tr>';
-			$foldercount++;
+			// not a upload file
+		} 
+		elseif (is_dir($path . $file))
+		{
+			$dirsArray[$dircount]['name'] = $file;
+			clearstatcache();
+			$ss = @stat($path . $file);
+			$dirsArray[$dircount]['date'] = @date('M j, Y',$ss['mtime']);
+			$dircount++;
+		}
+		else
+		{
+			$filesArray[$count]['name'] = $file;
+			$ext = substr($file, strrpos($file, '.') + 1);
+			$extention = get_FileType($ext);
+			$filesArray[$count]['type'] = $extention;
+			clearstatcache();
+			$ss = @stat($path . $file);
+			$filesArray[$count]['date'] = @date('M j, Y',$ss['ctime']);
+			$filesArray[$count]['size'] = fSize($ss['size']);
+			$totalsize = $totalsize + $ss['size'];
+			$count++;
 		}
 	}
-	
-			if ( $filesSorted && count($filesSorted) != 0) {
-				foreach ($filesSorted as $upload) {
-					$counter++;
-					if ($upload['type'] == i18n_r('IMAGES') .' Images') {
-						$cclass = 'iimage';
-					} else {
-						$cclass = '';
-					}
-					echo '<tr class="All '.$upload['type'].' '.$cclass.'" >';
-					echo '<td class="imgthumb" >';
-					if ($upload['type'] == i18n_r('IMAGES') .' Images') {
-						$gallery = 'rel=" facybox_i"';
-						$pathlink = 'image.php?i='.rawurlencode($upload['name']).'&amp;path='.$subPath;
-						$thumbLink = $urlPath.'thumbsm.'.$upload['name'];
-						$thumbLinkEncoded = $urlPath.'thumbsm.'.rawurlencode($upload['name']);
-						if (file_exists(GSTHUMBNAILPATH.$thumbLink)) {
-							$imgSrc='<img src="../data/thumbs/'. $thumbLinkEncoded .'" />';
-						} else {
-							$imgSrc='<img src="inc/thumb.php?src='. $urlPath . rawurlencode($upload['name']) .'&amp;dest='. $thumbLinkEncoded .'&amp;f=1" />';
-						}
-						echo '<a href="'. $path . rawurlencode($upload['name']) .'" title="'. rawurlencode($upload['name']) .'" rel=" facybox_i" >'.$imgSrc.'</a>';
-					} else {
-						$gallery = '';
-						$controlpanel = '';
-						$pathlink = $path . $upload['name'];
-					}
-					echo '</td><td><a title="'.i18n_r('VIEW_FILE').': '. htmlspecialchars($upload['name']) .'" href="'. $pathlink .'" class="primarylink">'.htmlspecialchars($upload['name']) .'</a></td>';
-					echo '<td style="width:80px;text-align:right;" ><span>'. $upload['size'] .'</span></td>';
-             
-		            
-					// get the file permissions.
-					if (isDebug()) {
-						$filePerms = substr(sprintf('%o', fileperms($path.$upload['name'])), -4);
-						if($isUnixHost){
-							$fileOwner = function_exists('posix_getpwuid') ? posix_getpwuid(fileowner($path.$upload['name'])) : '';
-							$fileOwnerName = isset($fileOwner['name']) ? $fileOwner['name'] : '';
-						} else {
-							$fileOwnerName = getenv('USERNAME');
-						}
-						echo '<td style="width:70px;text-align:right;"><span>'.$fileOwnerName.'/'.$filePerms.'</span></td>';
-					}
-
-					echo '<td style="width:85px;text-align:right;" ><span>'. shtDate($upload['date']) .'</span></td>';
-					echo '<td class="delete" ><a class="delconfirm" title="'.i18n_r('DELETE_FILE').': '. htmlspecialchars($upload['name']) .'" href="deletefile.php?file='. rawurlencode($upload['name']) . '&amp;path=' . $urlPath . '&amp;nonce='.get_nonce("delete", "deletefile.php").'">&times;</a></td>';
-					echo '</tr>';
-					
-				}
+	$filesSorted = subval_sort($filesArray,'name');
+	$dirsSorted = subval_sort($dirsArray,'name');
+}
+?>
+				<div class="edit-nav" >
+					<select id="imageFilter" >
+						<option value="All"><?=i18n_r('SHOW_ALL');?></option>;
+<?php
+if ($filesSorted && count($filesSorted) > 0)
+{
+	foreach ($filesSorted as $filter)
+	{
+		$filterArr[] = $filter['type'];
+	}
+	if (count($filterArr) != 0)
+	{
+		$filterArray = array_unique($filterArr);
+		$filterArray = subval_sort($filterArray,'type');
+		foreach ($filterArray as $type)
+		{
+			# check for image type
+			if (strstr($type, ' Images'))
+			{ 
+				$typeCleaned = 'Images';
+				$typeCleaned_2 = str_replace(' Images', '', $type);
+			} else
+			{
+				$typeCleaned = $type;
+				$typeCleaned_2 = $type;
 			}
-			event::create('file-extras');
-			echo '</table>';
-			
-			if ($counter > 0) { 
-				$sizedesc = '('. fSize($totalsize) .')';
+			echo '<option value="'.$typeCleaned.'">'.$typeCleaned_2.'</option>';
+		}
+	}
+}?>
+					</select>
+					<div class="clear" ></div>
+				</div>
+<?php
+			$pathParts = explode("/",$subPath);
+			$urlPath = null;?>
+				<div class="h5 clearfix">
+					<div class="crumbs">/ <a href="upload.php">uploads</a> / 
+<?php
+foreach ($pathParts as $pathPart)
+{
+	if ($pathPart!='')
+	{
+		$urlPath .= $pathPart.'/';?>
+		<a href="?path=<?=$urlPath;?>"><?=$pathPart;?></a> /
+<?php
+	}
+} ?>
+					</div>
+					<div id="new-folder">
+						<a href="#" id="createfolder"><?=i18n_r('CREATE_FOLDER');?></a>
+						<form action="upload.php">
+							<input type="hidden" name="path" value="<?=$subPath;?>" />
+							<input type="hidden" name="nonce" value="<?=get_nonce("createfolder");?>" />
+							<input type="text" class="text" name="newfolder" id="foldername" />
+							<input type="submit" class="submit" value="<?=i18n_r('CREATE_FOLDER');?>" />
+							<a href="#" class="cancel"><?=i18n_r('CANCEL');?></a>
+						</form>
+					</div>
+				</div>
+				<table class="highlight" id="imageTable">
+					<tr>
+						<th class="imgthumb" ></th>
+						<th><?=i18n_r('FILE_NAME');?></th>
+						<th style="text-align:right;"><?=i18n_r('FILE_SIZE');?></th>
+						<th style="text-align:right;"><?=i18n_r('DATE');?></th>
+						<th><!-- actions --></th>
+					</tr>  
+<?php
+if ($dirsSorted && count($dirsSorted) != 0)
+{
+	$foldercount = 0;
+	foreach ($dirsSorted as $upload)
+	{
+		# check to see if folder is empty
+		$directory_delete = null;
+		if ( check_empty_folder($path.$upload['name']) )
+		{
+			$directory_delete = '<a class="delconfirm" title="'.i18n_r('DELETE_FOLDER').': '. rawurlencode($upload['name']) .'" href="deletefile.php?path='.$urlPath.'&amp;folder='. rawurlencode($upload['name']) . '&amp;nonce='.get_nonce("delete", "deletefile.php").'">&times;</a>';
+		}
+		$directory_size = '<span>'.folder_items($path.$upload['name']).' '.i18n_r('ITEMS').'</span>';
+		$adm = substr($path . rawurlencode($upload['name']) ,  16);?>
+					<tr class="All folder <?=$upload['name'];?>" >
+						<td class="imgthumb" ></td>
+						<td>
+							<img src="<?=av::get('cpath_modules_client');?>admin/img/folder.png" width="11" />
+							<a href="upload.php?path=<?=$adm;?>" ><strong><?=htmlspecialchars($upload['name']);?></strong></a>
+						</td>
+						<td style="width:80px;text-align:right;" ><span><?=$directory_size;?></span></td>
+						<td style="width:85px;text-align:right;" ><span><?=shtDate($upload['date']);?></span></td>
+						<td class="delete" ><?=$directory_delete;?></td>
+					</tr>
+<?php
+		$foldercount++;
+	}
+}
+if ( $filesSorted && count($filesSorted) != 0)
+{
+	foreach ($filesSorted as $upload)
+	{
+		$counter++;
+		if ($upload['type'] == i18n_r('IMAGES') .' Images')
+		{
+			$cclass = 'iimage';
+		}
+		else
+		{
+			$cclass = '';
+		}
+		echo '<tr class="All '.$upload['type'].' '.$cclass.'" >';
+		echo '<td class="imgthumb" >';
+		if ($upload['type'] == i18n_r('IMAGES') .' Images')
+		{
+			$gallery = 'rel=" facybox_i"';
+			$pathlink = 'image.php?i='.rawurlencode($upload['name']).'&amp;path='.$subPath;
+			$thumbLink = $urlPath.'thumbsm.'.$upload['name'];
+			$thumbLinkEncoded = $urlPath.'thumbsm.'.rawurlencode($upload['name']);
+			if (file_exists(GSTHUMBNAILPATH.$thumbLink)) {
+				$imgSrc='<img src="../data/thumbs/'. $thumbLinkEncoded .'" />';
 			} else {
-				$sizedesc = '';
+				$imgSrc='<img src="inc/thumb.php?src='. $urlPath . rawurlencode($upload['name']) .'&amp;dest='. $thumbLinkEncoded .'&amp;f=1" />';
 			}
-			$totalcount = (int)$counter+(int)$foldercount;
-			echo '<p><em><b><span id="pg_counter">'. $totalcount .'</span></b> '.i18n_r('TOTAL_FILES').' '.$sizedesc.'</em></p>';
-		?>	
-		</div>
-		</div>
-	</div>
-	
-	<div id="sidebar" >
-	<?php include('template/sidebar-files.php'); ?>
-	</div>	
-	
-</div>
+			echo '<a href="'. $path . rawurlencode($upload['name']) .'" title="'. rawurlencode($upload['name']) .'" rel=" facybox_i" >'.$imgSrc.'</a>';
+		}
+		else
+		{
+			$gallery = '';
+			$controlpanel = '';
+			$pathlink = $path . $upload['name'];
+		}
+		echo '</td><td><a title="'.i18n_r('VIEW_FILE').': '. htmlspecialchars($upload['name']) .'" href="'. $pathlink .'" class="primarylink">'.htmlspecialchars($upload['name']) .'</a></td>';
+		echo '<td style="width:80px;text-align:right;" ><span>'. $upload['size'] .'</span></td>';
+		echo '<td style="width:85px;text-align:right;" ><span>'. shtDate($upload['date']) .'</span></td>';
+		echo '<td class="delete" ><a class="delconfirm" title="'.i18n_r('DELETE_FILE').': '. htmlspecialchars($upload['name']) .'" href="deletefile.php?file='. rawurlencode($upload['name']) . '&amp;path=' . $urlPath . '&amp;nonce='.get_nonce("delete", "deletefile.php").'">&times;</a></td>';
+		echo '</tr>';
+	}
+}
+event::create('file-extras');
+?>
+				</table>
+<?php
+if ($counter > 0)
+{ 
+	$sizedesc = '('. fSize($totalsize) .')';
+}
+else
+{
+	$sizedesc = '';
+}
+$totalcount = (int)$counter+(int)$foldercount;?>
+				<p><em><span id="pg_counter"><?=$totalcount;?></span><?=i18n_r('TOTAL_FILES');?> <?=$sizedesc;?></em></p>
+			</div> <!-- file_load -->
+		</div> <!-- main -->
+	</div> <!-- maincontent -->
+<?php include('template/sidebar-files.php'); ?>
+</div> <!-- bodycontent clearfix -->
 <?php get_template('footer'); ?>

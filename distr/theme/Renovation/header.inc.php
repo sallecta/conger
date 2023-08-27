@@ -23,7 +23,7 @@
 				<p class="role"><?=field::get('site_role');?></p>
 				<div class="menudt">
 					<ul>
-						<?php get_nested_navigation(return_page_slug()); ?>
+						<?=nested_menu::ret();?>
 					</ul>
 				</div>
 			</div>

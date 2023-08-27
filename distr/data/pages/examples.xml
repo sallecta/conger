@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Sat, 26 Aug 2023 15:38:35 +0300</pubDate><title>Examples</title><url>examples</url><meta/><metad/><menu>Examples</menu><menuStatus>Y</menuStatus><template>template.php</template><parent/><content>&amp;lt;p&amp;gt;Examples of various Conger features.&amp;lt;/p&amp;gt;
+
+&amp;lt;p&amp;gt;[$pages(parent=examples)$]&amp;lt;/p&amp;gt;
+</content><private/><author>admin</author><pages/><site_phone/><about>&lt;p&gt;Conger examples&lt;/p&gt;
+
+&lt;p&gt;[$pages$]&lt;/p&gt;
+</about><creDate>Thu, 17 Aug 2023 15:32:32 +0300</creDate><user>admin</user><menuOrder><![CDATA[2]]></menuOrder></item>

@@ -1,58 +1,55 @@
 <?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
 
-/**
- * Generate standard thumbnails
- * @param  string $path path to image
- * @param  string $name file name
- * @uses   GD
- */
 
-function genStdThumb($path,$name){
-
+function genStdThumb($path,$name)
+{
 	//gd check
 	$php_modules = get_loaded_extensions();
 	if(!in_arrayi('gd', $php_modules)) return;
 
-	if (!defined('GSIMAGEWIDTH')) {
+	if (!defined('GSIMAGEWIDTH'))
+	{
 		$width = 200; //New width of image  	
-	} else {
+	}
+	else
+	{
 		$width = GSIMAGEWIDTH;
 	}
-
-	$ext = lowercase(pathinfo($name,PATHINFO_EXTENSION));	
+	$ext = lowercase(pathinfo($name,PATHINFO_EXTENSION));
 	
-	if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'png' )	{
-		
+	if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'png' )
+	{
 		$thumbsPath = GSTHUMBNAILPATH.$path;
-		
-		if (!(file_exists($thumbsPath))) {
-			if (defined('GSCHMOD')) { 
+		if (!(file_exists($thumbsPath)))
+		{
+			if (defined('GSCHMOD'))
+			{ 
 				$chmod_value = GSCHMOD; 
-			} else {
+			}
+			else
+			{
 				$chmod_value = 0755;
 			}
 			mkdir($thumbsPath, $chmod_value);
 		}
 	}
-
 	$targetFile = GSDATAUPLOADPATH.$path.$name;
-	
 	//thumbnail for post
 	$imgsize = getimagesize($targetFile);
-		
-	switch($ext){
+	switch($ext)
+	{
 			case "jpeg":
 			case "jpg":
-					$image = imagecreatefromjpeg($targetFile);    
-			break;
+				$image = imagecreatefromjpeg($targetFile);    
+				break;
 			case "png":
-					$image = imagecreatefrompng($targetFile);
-			break;
+				$image = imagecreatefrompng($targetFile);
+				break;
 			case "gif":
-					$image = imagecreatefromgif($targetFile);
-			break;
+				$image = imagecreatefromgif($targetFile);
+				break;
 			default:
-					return;
+				return;
 			break;
 	}
 		
@@ -65,26 +62,24 @@ function genStdThumb($path,$name){
 	imagealphablending($picture, false);
 	imagesavealpha($picture, true);
 	$bool = imagecopyresampled($picture, $image, 0, 0, 0, 0, $width, $height, $src_w, $src_h); 
-	
-	if($bool)	{	
+	if($bool)
+	{
 		$thumbnailFile = $thumbsPath . "thumbnail." . $name;
-		
-	    switch(lowercase(substr($targetFile, -3))) {
-	        case "jpg":
-	            $bool2 = imagejpeg($picture,$thumbnailFile,85);
-	        break;
-	        case "png":
-	            imagepng($picture,$thumbnailFile);
-	        break;
-	        case "gif":
-	            imagegif($picture,$thumbnailFile);
-	        break;
-	    }
+		switch(lowercase(substr($targetFile, -3)))
+		{
+			case "jpg":
+				$bool2 = imagejpeg($picture,$thumbnailFile,85);
+				break;
+			case "png":
+				imagepng($picture,$thumbnailFile);
+				break;
+			case "gif":
+				imagegif($picture,$thumbnailFile);
+				break;
+		}
 	}
-	
 	imagedestroy($picture);
 	imagedestroy($image);
-
 	return true;
 }
 

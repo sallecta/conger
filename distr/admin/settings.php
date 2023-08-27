@@ -216,7 +216,6 @@ if (count($lang_array) != 0) {
 }
 
 get_template('header', cl($SITENAME).' &raquo; '.i18n_r('GENERAL_SETTINGS')); 
-
 ?>
 	
 <?php include('template/include-nav.php'); ?>

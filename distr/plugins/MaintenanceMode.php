@@ -23,7 +23,7 @@ register_plugin(
 
 event::join('settings-website-extras', 'MaintenanceModeSettingsRender');
 event::join('settings-website', 'MaintenanceModeSettingsSave');
-event::join('header', 'MaintenanceModeNotify');
+event::join('ev_client_admin_head', 'MaintenanceModeNotify');
 event::join('index-pretemplate', 'MaintenanceMode');
 function MaintenanceMode()
 {

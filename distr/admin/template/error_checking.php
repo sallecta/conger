@@ -1,25 +1,16 @@
-<?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
-/**
- * Error Checking
- *
- * Displays error and success messages	
- *
- * @package GetSimple
- *  
- * Modified by Jorge H. [ http://www.jorgehoya.es ] on 07/09/2011
- *
- * Modified by Shawn_a 8/01/2012
- * You can pass $update(global) directly if not using a redirrect and querystring
- *
- */
+<?php if(!defined('APP')){ die('you cannot load this page directly.'); } ?>
+<?php
  
-	if ( file_exists(GSUSERSPATH._id($USR).".xml.reset") && get_filename_id()!='index' && get_filename_id()!='resetpassword' ) {
-		echo '<div class="error"><p>'.i18n_r('ER_PWD_CHANGE').'</p></div>';
+	if ( file_exists(GSUSERSPATH._id($USR).".xml.reset") && get_filename_id()!='index' && get_filename_id()!='resetpassword' )
+	{?>
+	<div class="error"><p><?=$tr('ER_PWD_CHANGE');?></p></div>
+	<?php }
+	
+	if ((!defined('GSNOAPACHECHECK') || GSNOAPACHECHECK == false) and !server_is_apache())
+	{?>
+	  <div class="error"><?=$tr('WARNING');?>: <a href="health-check.php"><?=$tr('SERVER_SETUP');?> non-Apache</a></div>
+	<?php
 	}
-
-  if ((!defined('GSNOAPACHECHECK') || GSNOAPACHECHECK == false) and !server_is_apache()) {
-      echo '<div class="error">'.i18n_r('WARNING').': <a href="health-check.php">'.i18n_r('SERVER_SETUP').' non-Apache</a></div>';
-  }
 
 	if(!isset($update)) $update = '';
 	$err = '';
@@ -31,7 +22,8 @@
 	if(isset($_GET['id'])) $errid = ( function_exists( "filter_var") ) ? filter_var ( $_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS)  : htmlentities($_GET['id']);
 	if(isset($_GET['updated']) && $_GET['updated'] ==1)	$success = i18n_r('SITE_UPDATED');
 
-	switch ( $update ) {
+	switch ( $update )
+	{
 		case 'bak-success':
 			echo '<div class="updated"><p>'. sprintf(i18n_r('ER_BAKUP_DELETED'), $errid) .'</p></div>';
 		break;
@@ -75,14 +67,6 @@
 		case 'del-error':
 			echo '<div class="error"><p><b>'.i18n_r('ERROR').':</b> '.i18n_r('ER_PROBLEM_DEL').'.</p></div>';
 		break;
-		case 'comp-success':
-			echo '<div class="updated"><p>'.i18n_r('ER_COMPONENT_SAVE').'. <a href="components.php?undo&nonce='.get_nonce("undo").'">'.i18n_r('UNDO').'</a></p></div>';
-		break;
-		case 'comp-restored':
-			echo '<div class="updated"><p>'.i18n_r('ER_COMPONENT_REST').'. <a href="components.php?undo&nonce='.get_nonce("undo").'">'.i18n_r('UNDO').'</a></p></div>';
-		break;
-		
-		/**/
 		default:
 			if ( isset( $error ) ) echo '<div class="error"><p><b>'.i18n_r('ERROR').':</b> '. $error .'</div>';
 			else if ($restored == 'true') echo '<div class="updated"><p>'.i18n_r('ER_OLD_RESTORED').'. <a href="settings.php?undo&nonce='.get_nonce("undo").'">'.i18n_r('UNDO').'</a></p></div>';
@@ -95,8 +79,5 @@
 			elseif ( $restored == 'true') 
 				echo '<div class="updated"><p>'.i18n_r('ER_OLD_RESTORED').'. <a href="settings.php?undo&nonce='.get_nonce("undo").'">'.i18n_r('UNDO').'</a></p></div>';
 		break;
-		/**/
-		
 	}
-	?>
-	
+?>

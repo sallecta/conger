@@ -1,0 +1,28 @@
+.sortman .pointer
+{
+	cursor:pointer;
+}
+.sortman .src
+{
+	display: var(--disp);
+}
+.sortman .dest
+{
+	display: var(--disp);
+	outline-color: #73b01a;
+	outline-style: solid;
+	outline-width: 0.2rem;
+	outline-offset: 0.2rem;
+	border-radius: 0.2rem;
+	opacity:0.6;
+}
+.sortman li.src
+{
+	margin:auto;
+	width: fit-content;
+}
+.sortman li.dest
+{
+	margin:auto;
+	width: fit-content;
+}

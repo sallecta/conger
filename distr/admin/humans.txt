@@ -1,23 +1,31 @@
-/* TEAM */
+/* Conger */
+  Founder & Developer: Alexander Gribkov
+  GetSimple Forum Handle: 
+  Site: http://sallecta.infinityfreeapp.com/
+  Twitter: 
+  Location: Zhitkovo, Len obl, Russia
+  
+/* GetSimple */
+/* GetSimple team */
   Founder & Developer: Chris Cagle
-  Forum Handle: ccagle8
+  GetSimple Forum Handle: ccagle8
   Site: http://chriscagle.me/
   Twitter: @ccagle8
   Location: Pittsburgh, Pennsylvania, USA
   
   Developer: Mike Swan
-  Forum Handle: n00dles101
+  GetSimple Forum Handle: n00dles101
   Site: http://www.digimute.com/
   Twitter: @digimute
   Location: Dublin, Ireland
   
   Developer: Matthew Phillips
-  Forum Handle: OWS_Matthew
+  GetSimple Forum Handle: OWS_Matthew
   Site: http://www.owassowebsolutions.com/
   Location: Owasso, Oklahoma, USA
 
   Developer: Shawn Alverson
-  Forum Handle: shawn_a
+  GetSimple Forum Handle: shawn_a
   Site: http://shawnalverson.com/
   Location: Tennessee, USA
 
@@ -28,4 +36,4 @@
   Thorsten Panknin (polyfragmented)
   Mike Henken (MikeH)
   Martijn van der Ven (Zegnåt)
-  ...and the countless others on the forums and SVN that help us make this amazing product possible.
+  ...and the countless others on the GetSimple Forums and SVN that help us make this amazing product possible.

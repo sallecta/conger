@@ -69,20 +69,26 @@ if ( isset($_GET['action']) && isset($_GET['id']) && $_GET['action'] == 'clone')
 getPagesXmlValues(true);
 
 $count = 0;
-foreach ($pagesArray as $page) {
-	if ($page['parent'] != '') { 
+foreach ($pagesArray as $page)
+{
+	if ($page['parent'] != '')
+	{ 
 		$parentTitle = returnPageField($page['parent'], "title");
 		$sort = $parentTitle .' '. $page['title'];		
 		$sort = $parentTitle .' '. $page['title'];
-	} else {
+	}
+	else
+	{
 		$sort = $page['title'];
 	}
 	$page = array_merge($page, array('sort' => $sort));
 	$pagesArray_tmp[$count] = $page;
 	$count++;
 }
-// $pagesArray = $pagesArray_tmp;
-$pagesSorted = subval_sort($pagesArray_tmp,'sort');
+$pagesArray = $pagesArray_tmp;//??
+
+//$pagesSorted = subval_sort($pagesArray_tmp,'sort');
+$pagesSorted = subval_sort($pagesArray,'menuOrder');
 $table = get_pages_menu('','',0);
 
 get_template('header', cl($SITENAME).' &raquo; '.i18n_r('PAGE_MANAGEMENT')); 

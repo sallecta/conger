@@ -161,13 +161,14 @@ function delete_upload($id, $path = "") {
 function delete_cache()
 {
 	event::create('cache-delete');
-	$cachepath = GSCACHEPATH;
+	$cachepath = av::get('spath_data_cache');
 	$cnt = 0;
 	$success = null;
-	foreach(glob($cachepath.'*.txt') as $file)
+	foreach(glob($cachepath.'*') as $file) // .htaccess ignored
 	{
-		if(unlink($file)) $cnt++;
-		else $success = false;
+		//dev::ehtmlcom(['delete_cache $file',$file]);
+		if( unlink($file) ) { $cnt++; }
+		else { $success = false; }
 	}
 	if($success == false) return null;
 	return $cnt;
@@ -867,7 +868,7 @@ function get_pages_menu($parent, $menu,$level) {
 			$menu .= '<td class="pagetitle">'. $dash .'<a title="'.i18n_r('EDITPAGE_TITLE').': '. var_out($page['title']) .'" href="edit.php?id='. $page['url'] .'" >'. cl($page['title']) .'</a><span class="showstatus toggle" >'. $homepage . $page['menuStatus'] . $page['private'] .'</span></td>';
 			$menu .= '<td style="width:80px;text-align:right;" ><span>'. shtDate($page['pubDate']) .'</span></td>';
 			$menu .= '<td class="secondarylink" >';
-			$menu .= '<a title="'.i18n_r('VIEWPAGE_TITLE').': '. var_out($page['title']) .'" target="_blank" href="'. find_url($page['url'],$page['parent']) .'">#</a>';
+			$menu .= '<a title="'.i18n_r('VIEWPAGE_TITLE').': '. var_out($page['title']) .'" target="_blank" href="'. find_url($page['url'],$page['parent']) .'">➤</a>';
 			$menu .= '</td>';
 			if ($page['url'] != 'index' ) {
 				$menu .= '<td class="delete" ><a class="delconfirm" href="deletefile.php?id='. $page['url'] .'&amp;nonce='.get_nonce("delete", "deletefile.php").'" title="'.i18n_r('DELETEPAGE_TITLE').': '. var_out($page['title']) .'" >&times;</a></td>';

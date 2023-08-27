@@ -359,22 +359,19 @@ function deregister_script($handle){
 	}
 }
 
-/**
- * Queue Script
- *
- * Queue a script for loading
- *
- * @since 3.1
- * @uses $GS_scripts
- *
- * @param string $handle name for the script to load
- */
-function queue_script($handle,$where){
+
+function add_script($a_handle,$a_where)
+{
 	global $GS_scripts;
-	if (array_key_exists($handle, $GS_scripts)){
-		$GS_scripts[$handle]['load']=true;
-		$GS_scripts[$handle]['where']=$GS_scripts[$handle]['where'] | $where;
+	if (array_key_exists($a_handle, $GS_scripts))
+	{
+		$GS_scripts[$a_handle]['load']=true;
+		$GS_scripts[$a_handle]['where']=$GS_scripts[$a_handle]['where'] | $a_where;
 	}
+}
+function queue_script($a_handle,$where)
+{
+	add_script($a_handle,$where);
 }
 
 /**

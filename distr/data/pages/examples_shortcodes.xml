@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Sat, 26 Aug 2023 02:48:18 +0300</pubDate><title>Shortcodes</title><url>examples_shortcodes</url><meta/><metad/><menu>Shortcodes</menu><menuStatus>Y</menuStatus><template>template.php</template><parent>examples</parent><content>&amp;lt;h1&amp;gt;Conger Shortcode feature examples&amp;lt;/h1&amp;gt;
+
+&amp;lt;p&amp;gt;Wrap existing field name with shortcode tag inside page content and get this tag replaced with found field value.&amp;lt;/p&amp;gt;
+
+&amp;lt;p&amp;gt;&amp;lt;code&amp;gt;[$field_name$]&amp;lt;/code&amp;gt;&amp;lt;/p&amp;gt;
+
+&amp;lt;p&amp;gt;Unique or same shortcodes can be included as many times as needed.&amp;lt;/p&amp;gt;
+
+&amp;lt;h2&amp;gt;Shortcode result of site_email field&amp;lt;/h2&amp;gt;
+
+&amp;lt;p&amp;gt;[$site_email$]&amp;lt;/p&amp;gt;
+
+&amp;lt;h2&amp;gt;Shortcode result of unknown1 field&amp;lt;/h2&amp;gt;
+
+&amp;lt;p&amp;gt;[$unknown1$]&amp;lt;/p&amp;gt;
+
+&amp;lt;h2&amp;gt;Shortcode result of cpath field&amp;lt;/h2&amp;gt;
+
+&amp;lt;p&amp;gt;[$cpath$]&amp;lt;/p&amp;gt;
+
+&amp;lt;h2&amp;gt;Shortcode result of another_unknown field&amp;lt;/h2&amp;gt;
+
+&amp;lt;p&amp;gt;[$another_unknown$]&amp;lt;/p&amp;gt;
+
+&amp;lt;h2&amp;gt;Shortcode results for cpath, site_email and missing fields.&amp;lt;/h2&amp;gt;
+
+&amp;lt;p&amp;gt;Conger client path is &amp;#039;[$cpath$]&amp;#039;, site email is [$site_email$].&amp;lt;/p&amp;gt;
+
+&amp;lt;p&amp;gt;If shortcode has unknown field, that shortcode renders as initial: [$missing$]&amp;lt;/p&amp;gt;
+</content><private/><author>admin</author><pages/><site_phone/><about>&lt;p&gt;Access fields in page content using shortcode tag.&lt;/p&gt;
+</about><creDate>Thu, 17 Aug 2023 15:37:24 +0300</creDate><user>admin</user><menuOrder><![CDATA[3]]></menuOrder></item>

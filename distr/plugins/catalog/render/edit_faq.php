@@ -37,7 +37,7 @@
 	var startCKeditor = ( function()
 	{
 		//var ckedroot='rooot/dir/where/ckeditor/listed';
-		var ckedroot=<?="'".av::get('cpath').'admin/template/js/ckeditor'."'";?>;
+		var ckedroot=<?="'".av::get('cpath_modules_client').'admin/js/ckeditor'."'";?>;
 		var editor_el_name = 'post-content';
 		var custom_opts =
 		{

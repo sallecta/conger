@@ -61,6 +61,7 @@ $id = filter::create('indexid',$id);
 # define page, spit out 404 if it doesn't exist
 $file_404 = GSDATAOTHERPATH . '404.xml';
 $user_created_404 = GSDATAPAGESPATH . '404.xml';
+global $data_index;
 $data_index = null;
 
 // apply page data if page id exists

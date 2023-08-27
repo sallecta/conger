@@ -208,10 +208,10 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 				</p>
 				
 				<p class="inline post-menu clearfix">
-					<input type="checkbox" id="post-menu-enable" name="post-menu-enable" <?php echo $sel_m; ?> />&nbsp;&nbsp;&nbsp;<label for="post-menu-enable" ><?php i18n('ADD_TO_MENU'); ?></label><a href="navigation.php" class="viewlink" rel="facybox" ><img src="template/images/search.png" id="tick" alt="<?php echo strip_tags(i18n_r('VIEW')); ?>" /></a>
+					<input type="checkbox" id="post-menu-enable" name="post-menu-enable" <?php echo $sel_m; ?> />&nbsp;&nbsp;&nbsp;<label for="post-menu-enable" ><?php i18n('ADD_TO_MENU'); ?></label><a href="navigation.php" class="viewlink" rel="facybox" ><img src="<?=av::get('cpath_modules_client');?>admin/img/search.png" id="tick" alt="<?php echo strip_tags(i18n_r('VIEW')); ?>" /></a>
 				</p>
 				<div id="menu-items">
-					<img src="template/images/tick.png" id="tick" />
+					<img src="<?=av::get('cpath_modules_client');?>admin/img/tick.png" id="tick" />
 					<span style="float:left;width:81%;" ><label for="post-menu"><?php i18n('MENU_TEXT'); ?></label></span><span style="float:left;width:10%;" ><label for="post-menu-order"><?php i18n('PRIORITY'); ?></label></span>
 					<div class="clear"></div>
 					<input class="text" style="width:73%;" id="post-menu" name="post-menu" type="text" value="<?php echo $menu; ?>" />&nbsp;&nbsp;&nbsp;&nbsp;<select class="text"  style="width:16%" id="post-menu-order" name="post-menu-order" >
@@ -302,51 +302,13 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 			<?php } ?>
 			
 		</form>
-		<?php if ($HTMLEDITOR != '') { ?>
-		<?php
-		/* CKEditor toolbar */
-		//if( $EDTOOL=='basic' && empty($toolbar) )
-		//{
-			//$toolbar=array
-			//(
-				//(object)array('name'=>'basicstyles', 'items'=>['Bold','Italic']),
-			//);
-			//$toolbar= json_encode($toolbar);
-		//}
-		//if( $EDTOOL=='advanced' && empty($toolbar) )
-		//{
-			/*
-			 [['h2','h3','h4','h5','h6'], ['Bold','Italic','Underline'],['NumberedList', 'BulletedList', 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock', 'Table', 'TextColor', 'BGColor', 'Link', 'Unlink', 'Image', 'RemoveFormat', 'Source'], ['Undo','Redo'], [ 'Maximize', 'ShowBlocks','-','About' ] ]
-			 */
-			//$toolbar=array
-			//(
-				////(object)array('name'=>'basicstyles', 'items'=>['Bold','Italic']),
-				//(object)array('items'=>['h2','h3','h4','h5','h6']),
-				//(object)array('items'=>['Link','Unlink','Anchor']),
-				//(object)array('items'=>['Source','Unlink','Anchor']),
-			//);
-			//$toolbar= json_encode($toolbar);
-			//$toolbar= "[['h2','h3','h4','h5','h6'], ['NumberedList', 'BulletedList'],['Outdent','Indent'],[ 'find', 'selection', 'spellchecker' ],
-			//'/',
-			//['Source','About']]";
-		//}
-		//if( !empty($toolbar) && gettype($toolbar==='string') )
-		//{
-			//$toolbar="toolbar: $toolbar";
-		//}
-		//else
-		//{
-			//$toolbar = false;
-		//}
-		//$ckeditor_mod_url=$SITEURL.'/admin/template/js/ckeditor';
-		?>
-<script type="text/javascript" src="<?=av::get('cpath')?>admin/template/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
+<?php if ($HTMLEDITOR != '') { ?>
+<script type="text/javascript" src="<?=av::get('cpath_modules_client');?>admin/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
 <script type="text/javascript">
 // CKEditor run script
 var startCKeditor = ( function()
 {
-	//var ckedroot='rooot/dir/where/ckeditor/listed';
-	var ckedroot=<?="'".av::get('cpath').'admin/template/js/ckeditor'."'";?>;
+	var ckedroot=<?="'".av::get('cpath_modules_client').'admin/js/ckeditor'."'";?>;
 	var editor_el_name = 'post-content';
 	var custom_opts =
 	{
@@ -357,7 +319,6 @@ var startCKeditor = ( function()
 		filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
 		filebrowserWindowWidth : '730',
 		filebrowserWindowHeight : '500',
-		language : '<?php echo $EDLANG; ?>',
 		defaultLanguage : '<?php echo $EDLANG; ?>',
 		<?php if (file_exists(GSTHEMESPATH.$TEMPLATE."/editor.css")) { ?>
 		contentsCss: '<?=$SITEURL."theme/$TEMPLATE/editor.css";?>',
@@ -367,7 +328,6 @@ var startCKeditor = ( function()
 		contentsCss: ckedroot+'/custom/contents.css',
 		<?php } ?>
 	};
-	//console.log(['ckedroot',ckedroot,'custom_opts',custom_opts]);
 	if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
 	{
 		CKEDITOR.tools.enableHtml5Elements( document );
@@ -375,6 +335,7 @@ var startCKeditor = ( function()
 	// The trick to keep the editor in the sample quite small
 	// unless user specified own height.
 	//CKEDITOR.config.height = 150;
+	CKEDITOR.cpath_admin = "<?=av::get('cpath_admin');?>";
 	CKEDITOR.config.width = 'auto';
 	CKEDITOR.config.contentsCss = ckedroot+'/custom/contents.css';
 	CKEDITOR.plugins.basePath = ckedroot+'/custom/plugins/';
@@ -394,9 +355,6 @@ var startCKeditor = ( function()
 			editor.setAttribute( 'contenteditable', 'true' );
 			editor = CKEDITOR.inline( editor_el_name, custom_opts );
 		}
-		//isSomePlugin = !!CKEDITOR.plugins.get( 'plugin_name' );
-		//if ( true ) { editorElement.setHtml('Sample text.');}
-		//console.log('editor element=',editor);
 	};
 	function isWysiwygareaAvailable()
 	{
@@ -463,7 +421,7 @@ function trackChanges(editor)
 				event::create('html-editor-init'); 
 			?>
 			
-		<?php } ?>
+<?php } ?>
 		
 		
 		

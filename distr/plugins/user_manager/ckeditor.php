@@ -1,41 +1,43 @@
 <?php if (!defined('IN_GS')) {die('you cannot load this page directly.');}
-/**
- * CKEditor template
- */
+
 
 global $SITEURL, $EDHEIGHT, $TEMPLATE, $EDTOOL, $EDLANG, $EDOPTIONS, $TOOLBAR, $editor_id;
-
 ?>
 
-    <script type="text/javascript">
-      var editor = CKEDITOR.replace('bio-<?php echo $editor_id; ?>', {
-        skin : 'getsimple',
-        forcePasteAsPlainText : true,
-        language : '<?php echo $EDLANG; ?>',
-        defaultLanguage : 'en',
-        <?php
-        if (file_exists(GSTHEMESPATH . $TEMPLATE . '/editor.css')) {
-          $path = suggest_site_path();
-          ?>
-          contentsCss: '<?php echo $path; ?>theme/<?php echo $TEMPLATE; ?>/editor.css',
-          <?php
-        }
-        ?>
-        entities : true,
-        uiColor : '#FFFFFF',
-        height: '<?php echo $EDHEIGHT; ?>',
-        baseHref : '<?php echo $SITEURL; ?>',
-        toolbar :
-        [
-        <?php echo $TOOLBAR; ?>
-        ]
-        <?php echo $EDOPTIONS; ?>,
-        tabSpaces:10,
-        filebrowserBrowseUrl : 'filebrowser.php?type=all',
-        filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
-        filebrowserWindowWidth : '730',
-        filebrowserWindowHeight : '500'
-      });
-    </script>
+<script type="text/javascript">
+	function user_manager_web_editor ( a_el )
+	{
+		var ckedroot=<?="'".av::get('cpath_modules_client').'admin/js/ckeditor'."'";?>;
+		CKEDITOR.config.contentsCss = ckedroot+'/custom/contents.css';
+		CKEDITOR.plugins.basePath = ckedroot+'/custom/plugins/';
+		CKEDITOR.cpath_admin = "<?=av::get('cpath_admin');?>";
+		//console.log('CKEDITOR.cpath_admin',CKEDITOR.cpath_admin);
+		return CKEDITOR.replace( a_el,
+			{
+				customConfig: ckedroot+'/custom/config.js',
+				skin : 'conger,'+ckedroot+'/custom/skins/conger/',
+				<?php if (file_exists(GSTHEMESPATH.$TEMPLATE."/editor.css")) { ?>
+				contentsCss: '<?=$SITEURL."theme/$TEMPLATE/style.css";?>',
+				<?php } 
+				else
+				{ ?>
+				contentsCss: ckedroot+'/custom/contents.css',
+				<?php } ?>
+				forcePasteAsPlainText : true,
+				entities : true,
+				height: '200px',
+				//toolbar : [ <?php echo $toolbar; ?> ],
+				//language : '<?php echo $EDLANG; ?>',
+				//language : 'en',
+				filebrowserBrowseUrl : 'filebrowser.php?type=all',
+				filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
+				filebrowserWindowWidth : '730',
+				filebrowserWindowHeight : '500',
+				removePlugins: 'format_buttons'
+			}
+		);
+	}
+	var editor = user_manager_web_editor('bio-<?=$editor_id;?>')
+</script>
 
 <?php ?>

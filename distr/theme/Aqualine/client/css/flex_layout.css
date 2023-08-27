@@ -1,0 +1,77 @@
+.flexc *
+{
+	margin:0;padding:0;line-height:0;
+}
+.flexc
+{
+	--flexc_total_width: 800px;
+	--flexc_space: 0.5rem;
+	--flexc_side_width: calc( var(--flexc_total_width) / 4 );
+	--flexc_main_with: calc( var(--flexc_total_width) / 2 );
+}
+.flexc
+{
+	display: flex;
+	flex-wrap:nowrap;
+	flex-direction:row;
+	margin: var(--flexc_space) 0 var(--flexc_space) 0;
+}
+
+.flexc > div
+{
+	display:flex;
+}
+
+.flexc > .flexc_1, .flexc > .flexc_2
+{
+	width: var(--flexc_side_width);
+	min-width: var(--flexc_side_width);
+	max-width: var(--flexc_side_width);
+	background: lavender;
+	flex-grow:0;
+	padding: var(--flexc_space);
+}
+.flexc > .flexc_1
+{
+	order:1;
+	margin-left: var(--flexc_space);
+}
+.flexc > .flexc_2
+{
+	margin-right: var(--flexc_space);
+	order:3;
+}
+.flexc > .flexc_3
+{
+	order:2;
+	padding: var(--flexc_space);
+	flex-grow: 6;
+	min-width: var(--flexc_main_with);
+	background: lightblue;
+	margin: 0 var(--flexc_space) 0 var(--flexc_space);
+}
+@media screen and (max-width: 800px)
+{
+	.flexc { flex-direction:column; }
+	.flexc > .flexc_1, .flexc > .flexc_2
+	{
+		width: auto;
+		max-width: inherit;
+		margin-top: var(--flexc_space) ;
+		margin-right: var(--flexc_space) ;
+		margin-left: var(--flexc_space) ;
+	}
+	/* left and right goes to bottom */
+	.flexc > .flexc_1
+	{
+		order:2;
+	}
+	.flexc > .flexc_2
+	{
+		order:3;
+	}
+	.flexc > .flexc_3
+	{
+		order:1;
+	}
+}

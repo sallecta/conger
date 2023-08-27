@@ -2,11 +2,11 @@
 <?php
 class fields_predefined extends field
 {
-	protected static function add()
+	protected static $pfields;
+	public static function start()
 	{
-		$fields = &self::$fields;
-		$fields[] = array(
-		'key'=>av::get('fcpath'), 
+		self::$pfields['cpath'] = array(
+		'key'=>'cpath', 
 		'about'=>'predefined_var',
 		'scope'=>'all',
 		'type' => 'text',
@@ -14,7 +14,7 @@ class fields_predefined extends field
 		'predef'=> true
 		);
 		
-		$fields[] = array(
+		self::$pfields['pages'] = array(
 		'key'=>'pages', 
 		'about'=>'predefined_fn',
 		'scope'=>'page',
@@ -22,6 +22,26 @@ class fields_predefined extends field
 		'value' => 'pages',
 		'predef'=> true
 		);
+	}
+	protected static function ret( $a_key )
+	{
+		if ( array_key_exists( $a_key, self::$pfields ) )
+		{
+			return self::$pfields[$a_key];
+		}
+		else
+		{
+			dev::epre('invalid key '. $a_key);
+			exit;
+		}
+	}
+	protected static function add()
+	{
+		$fields = &self::$fields;
+		foreach (self::$pfields as &$pfield)
+		{
+			$fields[] = $pfield;
+		}
 	}
 	
 	public static function pages($a_=null)
@@ -67,3 +87,4 @@ class fields_predefined extends field
 		return $out;
 	}
 }
+fields_predefined::start();

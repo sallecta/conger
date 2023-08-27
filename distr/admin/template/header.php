@@ -1,92 +1,53 @@
-<?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
-/**
- * Header Admin Template
- *
- * @package GetSimple
- */
- 
+<?php if(!defined('APP')){ die('you cannot load this page directly.'); } ?>
+<?php
+
 global $SITENAME, $SITEURL;
 
 $GSSTYLE         = getDef('GSSTYLE') ? GSSTYLE : '';
 $GSSTYLE_sbfixed = in_array('sbfixed',explode(',',$GSSTYLE));
 $GSSTYLE_wide    = in_array('wide',explode(',',$GSSTYLE));
 
-$bodyclass="class=\"";
-if( $GSSTYLE_sbfixed ) $bodyclass .= " sbfixed";
-if( $GSSTYLE_wide )    $bodyclass .= " wide";
-$bodyclass .="\"";
-
 if(get_filename_id()!='index') event::create('admin-pre-header');
 $cpadm=av::get('cpath_admin');
-$cpadmt=av::get('cpath_admintemplate');
+$cpmodules=av::get('cpath_modules');
+$cmc=av::get('cpath_modules_client');
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo get_site_lang(true); ?>">
+<html lang="<?=get_site_lang(true);?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"  />
-	<title><?php echo $title ?></title>
-	<?php if(!isAuthPage()) { ?><meta name="generator" content="GetSimple - <?php echo GSVERSION; ?>" /> 
-	<link rel="shortcut icon" href="<?=$cpadm;?>favicon.png" type="image/x-icon" />
-	<link rel="author" href="humans.txt" />
-	<link rel="apple-touch-icon" href="<?=$cpadm;?>apple-touch-icon.png"/>
-	<?php } ?>
+	<title><?=$title;?></title>
+<?php if(!isAuthPage()) { ?>
+	<meta name="generator" content="<?=av::get('name') .' '. av::get('version');?>" /> 
+	<link rel="shortcut icon" href="<?=$cmc;?>img/favicon/favicon.png" type="image/x-icon" />
+	<link rel="author" href="<?=$cpadm;?>humans.txt" />
+	<link rel="apple-touch-icon" href="<?=$cmc;?>img/favicon/apple-touch-icon.png"/>
+<?php } ?>
 	<meta name="robots" content="noindex, nofollow">
-	<link rel="stylesheet" type="text/css" href="<?=$cpadmt;?>style.php?<?php echo 's='.$GSSTYLE.'&amp;v='.GSVERSION; ?>" media="screen" />
-	<?php
-		if($GSSTYLE_sbfixed) queue_script('scrolltofixed', GSBACK);
-		get_scripts_backend();
-	?>
-	<script type="text/javascript" src="<?=$cpadmt;?>js/jquery.getsimple.js?v=<?php echo GSVERSION; ?>"></script>
-
-	<?php if( ((get_filename_id()=='upload') || (get_filename_id()=='image')) && (!getDef('GSNOUPLOADIFY',true)) ) { ?>
-	<script type="text/javascript" src="<?=$cpadmt;?>js/uploadify/jquery.uploadify.js?v=3.0"></script>
-	<?php } ?>
-	<?php if(get_filename_id()=='image') { ?>
-	<script type="text/javascript" src="<?=$cpadmt;?>js/jcrop/jquery.Jcrop.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="<?=$cpadmt;?>js/jcrop/jquery.Jcrop.css" media="screen" />
-	<?php } ?>
-
-    <?php 
-	# Plugin hook to allow insertion of stuff into the header
+	<link rel="stylesheet" type="text/css" href="<?=$cmc;?>admin/css/style.php" media="screen" />
+	<script type="text/javascript" src="<?=$cmc;?>admin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="<?=$cmc;?>admin/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="<?=$cmc;?>admin/js/jquery.getsimple.js?v=<?=av::get('version');?>"></script>
+<?php if( ((get_filename_id()=='upload') || (get_filename_id()=='image')) && (!getDef('GSNOUPLOADIFY',true)) ) { ?>
+	<script type="text/javascript" src="<?=$cmc;?>admin/js/uploadify/jquery.uploadify.js?v=3.0"></script>
+<?php } ?>
+<?php if(get_filename_id()=='image') { ?>
+	<script type="text/javascript" src="<?=$cmc;?>admin/js/jcrop/jquery.Jcrop.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?=$cmc;?>admin/js/jcrop/jquery.Jcrop.css" media="screen" />
+<?php } ?>
+<?php 
 	if(!isAuthPage()) event::create('header'); 
-	
-	function doVerCheck(){
-		return !isAuthPage() && !getDef('GSNOVERCHECK');
-	}
-
-    if( doVerCheck() ) { ?>
-	<script type="text/javascript">		
-		// check to see if core update is needed
-		jQuery(document).ready(function() { 
-			<?php 
-				$data = get_api_details();
-				if ($data) {
-					$apikey = json_decode($data);
-					
-					if(isset($apikey->status)) {
-						$verstatus = $apikey->status;
-			?>
-				var verstatus = <?php echo $verstatus; ?>;
-				if(verstatus != 1) {
-					<?php if(isBeta()){ ?> $('a.health').parent('li').append('<span class="info">i</span>');
-					<?php } else { ?> $('a.health').parent('li').append('<span class="warning">!</span>'); <?php } ?>
-				}
-			<?php  }} ?>
-		});
-	</script>
-	<?php } ?>
-
-	<script type="text/javascript">		
-		// init gs namespace and i18n
+	if(!isAuthPage()) event::create('ev_client_admin_head');
+?>
+	<script type="text/javascript">
 		var GS = {};
 		GS.i18n = new Array();
 		GS.i18n['PLUGIN_UPDATED'] = '<?php i18n("PLUGIN_UPDATED"); ?>';
 		GS.i18n['ERROR'] = '<?php i18n("ERROR"); ?>';
 	</script>
-
 </head>
 
-<body <?php filename_id(); echo ' '.$bodyclass; ?> >
+<body id="<?=get_filename_id();?>" >
 	<div class="header" id="header" >
-		<div class="wrapper clearfix">
- <?php event::create('header-body'); ?>
+		<div class="wrapper clearfix"><?php
+event::create('header-body'); ?>

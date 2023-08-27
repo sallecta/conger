@@ -1,117 +1,6 @@
 <?php if(!defined('APP')){ die('you cannot load this page directly.'); }
 
-if (function_exists('return_i18n_pages'))
-{
-	require_once(GSPLUGINPATH.'i18n_navigation/frontend.class.php');
-}
 
-function i18n_customfields_list_pages_json()
-{
-	if (function_exists('find_i18n_url') && class_exists('I18nNavigationFrontend'))
-	{
-		$slug = isset($_GET['id']) ? $_GET['id'] : (isset($_GET['newid']) ? $_GET['newid'] : '');
-		$pos = strpos($slug, '_');
-		$lang = $pos !== false ? substr($slug, $pos+1) : null;
-		$structure = I18nNavigationFrontend::getPageStructure(null, false, null, $lang);
-		$pages = array();
-		$nbsp = html_entity_decode('&nbsp;', ENT_QUOTES, 'UTF-8');
-		$lfloor = html_entity_decode('&lfloor;', ENT_QUOTES, 'UTF-8');
-		foreach ($structure as $page)
-		{
-			$text = ($page['level'] > 0 ? str_repeat($nbsp,5*$page['level']-2).$lfloor.$nbsp : '').cl($page['title']);
-			$link = find_i18n_url($page['url'], $page['parent'], $lang ? $lang : return_i18n_default_language());
-			$pages[] = array($text, $link);
-		}
-		return json_encode($pages);
-	}
-	else
-	{
-		return list_pages_json();
-	}
-} // i18n_customfields_list_pages_json
-
-function i18n_customfields_customize_ckeditor($editorvar) { // copied and modified from ckeditor_add_page_link()
-	echo "
-	// modify existing Link dialog
-	CKEDITOR.on( 'dialogDefinition', function( ev )	{
-		if ((ev.editor != " . $editorvar . ") || (ev.data.name != 'link')) return;
-
-		// Overrides definition.
-		var definition = ev.data.definition;
-		definition.onFocus = CKEDITOR.tools.override(definition.onFocus, function(original) {
-			return function() {
-				original.call(this);
-					if (this.getValueOf('info', 'linkType') == 'localPage') {
-						this.getContentElement('info', 'localPage_path').select();
-					}
-			};
-		});
-
-		// Overrides linkType definition.
-		var infoTab = definition.getContents('info');
-		var content = getById(infoTab.elements, 'linkType');
-
-		content.items.unshift(['Link to local page', 'localPage']);
-		content['default'] = 'localPage';
-		infoTab.elements.push({
-			type: 'vbox',
-			id: 'localPageOptions',
-			children: [{
-				type: 'select',
-				id: 'localPage_path',
-				label: 'Select page:',
-				required: true,
-				items: " . i18n_customfields_list_pages_json() . ",
-				setup: function(data) {
-					if ( data.localPage )
-						this.setValue( data.localPage );
-				}
-			}]
-		});
-		content.onChange = CKEDITOR.tools.override(content.onChange, function(original) {
-			return function() {
-				original.call(this);
-				var dialog = this.getDialog();
-				var element = dialog.getContentElement('info', 'localPageOptions').getElement().getParent().getParent();
-				if (this.getValue() == 'localPage') {
-					element.show();
-					if (" . $editorvar . ".config.linkShowTargetTab) {
-						dialog.showPage('target');
-					}
-					var uploadTab = dialog.definition.getContents('upload');
-					if (uploadTab && !uploadTab.hidden) {
-						dialog.hidePage('upload');
-					}
-				}
-				else {
-					element.hide();
-				}
-			};
-		});
-		content.setup = function(data) {
-			if (!data.type || (data.type == 'url') && !data.url) {
-				data.type = 'localPage';
-			}
-			else if (data.url && !data.url.protocol && data.url.url) {
-				if (path) {
-					data.type = 'localPage';
-					data.localPage_path = path;
-					delete data.url;
-				}
-			}
-			this.setValue(data.type);
-		};
-		content.commit = function(data) {
-			data.type = this.getValue();
-			if (data.type == 'localPage') {
-				data.type = 'url';
-				var dialog = this.getDialog();
-				dialog.setValueOf('info', 'protocol', '');
-				dialog.setValueOf('info', 'url', dialog.getValueOf('info', 'localPage_path'));
-			}
-		};
-  });";
-} // i18n_customfields_customize_ckeditor
 
 global $SITEURL,$TEMPLATE;
 global $data_edit; // SimpleXML to read from
@@ -131,13 +20,11 @@ $id = $_GET['id'];
 $EDLANG = i18n_r('CKEDITOR_LANG');
 $EDTOOL = 'advanced';//basic/advanced
 $EDOPTIONS = ''; 
-$toolbar = "
-['Bold', 'Italic', 'Underline', 'NumberedList', 'BulletedList', 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock', 'Table', 'TextColor', 'BGColor', 'Link', 'Unlink', 'Image', 'RemoveFormat', 'Source'],
-'/',
-['Styles','Format','Font','FontSize']
-";
+$toolbar = "['Source', 'btns_h1']";
 // Editor settings end
 
+$sq="'";
+$dq='"';
 
 ?>
 <h4><?=i18n_r('field/fields_management')?> (<?=i18n_r('by_module')?> <?=i18n_r('field/TITLE')?>).</h4>
@@ -159,24 +46,25 @@ foreach ($fields as $field)
 	$key = $field['key'];
 	$about = $field['about'];
 	$type = $field['type'];
-	$value = htmlspecialchars($id ? (isset($data_edit->$key) ? $data_edit->$key : '') : (isset($field['value']) ? $field['value'] : ''), ENT_QUOTES);
+	$value = $id ? (isset($data_edit->$key) ? $data_edit->$key : '') : (isset($field['value']) ? $field['value'] : '');
+	$value = htmlspecialchars($value, ENT_QUOTES);
 
 	if ($field['predef'] ) // draw a full width TextBox
 	{
-	?>
+?>
 			<td colspan="2" style="border:0 none;"><p><strong><?=$key?></strong> (<?=i18n_r('field/predef')?>)</p>
 				<p><?=$field['about']?>. <?=$key?>=<?=$field['value']?></p>
 			</td> 
-	<?php
-	continue;
+<?php
+		continue;
 	}
 	if ('textfull' == $type ) // draw a full width TextBox
 	{
-	?>
+?>
 			<td colspan="2" style="border:0 none;"><strong><?=$key?></strong> (<?=$type?>)<br/>
 				<input class="text" type="text" style="width:602px;" id="post-<?=$key?>" name="post-<?=$key?>" value="<?=$value?>"/>
 			</td> 
-	<?php
+<?php
 	}
 	elseif ('dropdown' == $type )
 	{?>
@@ -206,35 +94,37 @@ foreach ($fields as $field)
 				<textarea style="width:602px;height:200px;border: 1px solid #AAAAAA;" id="post-<?=$key?>" name="post-<?=$key?>"><?=$value?></textarea>
 			</td>
 			<script type="text/javascript">
-				// missing border around text area, too much padding on left side, ...
-				$(function()
+				const field_start_ckeditor = function()
 				{
-					var ckedroot=<?="'".av::get('cpath').'admin/template/js/ckeditor'."'";?>;
-					var editor_<?php echo $ndx; ?> = CKEDITOR.replace( 'post-<?php echo $key; ?>',
-						{
-							customConfig: ckedroot+'/custom/config.js',
-							skin : 'conger,'+ckedroot+'/custom/skins/conger/',
-							<?php if (file_exists(GSTHEMESPATH.$TEMPLATE."/editor.css")) { ?>
-							contentsCss: '<?=$SITEURL."theme/$TEMPLATE/style.css";?>',
-							<?php } 
-							else
-							{ ?>
-							contentsCss: ckedroot+'/custom/contents.css',
-							<?php } ?>
-							forcePasteAsPlainText : true,
-							entities : true,
-							height: '200px',
-							toolbar : [ <?php echo $toolbar; ?> ],
-							language : '<?php echo $EDLANG; ?>',
-							filebrowserBrowseUrl : 'filebrowser.php?type=all',
-							filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
-							filebrowserWindowWidth : '730',
-							filebrowserWindowHeight : '500'
-						}
-					);
-					<?php //i18n_customfields_customize_ckeditor('editor_'.$ndx); ?>
-					}
-				);
+					const ckedroot=<?=$sq.av::get('cpath_modules_client').'admin/js/ckeditor'.$sq;?>;
+					const editor_el_name = <?=$sq."post-$key".$sq;?>;
+					const pr = function( arg ) { return 'btns_'+arg };
+					const custom_opts =
+					{
+						customConfig: ckedroot+'/custom/config.js',
+						skin : 'conger,'+ckedroot+'/custom/skins/conger/',
+						toolbar: [['Source'],
+							[pr('txt'),pr('h1'),pr('h2'),pr('h3'),
+								pr('h4'),pr('h5'),pr('h6'),pr('p')]],
+						filebrowserBrowseUrl : 'filebrowser.php?type=all',
+						filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
+						filebrowserWindowWidth : '730',
+						filebrowserWindowHeight : '500',
+<?php if (file_exists(GSTHEMESPATH.$TEMPLATE."/editor.css")) { ?>
+						contentsCss: <?=$sq.$SITEURL."theme/$TEMPLATE/editor.css".$sq;?>,
+<?php } 
+else
+{ ?>
+						contentsCss: ckedroot+'/custom/contents.css',
+<?php } ?>
+					};
+					CKEDITOR.cpath_admin = "<?=av::get('cpath_admin');?>";
+					CKEDITOR.config.width = 'auto';
+					CKEDITOR.config.contentsCss = ckedroot+'/custom/contents.css';
+					CKEDITOR.plugins.basePath = ckedroot+'/custom/plugins/';
+					editor_<?=$ndx;?> = CKEDITOR.replace( editor_el_name, custom_opts );
+				};
+				window.addEventListener('load',field_start_ckeditor);
 			</script>
 	<?php
 	}

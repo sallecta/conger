@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Sun, 02 Jul 2023 16:47:27 +0300</pubDate><title><![CDATA[Child page 2]]></title><url><![CDATA[child2]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Child page 2]]></menu><menuOrder><![CDATA[4]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[parent]]></parent><content><![CDATA[&lt;h2&gt;Child page 2 content&lt;/h2&gt;
+<item><pubDate>Tue, 04 Jul 2023 00:58:37 +0300</pubDate><title>Child page 2</title><url>child2</url><meta/><metad/><menu>Child page 2 long menu text to test</menu><menuStatus>Y</menuStatus><template>template.php</template><parent>parent</parent><content>&amp;lt;h2&amp;gt;Child page 2 content&amp;lt;/h2&amp;gt;
 
-&lt;p&gt;Some text.&lt;/p&gt;
-]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author><about><![CDATA[<p>Child page 2 about</p>
-]]></about><creDate>Sat, 10 Jun 2023 15:46:08 +0300</creDate><user><![CDATA[admin]]></user></item>
+&amp;lt;p&amp;gt;Some text.&amp;lt;/p&amp;gt;
+</content><private/><author>admin</author><about>&lt;p&gt;Child page 2 about&lt;/p&gt;
+</about><creDate>Sat, 10 Jun 2023 15:46:08 +0300</creDate><user>admin</user><menuOrder><![CDATA[7]]></menuOrder></item>

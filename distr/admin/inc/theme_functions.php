@@ -242,7 +242,9 @@ function get_header($full=true) {
 	// favicon, shortcut icon
 	$favicon=field::get('favicon');
 	if( !empty($favicon) )
-	{ echo '<link rel="shortcut icon" href="'.av::get('cpath').$favicon.'" type="image/x-icon" />'; }
+	{?>
+	<link rel="shortcut icon" href="<?=av::get('cpath').$favicon;?>" type="image/x-icon" />
+	<?php }
 	// meta description	
 	if ($metad != '') {
 		$desc = get_page_meta_desc(FALSE);
@@ -479,43 +481,35 @@ function menu_data($id = null,$xml=false)
 	}
 }
 
-/**
- * Get Component
- *
- * This will return the component requested. 
- * Components are parsed for PHP within them.
- *
- * @since 1.0
- * @uses GSDATAOTHERPATH
- * @uses getXML
- * @modified mvlcek 6/12/2011
- *
- * @param string $id This is the ID of the component you want to display
- *				True will return value in XML format. False will return an array
- * @return string 
- */
-function get_component($id) {
-    global $components;
-
-    // normalize id
-    $id = to7bit($id, 'UTF-8');
-	$id = clean_url($id);
-
-    if (!$components) {
-         if (file_exists(GSDATAOTHERPATH.'components.xml')) {
-            $data = getXML(GSDATAOTHERPATH.'components.xml');
-            $components = $data->item;
-        } else {
-            $components = array();
-        }
-    }
-    if (count($components) > 0) {
-        foreach ($components as $component) {
-            if ($id == $component->slug) { 
-                eval("?>" . strip_decode($component->value) . "<?php "); 
-            }
-        }
-    }
+function get_component($a_name)
+{
+	global $components;
+	// normalize a_name
+	$a_name = to7bit($a_name, 'UTF-8');
+	$a_name = clean_url($a_name);
+	if (!$components)
+	{
+		if (file_exists(GSDATAOTHERPATH.'components.xml'))
+		{
+			$data = getXML(GSDATAOTHERPATH.'components.xml');
+			$components = $data->item;
+		}
+		else
+		{
+			$components = array();
+		}
+	}
+	if (count($components) > 0)
+	{
+		foreach ($components as $component)
+		{
+			if ($a_name == $component->slug)
+			{ 
+				/*eval("?>" . strip_decode($component->value) . "<?php ");*/ 
+				echo(strip_decode($component->value)); 
+			}
+		}
+	}
 }
 
 function get_navigation($currentpage = "",$classPrefix = "") {

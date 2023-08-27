@@ -4,18 +4,18 @@ require_once(dirname(dirname(dirname(__FILE__))).'/modules/dev/dev.php');
 require_once(dirname(dirname(dirname(__FILE__))).'/modules/av/av.php');
 require_once(av::get('spath').'modules/event/event.php');
 require_once(av::get('spath').'modules/filter/filter.php');
-/*
-Enable development mode
-dev mode
-*/
-av::set('dev',true);
 
 /**
  * Headers
  */
 
 // charset utf-8
-header('content-type: text/html; charset=utf-8');
+if ( !av::get('http_header') )
+{
+	av::set('http_header','content-type: text/html; charset=utf-8');
+	header(av::get('http_header'));
+	
+}
 // headers for backend
 if(!isset($base)){
 	// no-cache headers
@@ -335,4 +335,7 @@ if(isset($load['plugin']) && $load['plugin']){
 	
 }
 if(isset($load['login']) && $load['login']){ 	include_once(GSADMININCPATH.'login_functions.php'); }
+
+
+require_once(av::get('spath').'modules/client/client.php');
 ?>

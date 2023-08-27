@@ -286,7 +286,7 @@ function getXML($file) {
 	if($xml){
 		$data = simplexml_load_string($xml, 'SimpleXMLExtended', LIBXML_NOCDATA); 
 		return $data;
-	}	
+	}
 }
 
 /**

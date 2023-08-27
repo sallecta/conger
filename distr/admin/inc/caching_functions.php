@@ -10,7 +10,7 @@
 
 $pagesArray = array();
 event::join('index-header','getPagesXmlValues',array(false));      // make $pagesArray available to the front 
-event::join('header', 'getPagesXmlValues',array(get_filename_id() != 'pages'));  // make $pagesArray available to the back
+event::join('ev_client_admin_head', 'getPagesXmlValues',array(get_filename_id() != 'pages'));  // make $pagesArray available to the back
 event::join('page-delete', 'create_pagesxml',array(true));         // Create pages.array if page deleted
 event::join('page-restored', 'create_pagesxml',array(true));        // Create pages.array if page undo
 event::join('changedata-aftersave', 'create_pagesxml',array(true));     // Create pages.array if page is updated

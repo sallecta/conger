@@ -133,7 +133,7 @@ get_template('header', cl($SITENAME).' &raquo; '. i18n_r('BAK_MANAGEMENT').' &ra
 		<script type="text/javascript" src="template/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
 		<script type="text/javascript">
 		<?php if(getDef("GSCKETSTAMP",true)) echo "CKEDITOR.timestamp = '".getDef("GSCKETSTAMP") . "';\n"; ?>
-		var ckedroot=<?="'".av::get('cpath').'admin/template/js/ckeditor'."'";?>;
+		var ckedroot=<?="'".av::get('cpath_modules_client').'admin/js/ckeditor'."'";?>;
 		CKEDITOR.plugins.basePath = ckedroot+'/custom/plugins/';
 		var editor = CKEDITOR.replace( 'codetext', {
 			customConfig: ckedroot+'/custom/config.js',

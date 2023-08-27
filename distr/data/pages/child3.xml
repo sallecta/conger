@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Mon, 03 Jul 2023 18:47:56 +0300</pubDate><title>Child page 3</title><url>child3</url><meta/><metad/><menu>child3</menu><menuStatus>Y</menuStatus><template>template.php</template><parent>parent</parent><content>&amp;lt;p&amp;gt;Some content&amp;lt;/p&amp;gt;
+</content><private/><author>admin</author><about>&lt;p&gt;Child page 3 about&lt;/p&gt;
+</about><creDate>Mon, 03 Jul 2023 18:47:37 +0300</creDate><user>admin</user><menuOrder><![CDATA[6]]></menuOrder></item>

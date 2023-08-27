@@ -1,0 +1,34 @@
+#to_top.show
+{
+	display:block;opacity:0.2;
+	transition: 500ms opacity;
+}
+#to_top.hide
+{
+	display:none;
+}
+#to_top
+{
+	/* https://yoksel.github.io/url-encoder/ */
+	--svg_to_top: url("data:image/svg+xml;charset=UTF-8,%3csvg version='1.1' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3e%3cpath id='to_top' d='m14.6 7.84-13 12c-3.2 2.93 1.2 7.73 4.4 4.8l8.27-7.86c1.71-1.88 1.73-1.64 3.45-.0041l8.28 7.86c3.2 2.93 7.6-1.87 4.4-4.8l-13-12c-1.03-.803-1.67-.753-2.8 0z' /%3e%3c/svg%3e");
+}
+#to_top {
+	display: block;
+	width: 32px;
+	height: 32px;
+	background-color: #0a1b87;
+	mask-image: var(--svg_to_top);
+	-webkit-mask-image: var(--svg_to_top);
+	mask-repeat: no-repeat;
+	position: fixed;
+	top: 15%;
+	right: 4%;
+	opacity: 0;
+	transition: 300ms opacity;
+	cursor: pointer;
+}
+#to_top:hover
+{
+	opacity: 1;
+	transition: 300ms opacity;
+}

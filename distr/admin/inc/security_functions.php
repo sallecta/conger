@@ -196,21 +196,12 @@ function validate_safe_file($file, $name, $mime = null){
 	}
 }
 
-/**
- * Checks that an existing filepath is safe to use by checking canonicalized absolute pathname.
- *
- * @since 3.1.3
- *
- * @param string $path Unknown Path to file to check for safety
- * @param string $pathmatch Known Path to parent folder to check against
- * @param bool $subdir allow path to be a deeper subfolder
- * @return bool Returns true if files path resolves to your known path
- */
-function filepath_is_safe($path,$pathmatch,$subdir = true){
-	$realpath = realpath($path);
-	$realpathmatch = realpath($pathmatch);
-	if($subdir) return strpos(dirname($realpath),$realpathmatch) === 0;
-	return dirname($realpath) == $realpathmatch;
+
+function filepath_is_safe( $a_path,$pathmatch=null,$subdir = null )
+{
+	$result = !str_contains($a_path, '../');
+	//dev::ehtmlcom(['requested',$a_path,'result',$result]);
+	return $result;
 }
 
 /**

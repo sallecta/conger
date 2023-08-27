@@ -12,6 +12,7 @@
 $load['plugin'] = true;
 include('inc/common.php');
 login_cookie_check();
+$tr='i18n_r';
 
 # save page priority order
 if (isset($_POST['menuOrder'])) {
@@ -44,39 +45,59 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('PAGE_MANAGEMENT').' &ra
 <?php include('template/include-nav.php'); ?>
 
 <div class="bodycontent clearfix">
-	
 	<div id="maincontent">
 		<div class="main" >
-			<h3><?php echo str_replace(array('<em>','</em>'), '', i18n_r('MENU_MANAGER')); ?></h3>
-			<p><?php i18n('MENU_MANAGER_DESC'); ?></p>
-			<?php
-				if (count($pagesSorted) != 0) { 
-					echo '<form method="post" action="menu-manager.php">';
-					echo '<ul id="menu-order" >';
-					foreach ($pagesSorted as $page) {
-						$sel = '';
-						if ($page['menuStatus'] != '') { 
-							
-							if ($page['menuOrder'] == '') { 
-								$page['menuOrder'] = "N/A"; 
-							} 
-							if ($page['menu'] == '') { 
-								$page['menu'] = $page['title']; 
-							}
-							echo '<li class="clearfix" rel="'.$page['slug'].'">
-											<strong>#'.$page['menuOrder'].'</strong>&nbsp;&nbsp;
-											'. $page['menu'] .' <em>'. $page['title'] .'</em>
-										</li>';
-						}
-					}
-					echo '</ul>';
-					echo '<input type="hidden" name="menuOrder" value=""><input class="submit" type="submit" value="'. i18n_r("SAVE_MENU_ORDER").'" />';
-					echo '</form>';
-				} else {
-					echo '<p>'.i18n_r('NO_MENU_PAGES').'.</p>';	
-				}
-			?>
-			
+			<h3><?=$tr('MENU_MANAGER');?></h3>
+			<p><?=$tr('MENU_MANAGER_DESC');?></p>
+<?php
+	if (count($pagesSorted) != 0)
+	{
+?>
+				<form method="post" action="menu-manager.php">
+					<ul id="menu-order" >
+<?php
+		foreach ($pagesSorted as $page)
+		{
+			$sel = '';
+			if ($page['menuStatus'] == '')
+			{ continue; }
+			if ($page['menuOrder'] == '')
+			{ 
+				$page['menuOrder'] = "N/A"; 
+			} 
+			if ($page['menu'] == '')
+			{ 
+				$page['menu'] = $page['title']; 
+			}
+			$ps=&$page['slug'];
+			$pmo=&$page['menuOrder'];
+			$pm=&$page['menu'];
+			$pt=&$page['title'];
+			$pp=&$page['parent'];
+			$edit=av::get('cpath_admin')."edit.php?id=$ps";
+			if ( $pp )
+			{ $out="$pp ➛ $ps"; }
+			else
+			{ $out="$ps"; }
+?>
+						<li class="" rel="<?=$ps;?>">
+							<strong>#<?=$pmo;?> ❭</strong> <em><?=$pt;?></em> ❭ <?=$out."\n";?> <a class='edit' href="<?=$edit;?>">Edit</a>
+						</li>
+<?php
+		}
+?>
+					</ul>
+					<input type="hidden" name="menuOrder" value=""><input class="submit" type="submit" value="<?=$tr("SAVE_MENU_ORDER");?>" />
+					</form>
+<?php
+	}
+	else
+	{
+?>
+					<p><?=$tr('NO_MENU_PAGES');?></p>	
+<?php
+	}
+?>
 			<script>
 				$("#menu-order").sortable({
 					cursor: 'move',
@@ -92,10 +113,8 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('PAGE_MANAGEMENT').' &ra
 				});
 				$("#menu-order").disableSelection();
 			</script>
-			
 		</div>
 	</div>
-	
 	<div id="sidebar" >
 		<?php include('template/sidebar-pages.php'); ?>
 	</div>

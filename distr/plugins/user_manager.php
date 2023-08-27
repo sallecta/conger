@@ -1,67 +1,19 @@
 <?php
 
-/*******************************************************************************
-
-	@File:			user_manager.php
-	@Plugin:		Multi User
-	@Description:	Adds Multi-User Management Section
-	@Subject:		Main plugin file
-	@Revision:		20 Feb 2015
-	@Version:		1.9.0
-	@Author:		Mike Henken (http://michaelhenken.com/)
-	@History:
-	----------------------------------------------------------------------------
-	Version 1.9.1 (June 2023) :: by sallecta (github.com/sallecta)
-	----------------------------------------------------------------------------
-	----------------------------------------------------------------------------
-	Version 1.9.0 (February 2015) :: smartened by maf (www.jinan.cz)
-	----------------------------------------------------------------------------
-	+ reworked UX to better fit GS 3.3 admin interface look&feel
-	+ complete localization with EN, RU and CS language files bundled
-	+ returned "User's bio" in User's profile, fixed non-latin chars crashes
-	+ CKeditor on demand on User Management page
-	+ added switch to reveal password text
-	+ added client-side username and empty password validation
-	+ added client-side automatic landing page restriction/setting by permissions
-	+ logged-in user cannot delete himself or remove his User Management rights
-	+ default permissions for standard non-admin user when adding new users
-	+ added several help hints
-	+ huge increase of performance by removing multiple readings of CKeditor code
-	- some of the above features do not work in IE<10 but plugin is still usable
-
-	----------------------------------------------------------------------------
-	Version 1.8.2+ "updated" (May 2014) :: cured by Oleg06 (www.getsimplecms.ru)
-	----------------------------------------------------------------------------
-	+ repaired to work with GS 3.3
-	+ added server-side checks for incorrect landing page settings
-	+ user with denied "Settings" rights can still edit his profile
-	+ added "admin" flag in users table
-	- removed User's bio from user's profile (it wrecked user on nonlatin chars)
-	- incomlete localization with many Cyrillic strings
-
-	----------------------------------------------------------------------------
-	Version 1.8.2 (September 2012) :: last version by Mike Henken
-	----------------------------------------------------------------------------
-	+ DISCLAIMER - When I initially created this plugin I had very little
-		knowledge of php and was a programming noob. I know it is in need
-		of a rewrite and I will get around to it at some point
-	- compromised functionality with GS 3.3
-
-*******************************************************************************/
-
-	// get correct id for plugin
+// get correct id for plugin
 	$plgid_usman = basename(__FILE__, ".php");
+	
 
 	# language support
 	i18n_merge('user_manager') || i18n_merge('user_manager', 'en_US');
 
 	// register plugin
 	register_plugin(
-	$plgid_usman,											# ID of plugin, should be filename minus php
-	'User Manager',										# Title of plugin
-	'1.9.0',											# Version of plugin
-	'Mike Henken, Oleg06, maf, sallecta',				# Author of plugin
-	'http://www.michaelhenken.com/',					# Author URL
+	$plgid_usman,
+	'User Manager',
+	'1.9.0',
+	'sallecta, Mike Henken, Oleg06, maf',
+	'http://sallecta.infinityfreeapp.com/conger/',
 	i18n_r('user_manager/PLUGIN_DESCRIPTION'),		# Plugin Description
 	'settings',											# Page type of plugin
 	'UserManager_interact'											# Function that displays content
@@ -71,15 +23,23 @@
 	//Add Sidebar Item In Settings Page
 	event::join('settings-sidebar', 'createSideMenu', array($plgid_usman, i18n_r('user_manager/SIDEBAR')));
 	//Make the multiuser_perm() function run before each admin page loads
-	event::join('header', 'UserManager_permissions');
+	event::join('ev_client_admin_head', 'UserManager_permissions');
 	event::join('settings-user', 'UserManager_ProcessSettings');
 	event::join('settings-user-extras', 'UserManager_ProfileRender');
 	event::join('resetpw-success', 'UserManager_ResetPw');
 
 	define('USERMANAGER_PATH', GSPLUGINPATH.'user_manager/');
 
-class UserManager {
-	public function __construct(){ }
+class UserManager
+{
+	public static $spath;
+	public static $name;
+	public function __construct()
+	{
+		
+		self::$name = basename(__FILE__, ".php");
+		self::$spath = av::get('spath_plugins').UserManager::$name.'/';
+	}
 	public function userData($get_Data, $data_Type = ""){
 		if(get_cookie('GS_ADMIN_USERNAME') != ""){
 			$current_user = get_cookie('GS_ADMIN_USERNAME');
@@ -288,108 +248,103 @@ class UserManager {
 		}
 	}
 
-	public function CheckPermissions(){
-		//echo $this->userData('SETTINGS'); //only for debug purposes
-		//Find Current script and trim path
+	public function CheckPermissions()
+	{
 		$current_file = $_SERVER["PHP_SELF"];
 		$current_file = basename(rtrim($current_file, '/'));
 		$current_script =  $_SERVER["QUERY_STRING"];
 		$landing = (string)$this->userData('LANDING');
 		$pages = (string)$this->userData('PAGES');
-
-		//pages.php permissions - If pages is disabled, this coding will kill the pages script and redirect to the chosen alternate landing page
-		if ($current_file=="pages.php" or $current_script=='id=i18n_base'){
+		$styles = [];
+		$scripts = [];
+		if ($current_file=="pages.php" or $current_script=='id=i18n_base')
+		{
 			$referer = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER']: '';
 			$adminfolder = basename(get_admin_path());
-			if ($referer and basename($referer) == $adminfolder or strpos($referer, $adminfolder.'/index.php')) {
-				if ($pages == "no") {
-					if ($landing == "pages.php" || $landing == "") die ('<meta http-equiv="refresh" content="0;url=logout.php">');
-					else die('<meta http-equiv="refresh" content="0;url='. $landing .'">');
+			if ($referer and basename($referer) == $adminfolder or strpos($referer, $adminfolder.'/index.php'))
+			{
+				if ($pages == "no")
+				{
+					if ($landing == "pages.php" || $landing == "")
+					{ die ('<meta http-equiv="refresh" content="0;url=logout.php">'); }
+					else
+					{ die('<meta http-equiv="refresh" content="0;url='. $landing .'">'); }
 				}
-				elseif ($landing and $landing != "pages.php") die('<meta http-equiv="refresh" content="0;url='. $landing .'">');	/*<meta http-equiv="refresh" content="0;url='. $landing .'">*/
+				elseif ($landing and $landing != "pages.php")
+				{ die('<meta http-equiv="refresh" content="0;url='. $landing .'">'); }
 			}
-			elseif ($pages == "no") die(i18n_r('user_manager/NO_PERMISSION'));
+			elseif ($pages == "no") { die(i18n_r('user_manager/NO_PERMISSION')); }
 		}
-		if ($pages == "no") {
+		if ($pages == "no")
+		{
 			if ($current_file=="menu-manager.php" or ($current_script=='id=i18n_navigation'||$current_script=='id=i18n_specialpages&pages'))
-				die(i18n_r('user_manager/NO_PERMISSION'));
-			$pages_menu = "#nav_pages, #sb_pages, #sb_i18n_base, #sb_i18n_navigation, #sb_menumanager, a[href='load.php?id=i18n_specialpages&pages'] {display:none !important;}";
-			$pages_footer =  '$("#footer").find("a[href=\'pages.php\']").remove(); $("#footer").find("a[href=\'load.php?id=i18n_base\']").remove();';
-		} else {$pages_menu =""; $pages_footer = "";}
-
-		//Settings.php permissions
-		if ($this->userData('SETTINGS') == "no") {
-			if ($current_file == "settings.php") {
-				$site_settings = '$(".main").children().not("#profile").remove(); $("#profile").css("padding", "0");';
+			{ die(i18n_r('user_manager/NO_PERMISSION')); }
+			array_push($styles,"#nav_pages, #sb_pages, #sb_i18n_base, #sb_i18n_navigation, #sb_menumanager, a[href='load.php?id=i18n_specialpages&pages'] {display:none !important;}");
+			array_push($scripts,'$("#footer").find("a[href=\'pages.php\']").remove(); $("#footer").find("a[href=\'load.php?id=i18n_base\']").remove();');
+		}
+		if ($this->userData('SETTINGS') == "no")
+		{
+			array_push($styles,"#sb_settings {display:none !important;}");
+			if ($current_file == "settings.php")
+			{
+				array_push($scripts,'$(".main").children().not("#profile").remove(); $("#profile").css("padding", "0");');
 			}
-			$settings_menu = "#sb_settings {display:none !important;}";
-		} else {$settings_menu =""; $site_settings = '';}
-
-		//backups.php permisions
-		if ($this->userData('BACKUPS') == "no") {
-			if ($current_file == "backups.php" || $current_file == "archive.php") die(i18n_r('user_manager/NO_PERMISSION'));
-			$backups_menu = "#nav_backups {display:none !important;}";
-			$backups_footer = '$("#footer").find("a[href=\'backups.php\']").remove();';
-		} else {$backups_menu =""; $backups_footer = "";}
-
-		//plugins.php permissions
-		if ($this->userData('PLUGINS') == "no") {
-			if ($current_file == "plugins.php") die(i18n_r('user_manager/NO_PERMISSION'));
-			$plugins_menu = "#nav_plugins {display:none !important;}";
-			$plugins_footer = '$("#footer").find("a[href=\'plugins.php\']").remove();';
-		} else {$plugins_menu =""; $plugins_footer = "";}
-
-		//support.php & health-check.php permissions
-		if ($this->userData('SUPPORT') == "no") {
-			if ($current_file == "support.php") die(i18n_r('user_manager/NO_PERMISSION'));
-			$support_menu = ".support {display:none !important;}";
-			$support_footer = '$("#footer").find("a[href=\'support.php\']").remove();';
-		} else {$support_menu = "";	$support_footer = "";}
-
-		//uploads.php (files page) permissions
-		if ($this->userData('FILES') == "no") {
-			if ($current_file == "upload.php") die(i18n_r('user_manager/NO_PERMISSION'));
-			$files_menu = "#nav_upload {display:none !important;}";
-			$files_footer = '$("#footer").find("a[href=\'upload.php\']").remove();';
-		} else {$files_menu = ""; $files_footer = "";}
-
-		//theme.php permissions
-		if ($this->userData('THEME') == "no") {
-			if ($current_file == "theme.php" || $current_file == "theme-edit.php" || $current_file == "components.php") die(i18n_r('user_manager/NO_PERMISSION'));
-			$theme_menu = "#nav_theme {display:none !important;}";
-			$theme_footer = '$("#footer").find("a[href=\'theme.php\']").remove();';
-		} else {$theme_menu = ""; $theme_footer = "";}
-
-		//edit.php
-		if ($this->userData('EDIT') == "no") {
-			if ($current_file == "edit.php") die(i18n_r('user_manager/NO_PERMISSION'));
-			$edit_menu = "#sb_newpage, a[href='load.php?id=i18n_specialpages&create'] {display:none !important;}";
-		} else {$edit_menu = "";}
-
-		//Admin - Do not allow permissions to edit users
-		if ($this->userData('ADMIN') == "no") {
-			if ($current_script == "id=user_manager") die(i18n_r('user_manager/NO_PERMISSION'));
-			if ($current_file == "settings.php") {
-				$htmleditor = '$("#show_htmleditor").closest("p").css("display","none");';
+		}
+		if ($this->userData('BACKUPS') == "no")
+		{
+			if ($current_file == "backups.php" || $current_file == "archive.php") { die(i18n_r('user_manager/NO_PERMISSION')); }
+			array_push($styles, "#nav_backups {display:none !important;}");
+			array_push($scripts,'$("#footer").find("a[href=\'backups.php\']").remove();');
+		}
+		if ($this->userData('PLUGINS') == "no")
+		{
+			if ($current_file == "plugins.php") { die(i18n_r('user_manager/NO_PERMISSION')); }
+			array_push($styles,"#nav_plugins {display:none !important;}");
+			array_push($scripts,'$("#footer").find("a[href=\'plugins.php\']").remove();');
+		}
+		if ($this->userData('SUPPORT') == "no")
+		{
+			if ($current_file == "support.php")
+			{die(i18n_r('user_manager/NO_PERMISSION'));}
+			array_push($styles,".support {display:none !important;}");
+			array_push($scripts,'$("#footer").find("a[href=\'support.php\']").remove();');
+		}
+		else
+		if ($this->userData('FILES') == "no")
+		{
+			if ($current_file == "upload.php") 
+			{ die(i18n_r('user_manager/NO_PERMISSION')); }
+			array_push($styles,"#nav_upload {display:none !important;}");
+			array_push($scripts,'$("#footer").find("a[href=\'upload.php\']").remove();');
+		}
+		if ($this->userData('THEME') == "no")
+		{
+			if ($current_file == "theme.php" || $current_file == "theme-edit.php")
+			{ die(i18n_r('user_manager/NO_PERMISSION')); }
+			array_push($styles,"#nav_theme {display:none !important;}");
+			array_push($scripts,'$("#footer").find("a[href=\'theme.php\']").remove();');
+		}
+		if ($this->userData('EDIT') == "no")
+		{
+			if ($current_file == "edit.php")
+			{ die(i18n_r('user_manager/NO_PERMISSION')); }
+			array_push($styles,"#sb_newpage, a[href='load.php?id=i18n_specialpages&create'] {display:none !important;}");
+		}
+		if ($this->userData('ADMIN') == "no")
+		{
+			if ($current_script == "id=user_manager")
+			{ die(i18n_r('user_manager/NO_PERMISSION')); }
+			array_push($styles,"#user_manager_sb {display:none !important;}");
+			if ($current_file == "settings.php")
+			{
+				array_push($scripts,'$("#show_htmleditor").closest("p").css("display","none");');
 			}
-			$admin_menu = "#user_manager_sb {display:none !important;}";
-		} else {$admin_menu = ""; $htmleditor = "";}
-
-		//Hide Menu Items
-		echo '<style type="text/css">';
-		echo $edit_menu."\n".$settings_menu."\n".$backups_menu."\n".$plugins_menu."\n".$pages_menu."\n".$support_menu."\n".$files_menu."\n".$theme_menu."\n".$admin_menu;
-		echo '</style>';
-
-		//Hide Footer Menu Items With Jquery
-		echo '<script type="text/javascript">';
-		echo "\n";
-		echo '$(document).ready(function() {';
-		echo "\n";
-		echo $files_footer."\n".$backups_footer."\n".$plugins_footer."\n".$pages_footer."\n".$support_footer."\n".$theme_footer."\n".$site_settings."\n".$htmleditor;
-		echo "\n";
-		echo ' });';
-		echo '</script>';
-	}
+		}
+		if ( count($styles)+count($scripts) > 0 )
+		{
+			require_once (self::$spath.'at_events/client_admin_head.tpl.php');
+		}
+	} // CheckPermissions
 
 	public function DownloadPlugin($id) {
 		$pluginurl = $this->DownloadPlugins($id, 'file');
@@ -757,7 +712,7 @@ p#submit_line, p.submit_line {
 
 </style>
 
-<script type="text/javascript" src="template/js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="<?=av::get('cpath_modules_client');?>admin/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
 
 <script language="javascript">
 	var loadingAjaxIndicator = $('#loader');
@@ -1249,7 +1204,8 @@ function UserManager_interact(){
 	}
 }
 
-function UserManager_permissions(){
+function UserManager_permissions()
+{
 	$inst_UserManager = new UserManager;
 	$inst_UserManager->CheckPermissions();
 }
@@ -1286,7 +1242,7 @@ function UserManager_ProfileRender(){ // show User's Bio form on Settings (User'
 
 	$inst_UserManager = new UserManager;
 	?>
-<script type="text/javascript" src="template/js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="<?=av::get('cpath_modules_client');?>admin/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
 <p>
 	<?php global $editor_id; $editor_id = (string) ''; ?>
 	<label for="bio-">
