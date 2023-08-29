@@ -78,7 +78,10 @@ header {
 	display: flex;
 	align-items: center;
 }
-
+.header .logo {
+	justify-content: center;
+	height: fit-content;
+}
 .header .logo .img_link
 {
 	opacity: 0.5;
@@ -97,8 +100,8 @@ header {
 	flex-wrap: wrap;
 }
 .header .logo > div * {
-	display:inline;
-	margin-left:0.4rem;
+	display: inline;
+	margin: 0 0 0.2rem 0.4rem;
 }
 .header .logo img {
 	display: block;

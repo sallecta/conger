@@ -6,7 +6,7 @@
 	&lt;li&gt;&lt;a href=&quot;tel:[$site_phone$]&quot;&gt;[$site_phone$]&lt;/a&gt;&lt;/li&gt;
 	&lt;li&gt;&lt;a href=&quot;mailto:[$site_email$]&quot;&gt;[$site_email$]&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-]]></value></item><item><key><![CDATA[footer2]]></key><about><![CDATA[theme footer 2]]></about><scope><![CDATA[system]]></scope><type><![CDATA[web_editor]]></type><value><![CDATA[&lt;h1&gt;Часы работы&lt;/h1&gt;
+]]></value></item><item><key><![CDATA[footer2]]></key><about><![CDATA[theme footer 2]]></about><scope><![CDATA[system]]></scope><type><![CDATA[web_editor]]></type><value><![CDATA[&lt;h1&gt;Working hours&lt;/h1&gt;
 
 &lt;ul&gt;
 	&lt;li&gt;Sun - Sat 09:00-19:00&lt;/li&gt;
@@ -36,5 +36,5 @@
 &lt;p&gt;Github page: &lt;a href=&quot;https://github.com/sallecta/conger&quot; target=&quot;_blank&quot;&gt;sallecta/conger&lt;/a&gt;.&lt;/p&gt;
 ]]></value></item><item><key><![CDATA[site_name]]></key><about><![CDATA[]]></about><scope><![CDATA[system]]></scope><type><![CDATA[text]]></type><value><![CDATA[Conger dev]]></value></item><item><key><![CDATA[header1]]></key><about><![CDATA[]]></about><scope><![CDATA[system]]></scope><type><![CDATA[web_editor]]></type><value><![CDATA[&lt;p&gt;[$site_name$]&lt;/p&gt;
 
-&lt;p&gt;The Content manaGer&lt;/p&gt;
+&lt;p&gt;The Content manaGer site descr&lt;/p&gt;
 ]]></value></item></channel>
