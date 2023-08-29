@@ -16,7 +16,7 @@ $ak='find_accesskey';
 				<form>
 					<p>todo</p>
 					<input type="text" autocomplete="off" class="text" id="q" placeholder="<?=strip_tags(lowercase($tr('todo')));?>" />
-						<a href="pages.php" class="cancel"><?$tr=('CANCEL');?></a>
+						<a href="pages.php" class="cancel"><?=$tr('CANCEL');?></a>
 				</form>
 			</div>
 			<p class="clear"><?=$tr('field/edit');?></p>
