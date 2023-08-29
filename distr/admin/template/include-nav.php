@@ -46,5 +46,5 @@ else
 		</div> <!-- wrapper clearfix -->
 	</div> <!-- header -->
 	<div class="wrapper">
-	<?php include('template/error_checking.php'); ?>
+<?php include(av::get('spath_admintemplate').'error_checking.php');  ?>
 <!-- end error_checking.php -->
