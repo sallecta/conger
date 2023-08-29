@@ -5,12 +5,20 @@ class th
 	$img_wide,$logo,$site_role,$nav,$sidebar2,$sidebar1;
 	public static function setup()
 	{
-		global $TEMPLATE, $LANG;
+		global $TEMPLATE, $LANG, $data_index;
 		self::$cpath = av::get('cpath_themes').$TEMPLATE.'/';
 		self::$lang = &$LANG;
 		self::$title = get_page_clean_title(false);
 		self::$sitename = get_site_name(false);
-		self::$title_tag=self::$title .' | '.self::$sitename;
+		//dev::ehtmlcom($data_index->url->__toString());
+		if($data_index->url->__toString() == 'index' )
+		{
+			self::$title_tag=self::$title;
+		}
+		else
+		{
+			self::$title_tag=self::$title .' | '.self::$sitename;
+		}
 		// favicon
 		if( self::fgr('favicon',self::$favicon) )
 		{
