@@ -204,22 +204,9 @@ function filepath_is_safe( $a_path,$pathmatch=null,$subdir = null )
 	return $result;
 }
 
-/**
- * Checks that an existing path is safe to use by checking canonicalized absolute path
- *
- * @since 3.1.3
- *
- * @param string $path Unknown Path to check for safety
- * @param string $pathmatch Known Path to check against
- * @param bool $subdir allow path to be a deeper subfolder
- * @return bool Returns true if $path is direct subfolder of $pathmatch
- *
- */
-function path_is_safe($path,$pathmatch,$subdir = true){
-	$realpath = realpath($path);
-	$realpathmatch = realpath($pathmatch);
-	if($subdir) return strpos($realpath,$realpathmatch) === 0;
-	return $realpath == $realpathmatch;
+function path_is_safe($a_path,$pathmatch=null,$subdir = null)
+{
+	return filepath_is_safe($a_path);
 }
 
 /**

@@ -794,7 +794,7 @@
 	}
 
 	CKEDITOR.plugins.tabletools = {
-		requires: 'table,dialog,contextmenu',
+		requires: 'table,dialog',
 
 		init: function( editor ) {
 			var lang = editor.lang.table,

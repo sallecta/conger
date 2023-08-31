@@ -306,9 +306,9 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('EDIT').' '.$title);
 <script type="text/javascript" src="<?=av::get('cpath_modules_client');?>admin/js/ckeditor/distr/ckeditor.js<?php echo getDef("GSCKETSTAMP",true) ? "?t=".getDef("GSCKETSTAMP") : ""; ?>"></script>
 <script type="text/javascript">
 // CKEditor run script
-var startCKeditor = ( function()
+var startCKeditor = function()
 {
-	var ckedroot=<?="'".av::get('cpath_modules_client').'admin/js/ckeditor'."'";?>;
+	const ckedroot=<?="'".av::get('cpath_modules_client').'admin/js/ckeditor'."'";?>;
 	var editor_el_name = 'post-content';
 	var custom_opts =
 	{
@@ -332,41 +332,13 @@ var startCKeditor = ( function()
 	{
 		CKEDITOR.tools.enableHtml5Elements( document );
 	}
-	// The trick to keep the editor in the sample quite small
-	// unless user specified own height.
-	//CKEDITOR.config.height = 150;
 	CKEDITOR.cpath_admin = "<?=av::get('cpath_admin');?>";
 	CKEDITOR.config.width = 'auto';
 	CKEDITOR.config.contentsCss = ckedroot+'/custom/contents.css';
 	CKEDITOR.plugins.basePath = ckedroot+'/custom/plugins/';
-	var wysiwygareaAvailable = isWysiwygareaAvailable();
-	return function()
-	{
-		//var editor; // uncomment for local scope
-		editor =  document.getElementById( editor_el_name );
-		/* Create classic or inline editor. */
-		if ( wysiwygareaAvailable )
-		{
-			editor = CKEDITOR.replace( editor_el_name, custom_opts );
-		}
-		else
-		{
-			console.warn('CKEditor missing wysiwygarea plugin, using inline mode.');
-			editor.setAttribute( 'contenteditable', 'true' );
-			editor = CKEDITOR.inline( editor_el_name, custom_opts );
-		}
-	};
-	function isWysiwygareaAvailable()
-	{
-		// If in development mode, then the wysiwygarea must be available.
-		// Split REV into two strings so builder does not replace it :D.
-		if ( CKEDITOR.revision == ( '%RE' + 'V%' ) )
-		{
-			return true;
-		}
-		return !!CKEDITOR.plugins.get( 'wysiwygarea' );
-	}
-} )();
+	editor =  document.getElementById( editor_el_name );
+	editor = CKEDITOR.replace( editor_el_name, custom_opts );
+};
 startCKeditor();
 
 ////**/

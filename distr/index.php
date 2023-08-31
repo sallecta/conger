@@ -91,6 +91,7 @@ if(!$data_index)
 	} 	
 	event::create('error-404');
 }
+
 $title         = $data_index->title;
 $date          = $data_index->pubDate;
 $metak         = $data_index->meta;

@@ -579,6 +579,7 @@ $i18n = array(
 'del'=>'Delete',
 'up'=>'Up',
 'down'=>'Down',
+'success'=>'Success',
 );
 
 ?>

@@ -13,22 +13,18 @@
 // Setup inclusions
 include('inc/common.php');
 login_cookie_check();
-
 $filesSorted=null;$dirsSorted=null;
 
 if (isset($_GET['path'])) 
 {
-	$path = av::get('spath')."/data/uploads/".$_GET['path'];
-	$path = "../data/uploads/".$_GET['path'];
+	$path = av::get('spath_data_uploads').$_GET['path'];
 }
 else
 {
-	$path = av::get('spath')."/data/uploads/";
-	$path = "../data/uploads/";
+	$path = av::get('spath_data_uploads');
 }
-
 $subPath = (isset($_GET['path'])) ? $_GET['path'] : "";
-if(!path_is_safe($path,GSDATAUPLOADPATH)) {die('!path_is_safe');}
+if( !path_is_safe($path) ) { die('!path_is_safe'); }
 $returnid = isset($_GET['returnid']) ? var_out($_GET['returnid']) : "";
 $func = (isset($_GET['func'])) ? var_out($_GET['func']) : "";
 $path = tsl($path);
@@ -42,14 +38,15 @@ $type = isset($_GET['type']) ? var_out($_GET['type']) : '';
 
 global $LANG;
 $LANG_header = preg_replace('/(?:(?<=([a-z]{2}))).*/', '', $LANG);
+$cmc=av::get('cpath_modules_client');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_header; ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"  />
 	<title><?php echo i18n_r('FILE_BROWSER'); ?></title>
-	<link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
-	<link rel="stylesheet" type="text/css" href="<?=av::get('cpath').'/admin/template/style.php?v='.GSVERSION; ?>" media="screen" />
+	<link rel="shortcut icon" href="<?=$cmc;?>img/favicon/favicon.png" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="<?=$cmc.'/admin/css/style.php'; ?>" media="screen" />
 	<style>
 		.wrapper, #maincontent, #imageTable { width: 100% }
 	</style>
@@ -142,7 +139,6 @@ $LANG_header = preg_replace('/(?:(?<=([a-z]{2}))).*/', '', $LANG);
 
 	echo '<table class="highlight" id="imageTable">';
 
-				//echo '<pre>'.json_encode(['---',$filesSorted]).'</pre>';
 	if ( !empty($dirsSorted) && count($dirsSorted) != 0)
 	{     
 		foreach ($dirsSorted as $upload)
@@ -165,11 +161,9 @@ $LANG_header = preg_replace('/(?:(?<=([a-z]{2}))).*/', '', $LANG);
 			{
 				$funct='';
 			}
-			/*
-			 filebrowser.php?path=images&CKEditorFuncNum=1&type=images& 
-			 */
-			$folderpathtmp='filebrowser.php?path='.$upload['name'].'&amp;CKEditorFuncNum='.$CKEditorFuncNum.'&amp;type='.$type.$returnlink.'&amp;'.$funct;
-			echo '<img src="template/images/folder.png" width="11" />';
+	dev::epre($urlPath);
+			$folderpathtmp='filebrowser.php?path='.$urlPath.$upload['name'].'&amp;CKEditorFuncNum='.$CKEditorFuncNum.'&amp;type='.$type.$returnlink.'&amp;'.$funct;
+			echo '<img src="'.$cmc.'admin/img/folder.png" width="11" />';
 			echo '<a href="'.$folderpathtmp.'" title="'. $upload['name'] .'"  >';
 			echo '<strong>'.$upload['name'].'</strong></a>';
 			echo '</td>';

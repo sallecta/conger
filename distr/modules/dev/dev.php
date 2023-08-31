@@ -40,6 +40,17 @@ class dev
 		$out=$out.' */'."\n";
 		return $out;
 	}
+	public static function rjscom($arg=Null,$a_bt=Null)
+	{
+		if(!ondev){ return; }
+		if(!$a_bt) { $a_bt = debug_backtrace(); }
+		$line=$a_bt[0]['line'];
+		$file=basename($a_bt[0]['file']);
+		$out='/* '.$file.': '.$line;
+		$out=$out.': '.json_encode($arg,JSON_UNESCAPED_UNICODE);
+		$out=$out.' */'."\n";
+		return $out;
+	}
 	public static function ehtmlcom($arg=Null)
 	{
 		if(!ondev){ return; }
@@ -49,6 +60,11 @@ class dev
 	{
 		if(!ondev){ return; }
 		printf(self::rcsscom($arg,debug_backtrace()));
+	}
+	public static function ejscom($arg=Null)
+	{
+		if(!ondev){ return; }
+		printf(self::rjscom($arg,debug_backtrace()));
 	}
 	public static function enl($arg=Null)
 	{

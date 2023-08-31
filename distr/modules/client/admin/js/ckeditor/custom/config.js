@@ -7,8 +7,8 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	// %REMOVE_START%
 	// The configuration options below are needed when running CKEditor from source files.
-	config.plugins = 'dialogui,dialog,about,a11yhelp,basicstyles,blockquote,notification,button,toolbar,clipboard,panel,floatpanel,menu,contextmenu,resize,elementspath,enterkey,entities,popup,filetools,filebrowser,floatingspace,listblock,richcombo,format,horizontalrule,htmlwriter,wysiwygarea,image,indent,indentlist,fakeobjects,link,list,magicline,maximize,pastetext,xml,ajax,pastetools,pastefromgdocs,pastefromlibreoffice,pastefromword,removeformat,showborders,sourcearea,specialchar,menubutton,scayt,stylescombo,tab,table,tabletools,tableselection,undo,lineutils,widgetselection,widget,notificationaggregator,uploadwidget,uploadimage,codesnippet';
-	config.plugins = config.plugins+',btns,autogrow,showblocks';
+	config.plugins = 'dialogui,dialog,about,basicstyles,blockquote,notification,button,toolbar,clipboard,panel,floatpanel,menu,resize,elementspath,enterkey,entities,popup,filetools,filebrowser,floatingspace,listblock,richcombo,format,horizontalrule,htmlwriter,wysiwygarea,image,indent,indentlist,fakeobjects,link,list,maximize,pastetext,xml,ajax,pastetools,sourcearea,specialchar,menubutton,stylescombo,tab,table,tabletools,tableselection,undo,widgetselection,widget,codesnippet';
+	config.plugins = config.plugins+',btns,showblocks';
 	config.skin = 'conger';
 	// %REMOVE_END%
 
@@ -21,18 +21,17 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
 		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
 		{ name: 'links' },
-		{ name: 'insert' },
+		{ name: 'insert' , groups: [ 'specialchar' ] },
 		{ name: 'forms' },
-		'/',
 		{ name: 'tools', groups: [ 'source', 'maximize', 'showblocks' ] },
 		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
 		{ name: 'others' },
+		{ name: 'about' },
 		'/',
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup', 'btns' ] },
-		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'basicstyles', groups: ['cleanup', 'btns' ] },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'styles', 'basicstyles' ] },
 		{ name: 'styles' },
-		{ name: 'colors' },
-		{ name: 'about' }
+		{ name: 'colors' }
 	];
 
 	// Remove some buttons provided by the standard plugins, which are
@@ -56,7 +55,6 @@ CKEDITOR.editorConfig = function( config ) {
 	config.tabSpaces                   = 10;    
 	config.dialog_backgroundCoverColor = '#000000';  // color for dialog popups
 	config.uiColor                     = '#FFFFFF';
-	config.magicline_color             = '#CF3805'; 
 	config.entities                    = false;    
 	config.allowedContent              = true;       // disable acf
 	config.disableAutoInline           = true;       // disable automatic inline editing of elements with contenteditable=true

@@ -230,10 +230,12 @@ new function()
 	/**/
 	function add_module()
 	{
+		const me = mdl.name+'.add_module';
 		client_ui.mdls[mdl.key] = mdl;
-		//console.log(mdl.key,'added');
+		//console.log(me,'done');
+		document.dispatchEvent(client_ui.events.loaded);
 	}
-	document.addEventListener( client_ui.events.ready.name, add_module,false );
+	document.addEventListener( client_ui.events.included.name, add_module,false );
 }
 
 

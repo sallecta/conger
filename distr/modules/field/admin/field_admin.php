@@ -51,14 +51,12 @@ class field_admin extends field
 	
 	public static function render()
 	{
-		$_SESSION['render'] = 'green';
 		field::$active=true;
 		if (isset($_GET['undo']) && !isset($_POST['save']))
 		{
 			if (field::undo())
 			{
 				field::$cmsg = i18n_r('field/UNDO_SUCCESS');
-				$success = true;
 			}
 			else
 			{
@@ -76,7 +74,6 @@ class field_admin extends field
 					field::$cmsg .= ' <a href="'.field::$cpath.'admin/field_admin.php?undo">'.i18n_r('UNDO').'</a>';
 				}
 				field::get_fields_and_types();
-				$success = true;
 			}
 			else
 			{

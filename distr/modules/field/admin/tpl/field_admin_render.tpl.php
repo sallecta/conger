@@ -19,7 +19,6 @@ $ak='find_accesskey';
 						<a href="pages.php" class="cancel"><?=$tr('CANCEL');?></a>
 				</form>
 			</div>
-			<p class="clear"><?=$tr('field/edit');?></p>
 			<form method="post" id="field_form" class="module_field" autocomplete="off" >
 				<div id="editfields" class="module_field" >
 <?php field_admin::render_field();?>
@@ -34,8 +33,8 @@ $ak='find_accesskey';
 				<a href="" class="down" data-cmd="field_down"><?=$tr('down');?></a>
 			</div>
 			<p id="pg_counter" style="margin-top:20px;"><?=$tr('field/total_fields:');?> <em class="fields_total"><?=$fields_total;?></em>.</p>
-		</div><!-- main -->
-	</div><!-- end maincontent -->
+		</div> <?=dev::rhtmlcom('main');?>
+	</div><?=dev::rhtmlcom('maincontent');?>
 <?php field_admin::render_sidebar();?>
-</div> <!-- bodycontent -->
+</div> <?=dev::rhtmlcom('bodycontent');?>
 <?php get_template('footer');?>

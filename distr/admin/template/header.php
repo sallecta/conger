@@ -49,5 +49,6 @@ $cmc=av::get('cpath_modules_client');
 
 <body id="<?=get_filename_id();?>" >
 	<div class="header" id="header" >
-		<div class="wrapper clearfix"><?php
+		<div class="wrapper clearfix">
+<?php
 event::create('header-body'); ?>

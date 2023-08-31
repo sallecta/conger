@@ -206,3 +206,14 @@ a > img {
 	max-height: 1080px;
 	margin:0 auto;
 }
+img {
+	object-fit: contain;
+	padding: var(--conger_space);
+	width: 10rem;
+	height: 5rem;
+	display: block;
+	margin: 0 auto;
+}
+img:hover {
+	background-color: #daecb1;
+}

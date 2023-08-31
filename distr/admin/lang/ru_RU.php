@@ -138,7 +138,7 @@ $i18n = array(
  * For: support.php
 */
 "SETTINGS_UPDATED"	=> 	"Your settings have been updated",
-"UNDO" 							=> 	"Undo",
+"UNDO" 							=> 	"Отменить",
 "SUPPORT" 					=> 	"Support",
 "SETTINGS" 					=> 	"Settings",
 "ERROR" 						=> 	"Error",
@@ -578,7 +578,7 @@ $i18n = array(
 'del'=>'Удалить',
 'up'=>'Вверх',
 'down'=>'Вниз',
-
+'success'=>'Успех',
 );
 
 ?>

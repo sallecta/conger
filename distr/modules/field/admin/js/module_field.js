@@ -1,6 +1,7 @@
 "use strict";
-client_ui.conger_field = {};
-client_ui.conger_field.defined = function( a_in )
+const module_field = {};
+module_field.msg='<?=field::$cmsg;?>';
+module_field.defined = function( a_in )
 {
 	if ( a_in == 'undefined' )
 	{
@@ -9,16 +10,16 @@ client_ui.conger_field.defined = function( a_in )
 	return a_in;
 }
 
-client_ui.conger_field.datr_get=function( a_obj, a_atr )
+module_field.datr_get=function( a_obj, a_atr )
 {
 	if ( !a_obj.dataset ) { return undefined; }
 	//if ( !a_obj.dataset[a_atr] ) { return null; }
 	return a_obj.dataset[a_atr];
 }
-client_ui.conger_field.reindex=function( a_obj={} )
+module_field.reindex=function( a_obj={} )
 {
-	const app = client_ui.conger_field;
-	const me='client_ui.conger_field.reindex';
+	const app = module_field;
+	const me='module_field.reindex';
 	const fields=app.el.querySelectorAll('.field');
 	//console.log(me);
 	let uniques = [];
@@ -69,11 +70,11 @@ client_ui.conger_field.reindex=function( a_obj={} )
 		}
 	}
 }
-client_ui.conger_field.value_type_adjust=function( arg )
+module_field.value_type_adjust=function( arg )
 {
-	const app = client_ui.conger_field;
+	const app = module_field;
 	const dd = app.defined;
-	const me='client_ui.conger_field.value_type_adjust';
+	const me='module_field.value_type_adjust';
 	let el;
 	if ( arg.target )
 	{ el = arg.target; }
@@ -165,10 +166,10 @@ client_ui.conger_field.value_type_adjust=function( arg )
 		el_src.parentNode.replaceChild(el_dest, el_src)
 	}
 }
-client_ui.conger_field.del=function( a_el )
+module_field.del=function( a_el )
 {
-	const me='client_ui.conger_field.del';
-	const app = client_ui.conger_field;
+	const me='module_field.del';
+	const app = module_field;
 	const fields=app.el.querySelectorAll('.field');
 	if ( fields.length == 1 )
 	{
@@ -183,10 +184,10 @@ client_ui.conger_field.del=function( a_el )
 			app.reindex({upd_total:true});
 		}, 500);
 }
-client_ui.conger_field.add=function()
+module_field.add=function()
 {
-	const me='client_ui.conger_field.add';
-	const app = client_ui.conger_field;
+	const me='module_field.add';
+	const app = module_field;
 	const dd=app.defined;
 	const el_ref = app.sortman.dest_els[app.sortman.dest_els.length-1];
 	
@@ -226,10 +227,10 @@ client_ui.conger_field.add=function()
 	client_ui.mdls.sortman.dest_els_reindex(app.sortman);
 	app.reindex({upd_total:true});
 }
-client_ui.conger_field.toggle_inner=function( a_el )
+module_field.toggle_inner=function( a_el )
 {
-	const app = client_ui.conger_field;
-	const me='client_ui.conger_field.toggle_inner';
+	const app = module_field;
+	const me='module_field.toggle_inner';
 	//console.log('app.sortman.ev_listeners_status',app.sortman.ev_listeners_status);
 	if ( app.sortman.ev_listeners_status == '-' )
 	{
@@ -240,10 +241,10 @@ client_ui.conger_field.toggle_inner=function( a_el )
 		a_el.innerHTML="<?=$tr('field/drag_off');?>";
 	}
 }
-client_ui.conger_field.dragtoggle=function( a_el )
+module_field.dragtoggle=function( a_el )
 {
-	const app = client_ui.conger_field;
-	const me='client_ui.conger_field.dragtoggle';
+	const app = module_field;
+	const me='module_field.dragtoggle';
 	
 	if ( app.sortman.ev_listeners_status == '-' )
 	{
@@ -256,10 +257,10 @@ client_ui.conger_field.dragtoggle=function( a_el )
 		a_el.innerHTML="<?=$tr('field/drag_on');?>";
 	}
 }
-client_ui.conger_field.collapsetoggle=function( a_el )
+module_field.collapsetoggle=function( a_el )
 {
-	const app = client_ui.conger_field;
-	const me='client_ui.conger_field.collapsetoggle';
+	const app = module_field;
+	const me='module_field.collapsetoggle';
 	
 	const els = document.querySelectorAll('.module_field .field .control')
 	if ( els[0].classList.contains('collapsed') )
@@ -285,10 +286,10 @@ client_ui.conger_field.collapsetoggle=function( a_el )
 		a_el.innerHTML="<?=$tr('field/collapse_off');?>";
 	}
 }
-client_ui.conger_field.click=function( a_ev )
+module_field.click=function( a_ev )
 {
-	const app = client_ui.conger_field;
-	const me='client_ui.conger_field.click';
+	const app = module_field;
+	const me='module_field.click';
 	const el = a_ev.target;
 	if ( 'field_dragtoggle'==el.getAttribute('data-cmd') )
 	{
@@ -325,20 +326,19 @@ client_ui.conger_field.click=function( a_ev )
 		app.el.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
 	}
 }
-client_ui.run = function()
+module_field.run = function()
 {
-	const me='client_ui.run';
-	const app = client_ui.conger_field;
+	const me='module_field.run';
+	const app = module_field;
 	const dd = app.defined;
-	
 	const el_controls = document.querySelector('.module_field.controls');
 	app.el=document.querySelector('#field_form');
+	console.log(me);
 	app.sortman=client_ui.mdls.sortman.run('#field_form .field',{disabled:true});
-	
 	app.el.addEventListener( 'drop', function(a_ev){app.reindex(a_ev.target); } );
 	app.el.addEventListener( 'change', app.value_type_adjust );
-	app.el.addEventListener( 'click', client_ui.conger_field.click );
-	el_controls.addEventListener( 'click', client_ui.conger_field.click );
+	app.el.addEventListener( 'click', module_field.click );
+	el_controls.addEventListener( 'click', module_field.click );
 	
 	const el_collapsetgl=document.querySelector('.module_field.controls *[data-cmd=field_collapsetoggle]');
 	if ( document.querySelector('.module_field .field .control.collapsed') )
@@ -359,10 +359,9 @@ client_ui.run = function()
 		el_dragtgl.innerHTML="<?=$tr('field/drag_off');?>";
 	}
 	
-	if ( client_ui.conger_field.msg )
+	if ( module_field.msg )
 	{
-		const msg = client_ui.conger_field.msg;
-		//const out = a_ref.parentNode.insertBefore(a_el, a_ref);
+		const msg = module_field.msg;
 		const el_ref = document.querySelector('div.bodycontent');
 		const el = document.createElement('div');
 		el_ref.parentNode.insertBefore(el, el_ref);
@@ -381,3 +380,4 @@ client_ui.run = function()
 		}
 	}
 }
+document.addEventListener('client_ui.ready',module_field.run);

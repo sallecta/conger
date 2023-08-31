@@ -43,8 +43,10 @@ else
 				<li class="rightnav" ><a class="health last" href="<?=$cpadm;?>health.php" accesskey="<?=$ak($tr('tab_health'));?>" ><?=$tr('tab_health');?></a></li>
 				<li class="rightnav" ><a class="settings first" href="<?=$cpadm;?>settings.php" accesskey="<?=$ak($tr('TAB_SETTINGS'));?>" ><?=$tr('TAB_SETTINGS');?></a></li>
 			</ul>
-		</div> <!-- wrapper clearfix -->
-	</div> <!-- header -->
+		</div> <?=dev::rhtmlcom('wrapper clearfix');?>
+	</div> <?=dev::rhtmlcom('header');?>
 	<div class="wrapper">
-<?php include(av::get('spath_admintemplate').'error_checking.php');  ?>
-<!-- end error_checking.php -->
+<?php 
+$fname=av::get('spath_admintemplate').'error_checking.php';
+?>
+<?php require_once(av::get('spath_admintemplate').'error_checking.php');  ?>

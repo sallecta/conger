@@ -81,7 +81,7 @@ get_template('header', cl($SITENAME).' &raquo; '.i18n_r('PAGE_MANAGEMENT').' &ra
 			{ $out="$ps"; }
 ?>
 						<li class="" rel="<?=$ps;?>">
-							<strong>#<?=$pmo;?> ❭</strong> <em><?=$pt;?></em> ❭ <?=$out."\n";?> <a class='edit' href="<?=$edit;?>">Edit</a>
+							<strong>#<?=$pmo;?> ❭</strong> <em><?=$pt;?></em> ❚ <?=$out."\n";?> <a class='edit' href="<?=$edit;?>">Edit</a>
 						</li>
 <?php
 		}
