@@ -58,14 +58,17 @@ a img,
 }
 
 .imgthumb {
-	display: none;
-	width: 70px;
+	width: 40px;
 }
 
 .imgthumb img {
+/*
 	border: 1px solid #555;
+*/
+	object-fit: contain;
+	width: 40px;
+	height: 40px;
 }
-
 .hidden {
 	display: none;
 }
@@ -431,12 +434,8 @@ h5 img,
 tr.folder img {
 	vertical-align: middle;
 	margin: 0 5px 0 0;
-	opacity: .5;
 }
 
-h5:hover img {
-	opacity: 1;
-}
 
 .bodycontent ul, 
 .bodycontent ol {

@@ -244,11 +244,19 @@ class SimpleXMLExtended extends SimpleXMLElement{
  * @param string $path
  * @return array
  */
-function getFiles($path) {
-	$handle = opendir($path) or die("getFiles: Unable to open $path");
+function getFiles($a_path)
+{
+	$handle = opendir($a_path);
+	if ( !$handle )
+	{
+		$a_path = str_replace(av::get('spath'), "[docroot]", $a_path);
+		die("getFiles: Unable to open $a_path");
+	}
 	$file_arr = array();
-	while ($file = readdir($handle)) {
-		if ($file != '.' && $file != '..') {
+	while ($file = readdir($handle))
+	{
+		if ($file != '.' && $file != '..')
+		{
 			$file_arr[] = $file;
 		}
 	}

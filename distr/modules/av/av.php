@@ -51,7 +51,7 @@ class av extends path// app variables
 	{
 		if ( self::$ready ) { return; }
 		self::$name='Conger';
-		self::$version='3.4.4';
+		self::$version='3.4.5';
 		self::$url='https://github.com/sallecta/conger'; 
 		self::$cpath=path::get('client'); 
 		self::$cadmin=self::$cpath.'admin/'; 

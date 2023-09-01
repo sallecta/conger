@@ -3,35 +3,44 @@
 $load['plugin'] = true;
 include('inc/common.php');
 login_cookie_check();
-
 $dirsSorted=null;$filesSorted=null;$foldercount=null;
+$folder_img=av::get('cpath_modules_client').'admin/img/folder.png';
 
-if (isset($_GET['path']) && !empty($_GET['path'])) {
-	$path = str_replace('../','', $_GET['path']);
-	$path = tsl("../data/uploads/".$path);
-	// die if path is outside of uploads
-	if(!path_is_safe($path,GSDATAUPLOADPATH)) die();
-	$subPath = str_replace('../','', $_GET['path']);
-	$subFolder = tsl($subPath);
-} else { 
-	$path = "../data/uploads/";
-	$subPath = ''; 
-	$subFolder = '';
+if (isset($_GET['path']) && !empty($_GET['path']))
+{
+	$req_path = tsl($_GET['path']);
+	$spath = av::get('spath_data_uploads').$req_path;
+	$cpath = av::get('cpath_data_uploads').$req_path;
+	if(!path_is_safe($spath))
+	{
+		die('!path_is_safe');
+	}
 }
-
+else
+{ 
+	$spath = av::get('spath_data_uploads');
+	$req_path = ''; 
+	$cpath = av::get('cpath_data_uploads');
+}
 // check if host uses Linux (used for displaying permissions
 $isUnixHost = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? false : true);
 
 // if a file was uploaded
-if (isset($_FILES['file'])) {
+if (isset($_FILES['file']))
+{
 	$uploadsCount = count($_FILES['file']['name']);
-	if($uploadsCount > 0) {
+	if($uploadsCount > 0)
+	{
 	 $errors = array();
 	 $messages = array();
-	 for ($i=0; $i < $uploadsCount; $i++) {
-		if ($_FILES["file"]["error"][$i] > 0)	{
+	 for ($i=0; $i < $uploadsCount; $i++)
+	{
+		if ($_FILES["file"]["error"][$i] > 0)
+		{
 			$errors[] = i18n_r('ERROR_UPLOAD');
-		} else {
+		}
+		else
+		{
 			
 			//set variables
 			$count = '1';
@@ -43,78 +52,94 @@ if (isset($_FILES['file'])) {
 			$name      = clean_img_name(to7bit($name));
 			$base      = $name . '.' . $extension;
 
-			$file_loc = $path . $base;
+			$file_loc = $spath . $base;
 			
 			//prevent overwriting
-			while ( file_exists($file_loc) ) {
-				$file_loc = $path . $count.'-'. $base;
+			while ( file_exists($file_loc) )
+			{
+				$file_loc = $spath . $count.'-'. $base;
 				$base = $count.'-'. $base;
 				$count++;
 			}
 			
 			//validate file
-			if (validate_safe_file($_FILES["file"]["tmp_name"][$i], $_FILES["file"]["name"][$i])) {
+			if (validate_safe_file($_FILES["file"]["tmp_name"][$i], $_FILES["file"]["name"][$i])){
 				move_uploaded_file($_FILES["file"]["tmp_name"][$i], $file_loc);
-				if (defined('GSCHMOD')) {
+				if (defined('GSCHMOD')){
 					chmod($file_loc, GSCHMOD);
-				} else {
+				} else{
 					chmod($file_loc, 0644);
 				}
 				event::create('file-uploaded');
 				
-				// generate thumbnail				
-				require_once('inc/imagemanipulation.php');	
-				genStdThumb($subFolder,$base);					
-				$messages[] = i18n_r('FILE_SUCCESS_MSG').': <a href="'. $SITEURL .'/data/uploads/'.$subFolder.$base.'">'. $SITEURL .'/data/uploads/'.$subFolder.$base.'</a>';
-			} else {
+				// generate thumbnail
+				require_once('inc/imagemanipulation.php');
+				genStdThumb($req_path,$base);
+				$messages[] = i18n_r('FILE_SUCCESS_MSG').': <a href="'. $SITEURL .'/data/uploads/'.$req_path.$base.'">'. $SITEURL .'/data/uploads/'.$req_path.$base.'</a>';
+			} else{
 				$errors[] = $_FILES["file"]["name"][$i] .' - '.i18n_r('ERROR_UPLOAD');
 			}
-			
 			//successfull message
-			
 		}
-	 }
+	}
 	 // after uploading all files process messages
-		if(sizeof($messages) != 0) { 
-			foreach($messages as $msg) {
+		if(sizeof($messages) != 0)
+		{
+			foreach($messages as $msg)
+			{
 				$success = $msg.'<br />';
 			}
 		}
-		if(sizeof($errors) != 0) {
-			foreach($errors as $msg) {
+		if(sizeof($errors) != 0)
+		{
+			foreach($errors as $msg)
+			{
 				$error = $msg.'<br />';
 			}
 		}
 	}
 }
 // if creating new folder
-if (isset($_GET['newfolder'])) {
-	
+if (isset($_GET['newfolder']))
+{
 	// check for csrf
-	if (!defined('GSNOCSRF') || (GSNOCSRF == FALSE) ) {
+	if (!defined('GSNOCSRF') || (GSNOCSRF == FALSE) )
+	{
 		$nonce = $_GET['nonce'];
-		if(!check_nonce($nonce, "createfolder")) {
+		if(!check_nonce($nonce, "createfolder"))
+		{
 			die("CSRF detected!");
 		}
 	}
-	
 	$newfolder = $_GET['newfolder'];
 	// check for invalid chars
 	$cleanname = clean_url(to7bit(strippath($newfolder), "UTF-8"));
-	if (file_exists($path.$cleanname) || $cleanname=='') {
+	if (file_exists($spath.$cleanname) || $cleanname=='')
+	{
 			$error = i18n_r('ERROR_FOLDER_EXISTS');
-	} else {
-		if (defined('GSCHMOD')) { 
+	}
+	else
+	{
+		if (defined('GSCHMOD'))
+		{ 
 			$chmod_value = GSCHMOD; 
-		} else {
+		}
+		else
+		{
 			$chmod_value = 0755;
 		}
-		if (mkdir($path . $cleanname, $chmod_value)) {
+		if (mkdir($spath . $cleanname, $chmod_value))
+		{
 			//create folder for thumbnails
-			$thumbFolder = GSTHUMBNAILPATH.$subFolder.$cleanname;
-			if (!(file_exists($thumbFolder))) { mkdir($thumbFolder, $chmod_value); }
+			$thumbFolder = GSTHUMBNAILPATH.$req_path.$cleanname;
+			if (!(file_exists($thumbFolder)))
+			{
+				mkdir($thumbFolder, $chmod_value);
+			}
 			$success = sprintf(i18n_r('FOLDER_CREATED'), $cleanname);
-		}	else { 
+		}
+		else
+		{ 
 			$error = i18n_r('ERROR_CREATING_FOLDER'); 
 		}
 	}
@@ -138,7 +163,7 @@ $counter = "0";
 $totalsize = 0;
 $filesArray = array();
 $dirsArray = array();
-$filenames = getFiles($path);
+$filenames = getFiles($spath);
 if (count($filenames) != 0)
 {
 	foreach ($filenames as $file)
@@ -147,11 +172,11 @@ if (count($filenames) != 0)
 		{
 			// not a upload file
 		} 
-		elseif (is_dir($path . $file))
+		elseif (is_dir($spath . $file))
 		{
 			$dirsArray[$dircount]['name'] = $file;
 			clearstatcache();
-			$ss = @stat($path . $file);
+			$ss = @stat($spath . $file);
 			$dirsArray[$dircount]['date'] = @date('M j, Y',$ss['mtime']);
 			$dircount++;
 		}
@@ -162,7 +187,7 @@ if (count($filenames) != 0)
 			$extention = get_FileType($ext);
 			$filesArray[$count]['type'] = $extention;
 			clearstatcache();
-			$ss = @stat($path . $file);
+			$ss = @stat($spath . $file);
 			$filesArray[$count]['date'] = @date('M j, Y',$ss['ctime']);
 			$filesArray[$count]['size'] = fSize($ss['size']);
 			$totalsize = $totalsize + $ss['size'];
@@ -207,7 +232,7 @@ if ($filesSorted && count($filesSorted) > 0)
 					<div class="clear" ></div>
 				</div>
 <?php
-			$pathParts = explode("/",$subPath);
+			$pathParts = explode("/",$req_path);
 			$urlPath = null;?>
 				<div class="h5 clearfix">
 					<div class="crumbs">/ <a href="upload.php">uploads</a> / 
@@ -225,7 +250,7 @@ foreach ($pathParts as $pathPart)
 					<div id="new-folder">
 						<a href="#" id="createfolder"><?=i18n_r('CREATE_FOLDER');?></a>
 						<form action="upload.php">
-							<input type="hidden" name="path" value="<?=$subPath;?>" />
+							<input type="hidden" name="path" value="<?=$req_path;?>" />
 							<input type="hidden" name="nonce" value="<?=get_nonce("createfolder");?>" />
 							<input type="text" class="text" name="newfolder" id="foldername" />
 							<input type="submit" class="submit" value="<?=i18n_r('CREATE_FOLDER');?>" />
@@ -249,17 +274,18 @@ if ($dirsSorted && count($dirsSorted) != 0)
 	{
 		# check to see if folder is empty
 		$directory_delete = null;
-		if ( check_empty_folder($path.$upload['name']) )
+		if ( check_empty_folder($spath.$upload['name']) )
 		{
 			$directory_delete = '<a class="delconfirm" title="'.i18n_r('DELETE_FOLDER').': '. rawurlencode($upload['name']) .'" href="deletefile.php?path='.$urlPath.'&amp;folder='. rawurlencode($upload['name']) . '&amp;nonce='.get_nonce("delete", "deletefile.php").'">&times;</a>';
 		}
-		$directory_size = '<span>'.folder_items($path.$upload['name']).' '.i18n_r('ITEMS').'</span>';
-		$adm = substr($path . rawurlencode($upload['name']) ,  16);?>
-					<tr class="All folder <?=$upload['name'];?>" >
-						<td class="imgthumb" ></td>
+		$directory_size = '<span>'.folder_items($spath.$upload['name']).' '.i18n_r('ITEMS').'</span>';
+		$newreq_path = $req_path . rawurlencode($upload['name']);
+?>
+					<tr class="folder <?=$upload['name'];?>" >
+						<td class="imgthumb" >
+							<img src="<?=$folder_img;?>" width="11" /></td>
 						<td>
-							<img src="<?=av::get('cpath_modules_client');?>admin/img/folder.png" width="11" />
-							<a href="upload.php?path=<?=$adm;?>" ><strong><?=htmlspecialchars($upload['name']);?></strong></a>
+							<a href="upload.php?path=<?=$newreq_path;?>" ><strong><?=htmlspecialchars($upload['name']);?></strong></a>
 						</td>
 						<td style="width:80px;text-align:right;" ><span><?=$directory_size;?></span></td>
 						<td style="width:85px;text-align:right;" ><span><?=shtDate($upload['date']);?></span></td>
@@ -287,21 +313,21 @@ if ( $filesSorted && count($filesSorted) != 0)
 		if ($upload['type'] == i18n_r('IMAGES') .' Images')
 		{
 			$gallery = 'rel=" facybox_i"';
-			$pathlink = 'image.php?i='.rawurlencode($upload['name']).'&amp;path='.$subPath;
+			$pathlink = 'image.php?i='.rawurlencode($upload['name']).'&amp;path='.$req_path;
 			$thumbLink = $urlPath.'thumbsm.'.$upload['name'];
 			$thumbLinkEncoded = $urlPath.'thumbsm.'.rawurlencode($upload['name']);
-			if (file_exists(GSTHUMBNAILPATH.$thumbLink)) {
+			if (file_exists(GSTHUMBNAILPATH.$thumbLink)){
 				$imgSrc='<img src="../data/thumbs/'. $thumbLinkEncoded .'" />';
-			} else {
+			} else{
 				$imgSrc='<img src="inc/thumb.php?src='. $urlPath . rawurlencode($upload['name']) .'&amp;dest='. $thumbLinkEncoded .'&amp;f=1" />';
 			}
-			echo '<a href="'. $path . rawurlencode($upload['name']) .'" title="'. rawurlencode($upload['name']) .'" rel=" facybox_i" >'.$imgSrc.'</a>';
+			echo '<a href="'. $cpath . rawurlencode($upload['name']) .'" title="'. rawurlencode($upload['name']) .'" rel=" facybox_i" >'.$imgSrc.'</a>';
 		}
 		else
 		{
 			$gallery = '';
 			$controlpanel = '';
-			$pathlink = $path . $upload['name'];
+			$pathlink = $cpath . $upload['name'];
 		}
 		echo '</td><td><a title="'.i18n_r('VIEW_FILE').': '. htmlspecialchars($upload['name']) .'" href="'. $pathlink .'" class="primarylink">'.htmlspecialchars($upload['name']) .'</a></td>';
 		echo '<td style="width:80px;text-align:right;" ><span>'. $upload['size'] .'</span></td>';
@@ -323,7 +349,7 @@ else
 	$sizedesc = '';
 }
 $totalcount = (int)$counter+(int)$foldercount;?>
-				<p><em><span id="pg_counter"><?=$totalcount;?></span><?=i18n_r('TOTAL_FILES');?> <?=$sizedesc;?></em></p>
+				<p><em><span id="pg_counter"><?=$totalcount;?></span> <?=i18n_r('TOTAL_FILES');?> <?=$sizedesc;?></em></p>
 			</div> <!-- file_load -->
 		</div> <!-- main -->
 	</div> <!-- maincontent -->
